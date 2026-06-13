@@ -33,6 +33,7 @@ npm run build
 
 📁 Repository Folder Structure
 
+```
 ├── public/
 │   ├── fonts/             # Custom typography (YekanBakh)
 │   ├── favicon.png
@@ -89,6 +90,7 @@ npm run build
 ├── postcss.config.js
 ├── tailwind.config.js     # Design system & theme overrides
 └── vite.config.js
+```
 
 🤖 Developer & AI Guidelines (Context for AI)
 To maintain consistency across the codebase, any AI or developer contributing to this project must strictly adhere to the following rules:
