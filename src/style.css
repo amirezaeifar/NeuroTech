@@ -1,0 +1,336 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* RGB triplets consumed by Tailwind via rgb(var(--c-…) / <alpha>) */
+  --c-parchment: 245 240 232;
+  --c-parchment-light: 250 247 242;
+  --c-parchment-dark: 234 227 214;
+  --c-parchment-deep: 214 204 186;
+  --c-gold: 184 146 42;
+  --c-gold-light: 212 174 90;
+  --c-gold-dark: 138 106 26;
+  --c-ink: 26 23 20;
+  --c-ink-soft: 61 56 48;
+  --c-ink-muted: 122 112 96;
+  --c-ink-hint: 176 168 152;
+
+  /* Legacy aliases for raw CSS below */
+  --parchment: rgb(var(--c-parchment));
+  --parchment-light: rgb(var(--c-parchment-light));
+  --parchment-dark: rgb(var(--c-parchment-dark));
+  --parchment-deep: rgb(var(--c-parchment-deep));
+  --gold: rgb(var(--c-gold));
+  --gold-light: rgb(var(--c-gold-light));
+  --gold-dark: rgb(var(--c-gold-dark));
+  --ink: rgb(var(--c-ink));
+  --ink-soft: rgb(var(--c-ink-soft));
+  --ink-muted: rgb(var(--c-ink-muted));
+}
+
+/* Dark mode — an elegant, warm-charcoal inversion. Surfaces (parchment*)
+   become deep tones; content (ink*) becomes luminous; gold is brightened. */
+.dark {
+  --c-parchment: 28 25 21;        /* mid surface  #1C1915 */
+  --c-parchment-light: 18 16 13;  /* page base    #12100D */
+  --c-parchment-dark: 38 34 28;   /* raised panel #26221C */
+  --c-parchment-deep: 60 54 44;   /* hairline border #3C362C */
+  --c-gold: 206 170 86;
+  --c-gold-light: 224 192 124;
+  --c-gold-dark: 198 162 92;      /* brightened so gold-dark reads on dark */
+  --c-ink: 242 237 228;           /* primary text */
+  --c-ink-soft: 208 200 186;
+  --c-ink-muted: 150 140 124;
+  --c-ink-hint: 110 102 88;
+  color-scheme: dark;
+}
+
+/* ── Academy page — charcoal immersion (brief: #323A45 primary backdrop) ──
+   Scoped to the Academy page only, and only in dark mode, so the rest of the
+   site keeps its warm dark palette and light mode is untouched. The brief's
+   charcoal family (cool blue-grey) replaces the warm-charcoal tokens, and gold
+   shifts to the brighter champagne/amber that reads best on charcoal. */
+.dark .academy-page {
+  --c-parchment-light: 50 58 69;   /* page base    #323A45  ← primary backdrop */
+  --c-parchment:       58 67 79;   /* raised card  #3A434F */
+  --c-parchment-dark:  66 76 90;   /* lifted panel #424C5A */
+  --c-parchment-deep:  82 94 110;  /* hairline     #525E6E */
+  --c-gold:        237 192 113;    /* amber     #EDC071 — accents / CTAs */
+  --c-gold-light:  244 215 145;    /* champagne #F4D791 — highlights / hover */
+  --c-gold-dark:   224 181 102;    /* deep amber, still legible on charcoal */
+  --c-ink:        236 239 243;     /* primary text  #ECEFF3 */
+  --c-ink-soft:   199 205 214;
+  --c-ink-muted:  142 151 164;     /* cool slate muted */
+  --c-ink-hint:    92 102 117;
+}
+
+/* Hero is an always-deep band in both modes (it must not invert with the
+   theme). Warm ink in light mode; deep charcoal a shade below the page in
+   dark mode, so the page base lifts above it. */
+.academy-hero { background: #14110E; }
+.dark .academy-page .academy-hero { background: #272E37; }
+
+/* Soft amber light-pool behind the hero — barely-there depth, no clutter. */
+.academy-hero-glow {
+  background: radial-gradient(60% 80% at 50% 0%, rgba(237, 192, 113, 0.16), transparent 70%);
+}
+
+/* Whisper-fine vertical hairlines for the hero — adds texture in the
+   negative space without reading as a pattern. */
+.academy-hero-grid {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 119px,
+    rgba(244, 215, 145, 0.05) 119px,
+    rgba(244, 215, 145, 0.05) 120px
+  );
+}
+
+/* Fixed-black depth for academy cards — reads correctly on both parchment and
+   charcoal, where ink-based shadows would invert to a light halo in dark mode.
+   Defined as a plain utility (not a Tailwind theme key) so the soft depth is
+   independent of any build-time theme caching. Hover lifts the card. */
+.lux-card {
+  box-shadow: 0 1px 2px rgb(2 6 12 / 0.16), 0 18px 40px -22px rgb(2 6 12 / 0.45);
+  transition: box-shadow 300ms ease, transform 300ms ease, border-color 300ms ease;
+}
+.lux-card:hover,
+.group:hover .lux-card {
+  box-shadow: 0 3px 8px rgb(2 6 12 / 0.22), 0 30px 60px -24px rgb(2 6 12 / 0.6);
+}
+
+html, body {
+  background: rgb(var(--c-parchment-light));
+  color: rgb(var(--c-ink));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+html[lang='en'] body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 300;
+}
+html[lang='en'] .font-serif {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Persian — YekanBakh covers all roles, including display headings.
+   Cormorant Garamond is not used in fa locale. Tailwind .font-light (300)
+   is overridden to YekanBakh Regular (400), and display headings are
+   promoted to Fat (900) / Bold (700) per the type system. */
+html[lang='fa'] body,
+html[lang='fa'] .font-serif {
+  font-family: 'YekanBakh', system-ui, sans-serif;
+  letter-spacing: 0 !important;
+}
+
+html[lang='fa'] body { font-weight: 400; }
+
+/* Override Tailwind weight utilities for Persian readability */
+html[lang='fa'] .font-thin,
+html[lang='fa'] .font-extralight,
+html[lang='fa'] .font-light { font-weight: 400 !important; }
+
+/* Display headings — h1 / h2 with .font-serif → Fat */
+html[lang='fa'] h1.font-serif,
+html[lang='fa'] h2.font-serif { font-weight: 900 !important; }
+
+/* Section headings — h3 with .font-serif → Bold */
+html[lang='fa'] h3.font-serif,
+html[lang='fa'] h4.font-serif { font-weight: 700 !important; }
+
+/* Italic Cormorant pull-quotes — render upright YekanBakh Bold in Persian */
+html[lang='fa'] .font-serif.italic { font-style: normal; font-weight: 700; }
+
+html { scroll-behavior: smooth; }
+
+::selection {
+  background: var(--gold);
+  color: var(--parchment-light);
+}
+
+/* Subtle scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--parchment-light); }
+::-webkit-scrollbar-thumb { background: var(--parchment-deep); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+
+/* Page fade transition */
+.fade-enter-active,
+.fade-leave-active { transition: opacity 200ms ease; }
+.fade-enter-from,
+.fade-leave-to { opacity: 0; }
+
+/* Nav link */
+.nav-link {
+  @apply relative px-1 py-2 text-xs uppercase tracking-[0.2em] font-light text-ink-soft transition-colors hover:text-ink;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transition: transform 250ms ease;
+}
+.nav-link.router-link-active { color: var(--ink); }
+.nav-link.router-link-active::after { transform: scaleX(1); }
+
+/* Faint ink lines texture for dark hero — barely visible */
+.hero-ink-texture {
+  background-color: var(--ink);
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0px,
+    transparent 5px,
+    rgba(245, 240, 232, 0.018) 5px,
+    rgba(245, 240, 232, 0.018) 6px
+  );
+}
+
+/* Gold rule with fading mask */
+.gold-fade-rule {
+  height: 1px;
+  background: var(--gold);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
+}
+
+/* Marquee */
+.marquee { overflow: hidden; width: 100%; }
+.marquee-track {
+  display: flex;
+  gap: 4rem;
+  width: max-content;
+  animation: marquee 45s linear infinite;
+}
+html[dir='rtl'] .marquee-track { animation-direction: reverse; }
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Reveal-on-scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Floating-label input */
+.float-field {
+  position: relative;
+  padding-top: 1.25rem;
+}
+.float-field input,
+.float-field textarea,
+.float-field select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--parchment-deep);
+  padding: 0.5rem 0;
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 250ms ease;
+}
+html[lang='fa'] .float-field input,
+html[lang='fa'] .float-field textarea,
+html[lang='fa'] .float-field select {
+  font-family: 'YekanBakh', sans-serif;
+}
+.float-field input:focus,
+.float-field textarea:focus,
+.float-field select:focus {
+  border-bottom-color: var(--gold);
+}
+.float-field label {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 1.25rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-weight: 300;
+  pointer-events: none;
+  transition: transform 200ms ease, color 200ms ease, font-size 200ms ease;
+  transform-origin: inset-inline-start top;
+}
+.float-field.is-active label,
+.float-field input:focus + label,
+.float-field textarea:focus + label,
+.float-field select:focus + label {
+  transform: translateY(-1.25rem);
+  font-size: 0.65rem;
+  color: var(--gold-dark);
+}
+html[lang='fa'] .float-field label {
+  letter-spacing: 0;
+}
+
+/* Ghost gold button */
+.btn-ghost-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  transition: background 250ms ease, color 250ms ease;
+  cursor: pointer;
+}
+.btn-ghost-gold:hover {
+  background: var(--gold);
+  color: var(--parchment-light);
+}
+html[lang='fa'] .btn-ghost-gold {
+  letter-spacing: 0;
+  text-transform: none;
+  font-family: 'YekanBakh', sans-serif;
+}
+
+/* Timeline rail */
+.timeline-rail {
+  position: relative;
+  padding-inline-start: 1.75rem;
+}
+.timeline-rail::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--ink-soft);
+  opacity: 0.5;
+}
+.timeline-dot {
+  position: absolute;
+  inset-inline-start: -4px;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--parchment-light);
+  border: 1px solid var(--gold);
+}

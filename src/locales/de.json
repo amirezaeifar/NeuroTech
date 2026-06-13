@@ -1,0 +1,908 @@
+{
+  "brand": "Neuro Tech",
+  "tagline": "Neurologie, mit Sorgfalt",
+  "nav": {
+    "home": "Start",
+    "academy": "Akademie",
+    "events": "Veranstaltungen",
+    "products": "Produkte",
+    "globalTrade": "Welthandel",
+    "partners": "Partner",
+    "agencies": "Vertretungen",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "admin": "Lehrer-Bereich"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Biomedizintechnik — gegründet 2010",
+      "titleA": "Präzision in der",
+      "titleEm": "Neurologie",
+      "titleB": "für eine vernetzte Welt",
+      "subline": "Wir importieren, exportieren und liefern sorgfältig ausgewählte Neurologiegeräte an Krankenhäuser, Kliniken und Forschungsinstitute — in Partnerschaft mit führenden Herstellern.",
+      "cta": "Portfolio entdecken"
+    },
+    "stats": [
+      {
+        "value": "15",
+        "label": "Jahre Erfahrung"
+      },
+      {
+        "value": "30+",
+        "label": "Vertretene Geräte"
+      },
+      {
+        "value": "10",
+        "label": "Partnerländer"
+      },
+      {
+        "value": "200+",
+        "label": "Betreute Einrichtungen"
+      }
+    ],
+    "expertise": {
+      "eyebrow": "Unsere Expertise",
+      "title": "Drei Disziplinen, ein Standard",
+      "items": [
+        {
+          "title": "Akademischer Inhalt & Lernsystem",
+          "desc": "Strukturierte Lehrpläne, Bewertungen und Fortschrittsverfolgung für Kliniker und Lernende gleichermaßen."
+        },
+        {
+          "title": "Vertrieb von Neurologiegeräten",
+          "desc": "EEG-, EMG-, Neurostimulations- und Überwachungssysteme von akkreditierten Herstellern."
+        },
+        {
+          "title": "Medizinischer Import & Export",
+          "desc": "Vollständige Abwicklung von Zulassung, Zoll und Logistik im grenzüberschreitenden Handel mit Medizingeräten."
+        },
+        {
+          "title": "Globale Partnerschaften",
+          "desc": "Exklusive Vertretungen und langfristige Vertriebsvereinbarungen auf vier Kontinenten."
+        }
+      ]
+    },
+    "partners": "Vertrauensvoll begleitet von",
+    "finalCta": {
+      "title": "Ein ruhiges Gespräch, vielleicht.",
+      "italic": "Beginnen wir es.",
+      "button": "Schreiben Sie uns"
+    }
+  },
+  "products": {
+    "hero": {
+      "eyebrow": "Maison-Katalog",
+      "title": "Die Kollektion"
+    },
+    "intro": "Ein wohlüberlegtes Portfolio an Neurologiegeräten, ausgewählt nach klinischem Wert und ingenieurtechnischer Integrität.",
+    "filters": {
+      "all": "Alle",
+      "eeg": "Elektroenzephalographie",
+      "emg": "Elektromyographie",
+      "neurostim": "Neurostimulation",
+      "monitoring": "Überwachung"
+    },
+    "inquire": "Anfragen",
+    "items": [
+      {
+        "name": "Aurelis EEG 32",
+        "category": "eeg",
+        "desc": "Zweiunddreißigkanalige digitale Elektroenzephalographie mit Cloud-Berichten."
+      },
+      {
+        "name": "Cortica Portable",
+        "category": "eeg",
+        "desc": "Ambulantes EEG-Headset für Ferndiagnostik und Langzeitstudien."
+      },
+      {
+        "name": "Sentier EMG 8",
+        "category": "emg",
+        "desc": "Achtkanaliges EMG- und Nervenleitungssystem, Oberflächen- und Nadelelektroden."
+      },
+      {
+        "name": "Ligne Nerve EX",
+        "category": "emg",
+        "desc": "Kompaktes Elektromyografiegerät für Rehabilitation und Sportmedizin."
+      },
+      {
+        "name": "Profond DBS-200",
+        "category": "neurostim",
+        "desc": "Implantierbarer Tiefenhirnstimulator mit programmierbarer Wellenformbibliothek."
+      },
+      {
+        "name": "Vagus Murmure",
+        "category": "neurostim",
+        "desc": "Nicht-invasiver Vagusnervstimulator für chronische Erkrankungen."
+      },
+      {
+        "name": "TMS Atelier",
+        "category": "neurostim",
+        "desc": "System für repetitive transkranielle Magnetstimulation in der klinischen Forschung."
+      },
+      {
+        "name": "ICP Sentinelle",
+        "category": "monitoring",
+        "desc": "Kontinuierliche Hirndrucküberwachung für Chirurgie und Intensivmedizin."
+      },
+      {
+        "name": "Somno 360",
+        "category": "monitoring",
+        "desc": "Polysomnographie-Suite für die spezialisierte Schlafneurologie."
+      }
+    ]
+  },
+  "academy": {
+    "hero": {
+      "eyebrow": "Neuro Tech Akademie",
+      "title": "Lernen von denen, die es täglich anwenden"
+    },
+    "intro": "Eine wohlüberlegte Bibliothek mit Neurologiekursen — Anatomie, Diagnostik und Gerätetechnik —, vermittelt von praktizierenden Klinikern und Ingenieuren.",
+    "tiers": {
+      "free": {
+        "name": "Kostenlos",
+        "desc": "Wissen ist ein gemeinsames Gut. Unser kostenloses Angebot macht grundlegende medizinische Bildung für jeden Kliniker zugänglich — offene Vorlesungen, Kernanatomie und einführende Walkthroughs, ohne jede Hürde.",
+        "cta": "Jetzt lernen"
+      },
+      "premium": {
+        "name": "Premium",
+        "desc": "Für Kliniker, die Tiefe fordern. Unsere Premium-Kurse sind hochspezialisierte, von Experten geleitete klinische Vertiefungen — intensive Module zu fortgeschrittenen Techniken, seltenen Präsentationen und modernsten Protokollen, die dedizierte Unterstützung für unsere Lehrenden erfordern.",
+        "cta": "Premium-Kurse entdecken",
+        "badge": "Abonnement erforderlich"
+      }
+    },
+    "filterTitle": "Bibliothek durchsuchen",
+    "filters": {
+      "all": "Alle Kurse",
+      "free": "Kostenlos",
+      "premium": "Premium"
+    },
+    "courses": [
+      {
+        "title": "Grundlagen des klinischen EEG",
+        "instructor": "Dr. N. Farahani",
+        "level": "Einsteiger",
+        "duration": "6 Lektionen · 3 Std. 20 Min.",
+        "tier": "free",
+        "desc": "Die Kurve lesen: Montagen, Artefakte und der normale Erwachsenenbefund.",
+        "field": "neurology"
+      },
+      {
+        "title": "EMG & Nervenleitung in der Praxis",
+        "instructor": "Dr. S. Moradi",
+        "level": "Mittelstufe",
+        "duration": "9 Lektionen · 5 Std. 10 Min.",
+        "tier": "premium",
+        "desc": "Nadeltechnik, Wellenforminterpretation und Berichtsstandards.",
+        "field": "general"
+      },
+      {
+        "title": "Programmierung von Tiefenhirnstimulatoren",
+        "instructor": "Dr. A. Karimi",
+        "level": "Fortgeschritten",
+        "duration": "8 Lektionen · 4 Std. 45 Min.",
+        "tier": "premium",
+        "desc": "Geräteparameter, Wellenformbibliotheken und Titrationsprotokolle für Patienten.",
+        "field": "neurology"
+      },
+      {
+        "title": "Einführung in die Neurostimulation",
+        "instructor": "Ing. R. Tabrizi",
+        "level": "Einsteiger",
+        "duration": "5 Lektionen · 2 Std. 40 Min.",
+        "tier": "free",
+        "desc": "TMS, VNS und die Prinzipien hinter der nicht-invasiven Stimulationstherapie.",
+        "field": "general"
+      },
+      {
+        "title": "Polysomnographie & Schlafberichte",
+        "instructor": "Dr. L. Hashemi",
+        "level": "Mittelstufe",
+        "duration": "7 Lektionen · 4 Std. 05 Min.",
+        "tier": "premium",
+        "desc": "Montageaufbau, Auswertungskonventionen und der Aufbau des Schlafberichts.",
+        "field": "psychEmergency"
+      },
+      {
+        "title": "Hirndrucküberwachung",
+        "instructor": "Dr. M. Saadat",
+        "level": "Fortgeschritten",
+        "duration": "6 Lektionen · 3 Std. 30 Min.",
+        "tier": "premium",
+        "desc": "Indikationen, Wellenformanalyse und Eskalationswege in der Intensivmedizin.",
+        "field": "psychEmergency"
+      }
+    ],
+    "player": {
+      "eyebrow": "Läuft gerade",
+      "title": "Grundlagen des klinischen EEG — Lektion 01: Die Kurve lesen",
+      "instructor": "Dr. N. Farahani · Grundlagen des klinischen EEG",
+      "locked": "Diese Lektion gehört zur Premium-Stufe. Abonnieren Sie, um fortzufahren.",
+      "subscribeCta": "Mit Premium freischalten",
+      "progress": "Lektion 1 von 6"
+    },
+    "comments": {
+      "title": "Diskussion",
+      "subtitle": "Fragen und Anmerkungen anderer Lernender — vor Veröffentlichung von der Lehrkraft geprüft.",
+      "placeholder": "Teilen Sie eine Frage oder Beobachtung…",
+      "submit": "Veröffentlichen",
+      "pendingNotice": "Ihr Kommentar erscheint, sobald eine Lehrkraft ihn freigegeben hat.",
+      "list": [
+        {
+          "name": "P. Ahmadi",
+          "time": "vor 2 Tagen",
+          "body": "Könnten Sie den Unterschied zwischen gutartigen Varianten und echten epileptiformen Entladungen bei Minute 14 erläutern?"
+        },
+        {
+          "name": "R. Soleimani",
+          "time": "vor 5 Tagen",
+          "body": "Hervorragende Erklärung der Montageauswahl — der Vergleich bipolar/referenziell ist mir endlich klar."
+        },
+        {
+          "name": "F. Karbasi",
+          "time": "vor 1 Woche",
+          "body": "Eine Folgelektion zu normalen EEG-Varianten bei Kindern wäre wunderbar."
+        }
+      ]
+    },
+    "fields": {
+      "all": "Alle Fachbereiche",
+      "psychEmergency": "Psychiatrischer Notfall",
+      "neurology": "Neurologie",
+      "general": "Allgemein"
+    },
+    "courseDetail": {
+      "eyebrow": "Kurs",
+      "back": "Zurück zur Akademie",
+      "infoTitle": "Kursinformationen",
+      "instructorLabel": "Dozent",
+      "levelLabel": "Niveau",
+      "durationLabel": "Dauer",
+      "fieldLabel": "Fachbereich",
+      "tierLabel": "Zugang",
+      "syllabusTitle": "Lehrplan",
+      "lesson": "Lektion",
+      "progressTitle": "Ihr Fortschritt",
+      "progressLabel": "Lektionen abgeschlossen",
+      "videosTitle": "Kursvideos",
+      "play": "Abspielen",
+      "locked": "Gesperrt",
+      "lockedNotice": "Dieses Video gehört zur Premium-Stufe.",
+      "subscribeCta": "Zum Freischalten abonnieren",
+      "relatedTitle": "Bibliothek durchsuchen",
+      "relatedSubtitle": "Weitere Kurse aus der Sammlung der Akademie.",
+      "descriptionTitle": "Kursbeschreibung"
+    }
+  },
+  "events": {
+    "hero": {
+      "eyebrow": "Kalender",
+      "title": "Veranstaltungen & Sitzungen"
+    },
+    "intro": "Live übertragene klinische Sitzungen und Präsenzseminare — gesammelt in einem Kalender, ergänzt durch ein Archiv vergangener Veranstaltungen.",
+    "tabs": {
+      "online": "Online",
+      "onsite": "Vor Ort"
+    },
+    "online": {
+      "title": "Live übertragene Operationen & Behandlungen",
+      "desc": "Verfolgen Sie Eingriffe und Fallbesprechungen, live aus Partnerkliniken übertragen, mit Echtzeitkommentar des operierenden Spezialisten.",
+      "items": [
+        {
+          "title": "Live-DBS-Implantation — Fallbesprechung",
+          "host": "Dr. A. Karimi · Neurologisches Institut Teheran",
+          "date": "18. Juni 2026 · 17:00 (GMT+3:30)",
+          "tag": "Operationsübertragung",
+          "status": "Bevorstehend"
+        },
+        {
+          "title": "Podiumsdiskussion: Patientenauswahl für Vagusnervstimulation",
+          "host": "Dr. S. Moradi und Gäste",
+          "date": "27. Juni 2026 · 18:30 (GMT+3:30)",
+          "tag": "Podiumsdiskussion",
+          "status": "Bevorstehend"
+        },
+        {
+          "title": "EEG-Lese-Klinik — Live-Fallübertragung",
+          "host": "Dr. N. Farahani",
+          "date": "4. Juli 2026 · 16:00 (GMT+3:30)",
+          "tag": "Lehrklinik",
+          "status": "Anmeldung offen"
+        }
+      ],
+      "watch": "Platz reservieren"
+    },
+    "onsite": {
+      "title": "Präsenzseminare & Workshops",
+      "desc": "Praxisorientierte Sitzungen in Partnerinstituten und -kliniken — Geräte-Workshops, Anatomielabore und Standard-Briefings.",
+      "items": [
+        {
+          "title": "Praxis-Workshop: Neurostimulationsgeräte",
+          "venue": "Neurologisches Institut Teheran, Saal B",
+          "date": "22.–23. Juni 2026",
+          "tag": "Workshop",
+          "status": "Plätze begrenzt"
+        },
+        {
+          "title": "Regulatorische Standards für medizinischen Import & Export",
+          "venue": "Neuro Tech Studio, Valiasr-Allee",
+          "date": "5. Juli 2026",
+          "tag": "Briefing",
+          "status": "Anmeldung offen"
+        },
+        {
+          "title": "Jahresseminar für klinische Neurophysiologie",
+          "venue": "Milad-Konferenzzentrum",
+          "date": "14.–15. September 2026",
+          "tag": "Seminar",
+          "status": "Termin vormerken"
+        }
+      ],
+      "register": "Interesse anmelden"
+    },
+    "archive": {
+      "title": "Archiv",
+      "subtitle": "Eine Aufzeichnung von Sitzungen, Seminaren und den daraus entstandenen Texten.",
+      "types": {
+        "image": "Galerie",
+        "document": "Dokument",
+        "blog": "Rückblick"
+      },
+      "items": [
+        {
+          "type": "image",
+          "title": "EEG-Lese-Klinik — Frühjahrskohorte",
+          "date": "März 2026",
+          "summary": "Fotos einer dreitägigen Lehrklinik mit Assistenzärzten aus vier Partnerkliniken."
+        },
+        {
+          "type": "document",
+          "title": "Regulatorisches Briefing: Zollhandbuch 2026",
+          "date": "Februar 2026",
+          "summary": "Folien und Referenzhandbuch, verteilt beim Briefing zu Import-/Exportstandards."
+        },
+        {
+          "type": "blog",
+          "title": "Notizen von der DBS-Programmier-Podiumsdiskussion",
+          "date": "Dezember 2025",
+          "summary": "Ein Rückblick auf die Diskussion über Titrationsprotokolle und Langzeitnachsorge."
+        },
+        {
+          "type": "image",
+          "title": "Jahresseminar 2025 — Galerie",
+          "date": "September 2025",
+          "summary": "Höhepunkte aus zwei Tagen mit Vorträgen, Workshops und der Partnerausstellung."
+        }
+      ],
+      "viewDetail": "Details ansehen"
+    },
+    "pastDetail": {
+      "eyebrow": "Archiv",
+      "back": "Zurück zum Archiv",
+      "overview": "Diese Veranstaltung vereinte über sechzig Kliniker aus Neurologie, Neurophysiologie, Notfallmedizin und Intensivmedizin für einen strukturierten Tag mit Expertenvorträgen und fallbasierten Workshops. Das Programm konzentrierte sich auf das praktische Management komplexer neurologischer Notfälle, mit besonderem Augenmerk auf die Evidenzlage für aktuelle Behandlungsprotokolle und klinische Situationen, in denen diese Evidenz fehlt oder umstritten ist. Die Diskussionen spiegelten die diagnostische Unsicherheit wider, die den klinischen Alltag an der Schnittstelle von Neurologie und Intensivmedizin prägt.",
+      "galleryTitle": "Galerie",
+      "relatedTitle": "Verwandte Materialien",
+      "blogsLabel": "Verwandter Beitrag",
+      "documentsLabel": "Klinisches Dokument",
+      "infoLabel": "Veranstaltungsinformation",
+      "infoBody": "Für vollständige Sitzungsaufzeichnungen, Transkripte oder ergänzende Unterlagen schreiben Sie bitte an das Atelier — Referenzen werden individuell mit Akademiemitgliedern geteilt."
+    },
+    "reservation": {
+      "eyebrow": "Reservierung",
+      "title": "Sichern Sie sich Ihren Platz",
+      "intro": "Füllen Sie das untenstehende Formular aus, um Ihren Platz bei dieser Sitzung zu sichern. Eine Bestätigung wird Ihnen kurz nach dem Absenden per E-Mail zugesandt.",
+      "eventDesc": "Diese Veranstaltung bringt Neurologen, Neurophysiologen und klinische Teams zu einem fokussierten Halbtagsprogramm mit Expertenvorträgen und strukturierter Diskussion zusammen. Das Format ist auf die direkte klinische Anwendung ausgerichtet: Jeder Vortrag basiert auf echtem Fallmaterial, gefolgt von einer Fragerunde.\n\nDer Morgenblock behandelt die akute Beurteilung des neurologisch verschlechterten Patienten — Erstanfälle in der Notaufnahme, das Management des konvulsiven und nonkonvulsiven Status epilepticus sowie einen Handlungsrahmen bei akuter Enzephalopathie. Der Nachmittag widmet sich prozeduralen Themen: EEG-Monitoring auf der Intensivstation, Interpretation des Kontinuums-EEG und eine Workshop-Sequenz mit anspruchsvollen Ableitungen.\n\nAlle Teilnehmer erhalten eine Woche vor dem Termin ein Vorbereitungspaket, eine Programmzusammenfassung vor Ort und Zugang zu den Folien innerhalb von 72 Stunden. Teilnahmebestätigungen werden automatisch per E-Mail versandt. Platzzahl begrenzt.",
+      "summaryTitle": "Sitzung",
+      "formTitle": "Ihre Angaben",
+      "fields": {
+        "name": "Vollständiger Name",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "seats": "Anzahl der Plätze",
+        "notes": "Anmerkungen (optional)"
+      },
+      "submit": "Reservierung bestätigen",
+      "success": "Ihre Reservierung ist eingegangen. Eine Bestätigung folgt per E-Mail.",
+      "backCta": "Zurück zu Veranstaltungen"
+    }
+  },
+  "globalTrade": {
+    "hero": {
+      "eyebrow": "Netzwerk & Handel",
+      "title": "Welthandel"
+    },
+    "intro": "Durch wohlüberlegte, langfristige Partnerschaften verbinden wir akkreditierte Hersteller mit Krankenhäusern, Kliniken und Forschungsinstituten — und bewegen Neurologiegeräte mit Sorgfalt über Grenzen hinweg.",
+    "regionsTitle": "Tätigkeitsregionen",
+    "regions": [
+      {
+        "name": "Europa",
+        "countries": [
+          "Deutschland",
+          "Italien",
+          "Frankreich",
+          "Niederlande"
+        ],
+        "note": "Langjährige Partnerschaften mit EU-zertifizierten Herstellern."
+      },
+      {
+        "name": "Naher Osten",
+        "countries": [
+          "Vereinigte Arabische Emirate",
+          "Saudi-Arabien",
+          "Katar",
+          "Iran"
+        ],
+        "note": "Regionales Studio und schnelles Logistiknetz."
+      },
+      {
+        "name": "Asien",
+        "countries": [
+          "Japan",
+          "Südkorea",
+          "Singapur",
+          "Indien"
+        ],
+        "note": "Beschaffung von den führenden Medizintechnik-Ateliers Asiens."
+      },
+      {
+        "name": "Amerika",
+        "countries": [
+          "Vereinigte Staaten",
+          "Kanada",
+          "Brasilien"
+        ],
+        "note": "Ausgewählte Vertriebs- und Importabkommen."
+      }
+    ],
+    "importExport": {
+      "eyebrow": "Kompetenz",
+      "title": "Import & Export, mit Sorgfalt abgewickelt",
+      "intro": "Vom Hersteller bis zur Klinik — wir verwalten die gesamte Sorgfaltskette für sensible Neurologiegeräte.",
+      "import": {
+        "title": "Import",
+        "desc": "Lizenzierter Import von Neurologiegeräten in regionale Märkte, einschließlich Registrierung, Zollabfertigung und klinischer Übergabe.",
+        "items": [
+          "Behördliche Registrierung & Lizenzierung",
+          "Zollabfertigung und Lagerlogistik",
+          "Handhabung von Kühlketten und sensiblen Geräten",
+          "Klinische Installation und Personalschulung"
+        ]
+      },
+      "export": {
+        "title": "Export",
+        "desc": "Exportbereitschaft für Hersteller, die Vertretung und Vertrieb in unseren Partnerregionen suchen.",
+        "items": [
+          "Marktanalyse und Markteintrittsstrategie",
+          "Unterstützung bei Dokumentation, Zertifizierung und Kennzeichnung",
+          "Spedition und versicherter Transit",
+          "Koordination des Kundendienstnetzes"
+        ]
+      }
+    },
+    "become": {
+      "title": "Vertretung werden",
+      "italic": "Eine Einladung, kein Vertrag.",
+      "items": [
+        "Etablierte Präsenz in der Medizintechnikbranche",
+        "Fähigkeit, regulatorische Aufgaben und Kundendienst zu übernehmen",
+        "Ein wohlüberlegtes Netzwerk aus Krankenhäusern und klinischen Einkäufern",
+        "Verbindlichkeit zu einer langfristigen, exklusiven Beziehung"
+      ],
+      "cta": "Dialog beginnen"
+    },
+    "caseStudies": {
+      "eyebrow": "Erfolgsbilanz",
+      "title": "Fallstudien & Handelsberichte",
+      "subtitle": "Ausgewählte Import- und Exportprojekte mit Partnerherstellern, Krankenhäusern und Forschungsinstituten.",
+      "viewReport": "Bericht ansehen",
+      "items": [
+        {
+          "company": "NeuroSpan GmbH",
+          "country": "Deutschland",
+          "type": "import",
+          "category": "EEG-Systeme",
+          "title": "Einführung von 32-Kanal-EEGs — Modernisierung des Krankenhausnetzwerks",
+          "summary": "Koordination von Import, Zollabfertigung und klinischer Installation von achtzehn digitalen EEG-Systemen in sechs Partnerkrankenhäusern, einschließlich Personalschulung und einem zwölfmonatigen Servicevertrag.",
+          "year": "2025",
+          "volume": "18 Einheiten · 620.000 €",
+          "outcome": "Verringerung des Diagnosestaus um etwa 40 % im ersten Quartal nach vollständiger Inbetriebnahme sowie Aufbau eines regionalen Servicezentrums für die laufende Wartung."
+        },
+        {
+          "company": "Atlas Neurodevices Inc.",
+          "country": "Vereinigte Staaten",
+          "type": "export",
+          "category": "Neurostimulation",
+          "title": "Vertretungsvereinbarung — Produktreihe der Vagusnervstimulatoren",
+          "summary": "Sicherung exklusiver regionaler Vertriebsrechte für eine nicht-invasive Vagusnervstimulationsplattform, einschließlich behördlicher Registrierung und eines mehrstufigen klinischen Schulungsprogramms für Partnerneurologen.",
+          "year": "2024",
+          "volume": "Vertriebsvereinbarung · Laufzeit 5 Jahre",
+          "outcome": "Die Plattform ist nun in elf Kliniken in drei Ländern aktiv und wird von einem eigenen Kundendienstnetz unterstützt."
+        },
+        {
+          "company": "SilkRoad Medtech",
+          "country": "Südkorea",
+          "type": "import",
+          "category": "Intrakranielle Überwachung",
+          "title": "ICU-Überwachungssuite — Erweiterung der Intensivpflege",
+          "summary": "Durchgängige Verwaltung des Imports von Suiten zur Überwachung des intrakraniellen Drucks für drei Intensivstationen, einschließlich Kühlkettenlogistik, Zollabfertigung und klinischer Übergabe.",
+          "year": "2025",
+          "volume": "9 Einheiten · 410.000 €",
+          "outcome": "Erstmals kontinuierliche ICP-Überwachung in zwei Städten ermöglicht, wodurch die Entscheidungszeit in kritischen Fällen verkürzt wurde."
+        },
+        {
+          "company": "Cedar Biomedical",
+          "country": "Kanada",
+          "type": "export",
+          "category": "EMG-Systeme",
+          "title": "Exportbereitschaftsprogramm — Kompakte EMG-Geräte",
+          "summary": "Begleitung eines Herstellers durch Marktbewertung, Dokumentation, Zertifizierung und Frachtorganisation für den Eintritt in nahöstliche Vertriebskanäle.",
+          "year": "2023",
+          "volume": "Markteintrittsprogramm · 14 Monate",
+          "outcome": "Erster regionaler Verkauf fünf Monate nach der Zertifizierung erzielt; mittlerweile besteht eine feste vierteljährliche Bestellung."
+        }
+      ]
+    },
+    "tradeDetail": {
+      "eyebrow": "Fallstudie",
+      "back": "Zurück zu Globaler Handel",
+      "overviewTitle": "Überblick",
+      "detailsTitle": "Details der Zusammenarbeit",
+      "partnerLabel": "Partner",
+      "countryLabel": "Land",
+      "categoryLabel": "Kategorie",
+      "typeLabel": "Art der Zusammenarbeit",
+      "yearLabel": "Jahr",
+      "volumeLabel": "Volumen",
+      "outcomeTitle": "Ergebnis",
+      "import": "Import",
+      "export": "Export"
+    }
+  },
+  "partners": {
+    "hero": {
+      "eyebrow": "Vertrauensvoll begleitet von",
+      "title": "Partner"
+    },
+    "intro": "Die Kliniker, Lehrenden und Kreativen, die ihre Expertise in unsere Geräte, Kurse und Gemeinschaft einbringen.",
+    "people": [
+      {
+        "name": "Dr. A. Karimi",
+        "qualification": "Dr. med., Funktionelle Neurochirurgie — Universität für Medizinische Wissenschaften Teheran",
+        "councilNumber": "IR-NS-10342",
+        "collaborations": [
+          "Beirat für Geräte",
+          "Leiter Chirurgie-Workshop"
+        ],
+        "bio": "Leitet Programme zur Tiefenhirnstimulation am Neurologischen Institut Teheran; berät bei Geräteauswahl und chirurgischen Abläufen."
+      },
+      {
+        "name": "Dr. S. Moradi",
+        "qualification": "Dr. med., Klinische Neurophysiologie — Shahid-Beheshti-Universität für Medizinische Wissenschaften",
+        "councilNumber": "IR-NP-20567",
+        "collaborations": [
+          "Kursleiter",
+          "Berater für Gerätevalidierung"
+        ],
+        "bio": "Spezialist für EMG- und Nervenleitungsdiagnostik; arbeitet an Gerätevalidierung und klinischer Schulung mit."
+      },
+      {
+        "name": "Dr. N. Farahani",
+        "qualification": "Dr. med., Epileptologie und EEG — Universität für Medizinische Wissenschaften Täbris",
+        "councilNumber": "IR-EP-30781",
+        "collaborations": [
+          "Kursleiterin",
+          "Leiterin der Live-Lese-Klinik"
+        ],
+        "bio": "Unterrichtet den Kurs „Grundlagen der klinischen EEG“ und leitet die Live-Lese-Kliniken der Akademie."
+      },
+      {
+        "name": "Dr. L. Hashemi",
+        "qualification": "Dr. med., Schlafmedizin — Universität für Medizinische Wissenschaften Isfahan",
+        "councilNumber": "IR-SM-40219",
+        "collaborations": [
+          "Kursleiterin",
+          "Lehrplan-Gutachterin"
+        ],
+        "bio": "Entwirft Polysomnographie-Lehrpläne und prüft Premium-Kursinhalte vor der Veröffentlichung."
+      },
+      {
+        "name": "Dr. M. Saadat",
+        "qualification": "Dr. med., Intensivmedizin und Status epilepticus — Neurologisches Institut Teheran",
+        "councilNumber": "IR-CC-50934",
+        "collaborations": [
+          "Berater für Status epilepticus",
+          "Leiter klinische Dokumentation"
+        ],
+        "bio": "Berät zu Eskalationsprotokollen in der Intensivpflege und erstellt Fallstudieninhalte für das Veranstaltungsarchiv und die Akademiebibliothek."
+      },
+      {
+        "name": "Ing. R. Tabrizi",
+        "qualification": "M.Sc. Biomedizinische Technik — Sharif-Universität für Technologie",
+        "councilNumber": "—",
+        "collaborations": [
+          "Kursleiter",
+          "Entwickler von Gerätetechnik-Modulen"
+        ],
+        "bio": "Entwickelt Module zur Gerätetechnik, die ingenieurwissenschaftliche Prinzipien mit klinischer Anwendung verbinden."
+      },
+      {
+        "name": "F. Karbasi",
+        "qualification": "B.A. Bildende Kunst, Medizinische Illustration — Kunstuniversität Teheran",
+        "councilNumber": "—",
+        "collaborations": [
+          "Medizinische Illustratorin",
+          "Gestalterin von Seminarmaterialien"
+        ],
+        "bio": "Erstellt anatomische und prozedurale Illustrationen für Kurse und Seminarmaterialien."
+      }
+    ],
+    "cta": {
+      "title": "Mit uns zusammenarbeiten",
+      "desc": "Wir freuen uns über Gespräche mit Klinikern, Lehrenden und Kreativen, die unseren Anspruch an Sorgfalt teilen.",
+      "button": "Stellen Sie sich vor"
+    },
+    "labels": {
+      "qualification": "Akademische Qualifikation",
+      "council": "Ärztekammer-Nummer",
+      "collaborations": "Bereiche der Zusammenarbeit"
+    }
+  },
+  "admin": {
+    "hero": {
+      "eyebrow": "Akademie",
+      "title": "Lehrer-Bereich"
+    },
+    "intro": "Prüfen Sie ausstehende Diskussionsbeiträge vor der Veröffentlichung und halten Sie die lebendigen Inhalte der Website aktuell.",
+    "nav": {
+      "moderation": "Kommentarprüfung",
+      "content": "Website-Inhalte"
+    },
+    "moderation": {
+      "title": "Ausstehende Kommentare",
+      "subtitle": "Neue Diskussionsbeiträge warten hier, bis eine Lehrkraft sie freigibt oder ablehnt.",
+      "approve": "Freigeben",
+      "reject": "Ablehnen",
+      "empty": "Keine Kommentare zur Prüfung ausstehend.",
+      "queue": [
+        {
+          "name": "P. Ahmadi",
+          "course": "Grundlagen des klinischen EEG",
+          "time": "vor 2 Stunden",
+          "body": "Könnten Sie den Unterschied zwischen gutartigen Varianten und echten epileptiformen Entladungen bei Minute 14 erläutern?"
+        },
+        {
+          "name": "H. Yazdani",
+          "course": "Programmierung von Tiefenhirnstimulatoren",
+          "time": "vor 6 Stunden",
+          "body": "Gilt das Titrationsprotokoll aus Lektion vier auch für bilaterale Implantate?"
+        },
+        {
+          "name": "G. Pourian",
+          "course": "EMG & Nervenleitung in der Praxis",
+          "time": "vor 1 Tag",
+          "body": "Die Demonstration der Nadeltechnik war sehr klar — könnten wir eine herunterladbare Checkliste bekommen?"
+        }
+      ],
+      "approved": "Freigegeben — jetzt unter der Lektion sichtbar.",
+      "rejected": "Abgelehnt — für Lernende ausgeblendet."
+    },
+    "content": {
+      "title": "Dynamische Inhalte verwalten",
+      "subtitle": "Aktualisieren Sie die Texte der öffentlichen Website. Änderungen werden vor der Veröffentlichung zur Prüfung vorgelegt.",
+      "sections": {
+        "announcement": "Ankündigungsbanner der Website",
+        "course": "Kursliste",
+        "event": "Veranstaltungsliste"
+      },
+      "fields": {
+        "title": "Titel",
+        "summary": "Zusammenfassung",
+        "body": "Inhalt",
+        "date": "Datum",
+        "tier": "Zugriffsstufe",
+        "save": "Entwurf speichern",
+        "publish": "Veröffentlichen"
+      },
+      "saved": "Entwurf gespeichert. Wartet auf Veröffentlichung."
+    }
+  },
+  "agencies": {
+    "hero": {
+      "eyebrow": "Netzwerk",
+      "title": "Vertretungen & Partnerschaften"
+    },
+    "intro": "Durch wohlüberlegte, langfristige Partnerschaften verbinden wir akkreditierte Hersteller mit Krankenhäusern, Kliniken und Forschungsinstituten auf vier Kontinenten.",
+    "regionsTitle": "Tätigkeitsregionen",
+    "regions": [
+      {
+        "name": "Europa",
+        "countries": [
+          "Deutschland",
+          "Italien",
+          "Frankreich",
+          "Niederlande"
+        ],
+        "note": "Langjährige Partnerschaften mit EU-zertifizierten Herstellern."
+      },
+      {
+        "name": "Naher Osten",
+        "countries": [
+          "Vereinigte Arabische Emirate",
+          "Saudi-Arabien",
+          "Katar",
+          "Iran"
+        ],
+        "note": "Regionales Studio und schnelles Logistiknetz."
+      },
+      {
+        "name": "Asien",
+        "countries": [
+          "Japan",
+          "Südkorea",
+          "Singapur",
+          "Indien"
+        ],
+        "note": "Beschaffung von den führenden Medizintechnik-Ateliers Asiens."
+      },
+      {
+        "name": "Amerika",
+        "countries": [
+          "Vereinigte Staaten",
+          "Kanada",
+          "Brasilien"
+        ],
+        "note": "Ausgewählte Vertriebs- und Importabkommen."
+      }
+    ],
+    "become": {
+      "title": "Vertretung werden",
+      "italic": "Eine Einladung, kein Vertrag.",
+      "items": [
+        "Etablierte Präsenz in der Medizintechnikbranche",
+        "Fähigkeit, regulatorische Aufgaben und Kundendienst zu übernehmen",
+        "Ein wohlüberlegtes Netzwerk aus Krankenhäusern und klinischen Einkäufern",
+        "Verbindlichkeit zu einer langfristigen, exklusiven Beziehung"
+      ],
+      "cta": "Dialog beginnen"
+    }
+  },
+  "about": {
+    "hero": {
+      "eyebrow": "Maison",
+      "title": "Über Neuro Tech"
+    },
+    "pullquote": "— ein Erbe der Präzision, eine Zukunft der Partnerschaft —",
+    "story": {
+      "eyebrow": "Unsere Geschichte",
+      "title": "Auf Ingenieurskunst gegründet, von Sorgfalt geprägt",
+      "body": "Gegründet von Biomedizintechnikern mit tiefer klinischer Erfahrung, begann Neuro Tech als spezialisierter Neurologie-Importeur und ist langsam und bewusst zu einem globalen Anbieter, einer Akademie und einem Vertretungspartner herangewachsen — präsent in Forschungsinstituten, Krankenhäusern und Kliniken auf vier Kontinenten."
+    },
+    "mission": {
+      "title": "Mission",
+      "desc": "Klinikern weltweit erstklassige Neurologiegeräte und -ausbildung zugänglich zu machen, durch verlässliche Beschaffung und kompromisslosen Service."
+    },
+    "vision": {
+      "title": "Vision",
+      "desc": "Ein weltweiter Standard neurologischer Versorgung, getragen von wohlüberlegten Partnerschaften zwischen Herstellern, Vertrieben, Lehrenden und Klinikern."
+    },
+    "teamTitle": "Das Atelier",
+    "team": [
+      {
+        "initials": "AR",
+        "name": "Dr. A. Rahimi",
+        "role": "Gründer & Direktor"
+      },
+      {
+        "initials": "MS",
+        "name": "M. Saadat",
+        "role": "Betrieb"
+      },
+      {
+        "initials": "LH",
+        "name": "L. Hashemi",
+        "role": "Partnerschaften"
+      }
+    ],
+    "timelineTitle": "Meilensteine",
+    "timeline": [
+      {
+        "year": "2010",
+        "event": "Gegründet als biomedizintechnisches Unternehmen."
+      },
+      {
+        "year": "2013",
+        "event": "Nationale Importlizenz für Neurologiegeräte erhalten."
+      },
+      {
+        "year": "2016",
+        "event": "Erste exklusive Vertretung mit einem europäischen Hersteller."
+      },
+      {
+        "year": "2019",
+        "event": "Expansion in Exportmärkte im Nahen Osten."
+      },
+      {
+        "year": "2023",
+        "event": "Partnernetzwerk erreicht zehn Länder und zweihundert Einrichtungen."
+      },
+      {
+        "year": "2026",
+        "event": "Start der Neuro Tech Akademie und des globalen Veranstaltungsprogramms."
+      }
+    ]
+  },
+  "contact": {
+    "hero": {
+      "eyebrow": "Korrespondenz",
+      "title": "Eine Nachricht an das Atelier"
+    },
+    "intro": "Erzählen Sie uns in Ihren eigenen Worten, was Sie hierherführt. Wir antworten innerhalb eines Werktags.",
+    "form": {
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "subject": "Betreff",
+      "message": "Nachricht",
+      "submit": "Senden",
+      "success": "Ihre Nachricht ist eingegangen."
+    },
+    "info": {
+      "address": {
+        "title": "Studio",
+        "value": "Valiasr-Allee 42, Teheran"
+      },
+      "phone": {
+        "title": "Telefon",
+        "value": "+98 21 1234 5678"
+      },
+      "email": {
+        "title": "E-Mail",
+        "value": "atelier{'@'}neurotech.example"
+      },
+      "hours": {
+        "title": "Öffnungszeiten",
+        "value": "Samstag – Mittwoch, 9.00 – 18.00 Uhr"
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Präzise Neurologiegeräte, Ausbildung, Veranstaltungen und wohlüberlegte globale Vertretungen.",
+    "links": "Seiten",
+    "more": "Mehr",
+    "contact": "Kontakt",
+    "rights": "Alle Rechte vorbehalten."
+  },
+  "checkout": {
+    "hero": {
+      "eyebrow": "Abonnement",
+      "title": "Kasse"
+    },
+    "summaryTitle": "Bestellübersicht",
+    "itemLabel": "Artikel",
+    "tierLabel": "Stufe",
+    "priceLabel": "Preis",
+    "totalLabel": "Heute fälliger Gesamtbetrag",
+    "mockPrice": "49,00 € / Monat",
+    "formTitle": "Ihre Angaben",
+    "fields": {
+      "name": "Vollständiger Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "address": "Rechnungsadresse",
+      "card": "Kartendaten"
+    },
+    "cardNote": "Die Zahlung wird von einem Drittanbieter abgewickelt. Neuro Tech speichert keine Kartendaten.",
+    "submit": "Zur Kasse gehen",
+    "processing": "Weiterleitung zur sicheren Zahlung…",
+    "successTitle": "Abonnement bestätigt",
+    "successDesc": "Ihr Zugang wurde freigeschaltet. Sie können nun zum Kurs zurückkehren.",
+    "successToast": "Zahlung erfolgreich — Kurs freigeschaltet.",
+    "backCta": "Zurück zum Kurs",
+    "continueCta": "Weiter stöbern",
+    "stepPersonal": "Persönliche Angaben",
+    "stepPayment": "Zahlungsmethode",
+    "next": "Nächster Schritt",
+    "back": "Zurück",
+    "paymentTitle": "Zahlungsmethode wählen",
+    "paymentOptions": { "card": "Kredit-/Debitkarte", "paypal": "PayPal", "bank": "Banküberweisung" }
+  }
+}

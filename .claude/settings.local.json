@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(grep -c 'dark\\\\\\\\:' dist/assets/index-*.css)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(tasklist)",
+      "Bash(netstat -ano)",
+      "PowerShell($conns = Get-NetTCPConnection -LocalPort 5173 -State Listen -ErrorAction SilentlyContinue; foreach\\($c in $conns\\){ Write-Output \"Killing PID $\\($c.OwningProcess\\)\"; Stop-Process -Id $c.OwningProcess -Force -ErrorAction SilentlyContinue }; Start-Sleep -Milliseconds 500; $still = Get-NetTCPConnection -LocalPort 5173 -State Listen -ErrorAction SilentlyContinue; if\\($still\\){\"still listening\"}else{\"port 5173 free\"})",
+      "Bash(node -e \"const e=require\\('./src/locales/en.json'\\); console.log\\(JSON.stringify\\(e.academy, null, 1\\)\\)\")",
+      "Bash(npm run *)"
+    ]
+  }
+}
