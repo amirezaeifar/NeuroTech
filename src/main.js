@@ -13,6 +13,7 @@ import ar from './locales/ar.json'
 import './assets/fonts.css'
 import './style.css'
 import { initTheme } from './composables/useTheme.js'
+import { MotionPlugin } from '@vueuse/motion'
 
 initTheme()
 
@@ -30,5 +31,6 @@ const i18n = createI18n({
 
 const app = createApp(App)
 app.use(router)
+app.use(MotionPlugin)
 app.use(i18n)
 app.mount('#app')
