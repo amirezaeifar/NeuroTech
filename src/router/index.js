@@ -5,6 +5,7 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'Home', component: () => import('../views/HomeView.vue') },
     { path: '/academy', name: 'Academy', component: () => import('../views/AcademyView.vue') },
+    { path: '/pathway', name: 'Pathway', component: () => import('../views/PathwayView.vue') },
     { path: '/academy/course/:id', name: 'CourseDetail', component: () => import('../views/CourseDetailView.vue') },
     { path: '/events', name: 'Events', component: () => import('../views/EventsView.vue') },
     { path: '/events/archive/:id', name: 'PastEventDetail', component: () => import('../views/PastEventDetailView.vue') },
