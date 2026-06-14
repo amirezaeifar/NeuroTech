@@ -65,6 +65,30 @@
   --c-ink-hint:    92 102 117;
 }
 
+/* ── Neural progress tree — dark/light palette ──────────────────────────────
+   The component (NeuralProgressTree.vue) defines its LIGHT-mode palette inline:
+   a sleek charcoal (#323A45) ink structure with gold (#EBBC73) currents & nodes,
+   for heavy contrast on the light page. In DARK mode we restore the original
+   pure-white luminous network. Defined globally (not in scoped CSS) so the
+   `html.dark` ancestor reliably wins — scoped `:global()` was being dropped. */
+html.dark .npt {
+  --npt-branch: #FFFFFF;
+  --npt-current: #FFFFFF;
+}
+
+/* Academy neural halo — a soft gold aura in light mode (set in AcademyView), a
+   deep-charcoal pool (#323A45 → #212833) in dark mode so the white tree pops. */
+html.dark .neural-glow {
+  background: radial-gradient(
+    ellipse 46% 42% at 38% 50%,
+    rgba(33, 40, 51, 0.92) 0%,
+    rgba(33, 40, 51, 0.6) 24%,
+    rgba(33, 40, 51, 0.32) 44%,
+    rgba(33, 40, 51, 0.12) 62%,
+    rgba(33, 40, 51, 0) 80%
+  );
+}
+
 /* Hero is an always-deep band in both modes (it must not invert with the
    theme). Warm ink in light mode; deep charcoal a shade below the page in
    dark mode, so the page base lifts above it. */

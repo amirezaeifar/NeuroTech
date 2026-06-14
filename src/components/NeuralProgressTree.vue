@@ -352,8 +352,10 @@ onBeforeUnmount(() => {
         </filter>
       </defs>
 
-      <!-- ░░ STATIC ARBOR (bloomed once, cached) ░░ -->
-      <g filter="url(#npt-bloom)" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+      <!-- ░░ STATIC ARBOR (bloomed once, cached) ░░
+           Stroke/fill colours come from CSS vars (see <style>) so the arbor is
+           luminous white in dark mode and dark-charcoal ink in light mode. -->
+      <g class="npt__arbor" filter="url(#npt-bloom)" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <!-- decorative fractal filaments / roots -->
         <path
           v-for="(f, i) in arbor.filaments"
@@ -373,11 +375,12 @@ onBeforeUnmount(() => {
         <!-- apical trunk -->
         <path :d="arbor.trunkD" stroke-width="2.6" stroke-opacity="0.72" />
         <!-- soma (cell body) -->
-        <circle :cx="arbor.soma.x" :cy="arbor.soma.y" r="9" fill="#FFFFFF" stroke="none" opacity="0.9" />
+        <circle class="npt__soma" :cx="arbor.soma.x" :cy="arbor.soma.y" r="9" stroke="none" opacity="0.9" />
       </g>
 
-      <!-- ░░ NEURAL CURRENTS — action potentials streaming with scroll ░░ -->
-      <g filter="url(#npt-core)" fill="none" stroke="#FFFFFF" stroke-linecap="round">
+      <!-- ░░ NEURAL CURRENTS — action potentials streaming with scroll ░░
+           Gold in light mode, white in dark mode (via CSS var). -->
+      <g class="npt__currents" filter="url(#npt-core)" fill="none" stroke-linecap="round">
         <path
           v-for="(c, i) in arbor.currents"
           :key="`c-${i}`"
@@ -390,8 +393,8 @@ onBeforeUnmount(() => {
         />
       </g>
 
-      <!-- ░░ NODES ░░ -->
-      <g filter="url(#npt-core)" fill="#FFFFFF" stroke="none">
+      <!-- ░░ NODES ░░ — gold in light mode, white in dark mode (via CSS var). -->
+      <g class="npt__nodes" filter="url(#npt-core)" stroke="none">
         <circle
           v-for="n in arbor.courseNodes"
           :key="n.id"
@@ -408,8 +411,8 @@ onBeforeUnmount(() => {
 
       <!-- ░░ THE PULSE — last watched video ░░ -->
       <g v-if="currentNode" filter="url(#npt-core)" :transform="`translate(${currentNode.x} ${currentNode.y})`">
-        <circle ref="pulseEl" class="npt-pulse" r="4" fill="none" stroke="#FFFFFF" stroke-width="1.2" />
-        <circle r="2.8" fill="#FFFFFF" />
+        <circle ref="pulseEl" class="npt-pulse" r="4" fill="none" stroke-width="1.2" />
+        <circle class="npt__pulse-core" r="2.8" />
       </g>
 
       <!-- ░░ HIT AREAS — invisible, pointer-enabled (hover + click) ░░
@@ -454,7 +457,26 @@ onBeforeUnmount(() => {
   width: 100%;
   background: transparent;
   pointer-events: none; /* purely decorative overlay */
+
+  /* ── Theme palette ────────────────────────────────────────────────────────
+     LIGHT MODE (default): a sleek dark-metallic / ink neural structure —
+     branches & soma in brand charcoal (#323A45), with elegant gold (#EBBC73)
+     neural currents and nodes. Heavy contrast against the light page. */
+  --npt-branch: #323A45;   /* dendrites, branches, trunk, soma (charcoal ink) */
+  --npt-current: #EBBC73;  /* travelling currents, nodes & the pulse (gold)    */
 }
+/* DARK MODE keeps the original pure-white luminous network — the override lives
+   in the global stylesheet (src/style.css, `html.dark .npt`), matching how the
+   rest of the app's dark theming is done; scoped `:global()` is unreliable here. */
+
+/* Wire the palette into the SVG. CSS stroke/fill override the (removed) white
+   presentation attributes and let the bloom filter glow in the theme colour. */
+.npt__arbor { stroke: var(--npt-branch); }
+.npt__soma { fill: var(--npt-branch); }
+.npt__currents { stroke: var(--npt-current); }
+.npt__nodes { fill: var(--npt-current); }
+.npt-pulse { stroke: var(--npt-current); }
+.npt__pulse-core { fill: var(--npt-current); }
 .npt--sticky {
   position: sticky;
   top: var(--npt-top, 24px);
