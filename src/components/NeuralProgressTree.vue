@@ -120,17 +120,19 @@ const arbor = computed(() => {
   const soma = { x: VB_W * 0.5, y: VB_H * 0.7 }
 
   // Recursively spawn small child filaments off a parent branch for density.
+  // Three children per level + deeper recursion = a denser, more fractal arbor
+  // of fine sub-dendrites (the smaller twigs that read as biological detail).
   function fractal(parent, depth, lengthScale) {
     if (depth <= 0) return
-    const spawnCount = 2
+    const spawnCount = 3
     for (let s = 0; s < spawnCount; s++) {
-      const f = 0.35 + rng() * 0.6
+      const f = 0.3 + rng() * 0.65
       const p = pointAt(parent.pts, f)
       const side = rng() < 0.5 ? -1 : 1
-      const a = parent.endAngle + side * (0.5 + rng() * 0.7)
-      const child = growBranch(p.x, p.y, a, parent.length * lengthScale, 5 + ((rng() * 3) | 0), 0.5, rng)
-      filaments.push({ d: child.d, w: Math.max(0.5, 1.4 * lengthScale), o: 0.16 + depth * 0.05 })
-      fractal(child, depth - 1, lengthScale * 0.62)
+      const a = parent.endAngle + side * (0.45 + rng() * 0.8)
+      const child = growBranch(p.x, p.y, a, parent.length * lengthScale, 5 + ((rng() * 3) | 0), 0.55, rng)
+      filaments.push({ d: child.d, w: Math.max(0.45, 1.4 * lengthScale), o: 0.15 + depth * 0.05 })
+      fractal(child, depth - 1, lengthScale * 0.6)
     }
   }
 
@@ -165,10 +167,13 @@ const arbor = computed(() => {
         id: m.id, x: mp.x, y: mp.y, status: m.status,
         title: m.title, type: 'module', courseIndex: ci,
       })
-      // dendrite tuft off the module
-      const tuft = growBranch(mp.x, mp.y, a + (rng() - 0.5) * 1.4, 34 + rng() * 26, 5, 0.6, rng)
-      filaments.push({ d: tuft.d, w: 0.9, o: 0.28 })
-      fractal(tuft, 2, 0.55)
+      // dendrite tufts off the module — two splayed tufts, each branching
+      // deeply into fine sub-dendrites for a dense, natural cluster.
+      for (let k = 0; k < 2; k++) {
+        const tuft = growBranch(mp.x, mp.y, a + (rng() - 0.5) * 1.7, 30 + rng() * 30, 5, 0.65, rng)
+        filaments.push({ d: tuft.d, w: 0.9, o: 0.28 })
+        fractal(tuft, 2, 0.55)
+      }
     })
 
     fractal(branch, 2, 0.5)
@@ -176,17 +181,17 @@ const arbor = computed(() => {
 
   // ── Apical tuft: dense canopy where the trunk ends. ──
   const tip = trunk.end
-  for (let i = 0; i < 7; i++) {
-    const a = -Math.PI / 2 + (rng() - 0.5) * 1.7
-    const t = growBranch(tip.x, tip.y, a, 70 + rng() * 80, 7, 0.45, rng)
+  for (let i = 0; i < 13; i++) {
+    const a = -Math.PI / 2 + (rng() - 0.5) * 1.9
+    const t = growBranch(tip.x, tip.y, a, 70 + rng() * 85, 7, 0.48, rng)
     filaments.push({ d: t.d, w: 1.1, o: 0.3 })
     fractal(t, 2, 0.55)
   }
 
   // ── Basal roots & axon: fan downward/out from the soma. ──
-  for (let i = 0; i < 7; i++) {
-    const a = Math.PI / 2 + (rng() - 0.5) * 2.4
-    const t = growBranch(soma.x, soma.y, a, 90 + rng() * 110, 9, 0.4, rng)
+  for (let i = 0; i < 13; i++) {
+    const a = Math.PI / 2 + (rng() - 0.5) * 2.5
+    const t = growBranch(soma.x, soma.y, a, 90 + rng() * 115, 9, 0.42, rng)
     filaments.push({ d: t.d, w: 1.0, o: 0.24 })
     fractal(t, 2, 0.58)
   }
@@ -369,13 +374,13 @@ onBeforeUnmount(() => {
           v-for="(b, i) in arbor.branches"
           :key="`b-${i}`"
           :d="b.d"
-          stroke-width="1.7"
+          stroke-width="2"
           stroke-opacity="0.55"
         />
         <!-- apical trunk -->
-        <path :d="arbor.trunkD" stroke-width="2.6" stroke-opacity="0.72" />
+        <path :d="arbor.trunkD" stroke-width="3" stroke-opacity="0.72" />
         <!-- soma (cell body) -->
-        <circle class="npt__soma" :cx="arbor.soma.x" :cy="arbor.soma.y" r="9" stroke="none" opacity="0.9" />
+        <circle class="npt__soma" :cx="arbor.soma.x" :cy="arbor.soma.y" r="10" stroke="none" opacity="0.9" />
       </g>
 
       <!-- ░░ NEURAL CURRENTS — action potentials streaming with scroll ░░
@@ -386,7 +391,7 @@ onBeforeUnmount(() => {
           :key="`c-${i}`"
           :d="c.d"
           pathLength="1"
-          :stroke-width="i === 0 ? 2.4 : 1.7"
+          :stroke-width="i === 0 ? 2.8 : 2"
           stroke-dasharray="0.012 0.2"
           :stroke-dashoffset="dashOffset(c.phase)"
           stroke-opacity="0.95"
@@ -463,7 +468,9 @@ onBeforeUnmount(() => {
      branches & soma in brand charcoal (#323A45), with elegant gold (#EBBC73)
      neural currents and nodes. Heavy contrast against the light page. */
   --npt-branch: #323A45;   /* dendrites, branches, trunk, soma (charcoal ink) */
-  --npt-current: #EBBC73;  /* travelling currents, nodes & the pulse (gold)    */
+  --npt-current: #EBBC73;  /* travelling currents & the active-node pulse (gold) */
+  --npt-node: #20262E;     /* course/module nodes — a darker, muted charcoal so
+                              they read as part of the body, not separate dots  */
 }
 /* DARK MODE keeps the original pure-white luminous network — the override lives
    in the global stylesheet (src/style.css, `html.dark .npt`), matching how the
@@ -474,7 +481,7 @@ onBeforeUnmount(() => {
 .npt__arbor { stroke: var(--npt-branch); }
 .npt__soma { fill: var(--npt-branch); }
 .npt__currents { stroke: var(--npt-current); }
-.npt__nodes { fill: var(--npt-current); }
+.npt__nodes { fill: var(--npt-node); }
 .npt-pulse { stroke: var(--npt-current); }
 .npt__pulse-core { fill: var(--npt-current); }
 .npt--sticky {

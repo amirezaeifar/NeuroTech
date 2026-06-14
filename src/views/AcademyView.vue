@@ -291,10 +291,11 @@ useReveal()
   .lib-grid {
     /* Wider rail so the (much larger) neuron reads as a prominent visual anchor. */
     grid-template-columns: minmax(300px, 4.6fr) minmax(0, 7.4fr);
-    /* A big tree, sized so the WHOLE thing fits below the sticky navbar (81px)
-       plus breathing room when it locks — prerequisite for the "fully visible"
-       lock. Capped at 820px; otherwise it tracks the viewport minus 150px. */
-    --neuron-h: min(820px, calc(100vh - 150px));
+    /* A large, prominent tree (~30–40% bigger than before). Sized so the WHOLE
+       thing still fits in the viewport when it locks — prerequisite for the
+       "fully visible, uncut" lock. Capped at 1100px on tall screens; otherwise
+       it tracks the viewport minus 160px (room for navbar + top/bottom gaps). */
+    --neuron-h: min(1100px, calc(100vh - 160px));
     /* Initial offset so the TOP of the tree starts just below the field row
        ("All fields / Neurology / Psychiatric Emergency / General"). */
     --neuron-start: clamp(11rem, 7vh + 11.9rem, 18rem);
@@ -315,11 +316,12 @@ useReveal()
      screen — then holds while the cards scroll, releasing at the section ends.
 
      The inset clears the 81px sticky navbar and otherwise vertically centres the
-     neuron in the leftover viewport height. */
+     neuron in the leftover viewport height, biased ~50–90px downward so it sits
+     comfortably mid-viewport (never cut off at the top) when locked. */
   .neural-rail {
     align-self: start;
     position: sticky;
-    top: clamp(96px, calc((100vh - var(--neuron-h)) / 2), 220px);
+    top: clamp(140px, calc((100vh - var(--neuron-h)) / 2 + 45px), 320px);
     height: var(--neuron-h);
     margin-top: var(--neuron-start);
     padding-top: 0;

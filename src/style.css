@@ -74,6 +74,7 @@
 html.dark .npt {
   --npt-branch: #FFFFFF;
   --npt-current: #FFFFFF;
+  --npt-node: #FFFFFF;
 }
 
 /* Academy neural halo — a soft gold aura in light mode (set in AcademyView), a
