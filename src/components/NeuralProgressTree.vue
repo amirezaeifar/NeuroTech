@@ -199,6 +199,18 @@ const arbor = computed(() => {
     fractal(t, 2, 0.58)
   }
 
+  // ── Extra fine sub-branches on the LEFT flank — adds organic, biological
+  //    density and a deliberate left/right asymmetry. Twigs sprout leftward
+  //    (≈180°) from points along the trunk and each branch into sub-dendrites. ──
+  for (let i = 0; i < 12; i++) {
+    const f = 0.18 + rng() * 0.72
+    const base = pointAt(trunk.pts, f)
+    const a = Math.PI + (rng() - 0.5) * 1.7   // ~180° → left, with vertical spread
+    const t = growBranch(base.x, base.y, a, 36 + rng() * 66, 6, 0.55, rng)
+    filaments.push({ d: t.d, w: 0.8, o: 0.2 })
+    fractal(t, 2, 0.55)
+  }
+
   return { soma, trunkD: trunk.d, filaments, branches, currents, courseNodes, moduleNodes }
 })
 
@@ -398,6 +410,14 @@ onBeforeUnmount(() => {
           <stop offset="0.88" stop-color="#D1D5DB" stop-opacity="0" />
           <stop offset="1" stop-color="#D1D5DB" stop-opacity="0" />
         </linearGradient>
+
+        <!-- Soma mask: hides the travelling current within a disc around the
+             central base node, so the flow stops at the node's edge and the
+             node core stays clean and static. White = visible, black = hidden. -->
+        <mask id="npt-soma-mask" maskUnits="userSpaceOnUse" x="0" y="0" :width="VB_W" :height="VB_H">
+          <rect x="0" y="0" :width="VB_W" :height="VB_H" fill="#FFFFFF" />
+          <circle :cx="arbor.soma.x" :cy="arbor.soma.y" r="15" fill="#000000" />
+        </mask>
       </defs>
 
       <!-- ░░ STATIC ARBOR (bloomed once, cached) ░░
@@ -435,6 +455,7 @@ onBeforeUnmount(() => {
         class="npt__currents"
         fill="none"
         stroke-linecap="round"
+        mask="url(#npt-soma-mask)"
         :style="{
           opacity: flowOpacity,
           filter: `drop-shadow(0 0 ${flowGlow * 0.45}px rgba(255,255,255,${0.55 + 0.4 * flowOpacity})) drop-shadow(0 0 ${flowGlow}px rgba(209,213,219,${0.35 + 0.4 * flowOpacity}))`,

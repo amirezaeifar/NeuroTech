@@ -3,8 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLocale } from '../composables/useLocale.js'
 import { useTheme } from '../composables/useTheme.js'
-// BrandLogo temporarily replaced with placeholder
-// import BrandLogo from './BrandLogo.vue'
+import BrandMark from './BrandMark.vue'
 
 const { t } = useI18n()
 const { locale, setLocale, locales } = useLocale()
@@ -42,28 +41,23 @@ const pickLocale = (code) => { setLocale(code); langOpen.value = false }
       : 'bg-parchment-light border-b border-parchment-dark'
   ]"
 >
-  <div class="max-w-5xl mx-auto px-8 min-h-[80px] h-20 flex items-center justify-between gap-6">
+  <div class="max-w-7xl mx-auto px-8 min-h-[80px] h-20 flex items-center justify-between gap-6">
     <!-- Logo + Nav group (left in LTR, right in RTL) -->
-    <div class="flex items-center gap-8">
+    <div class="flex items-center gap-6 min-w-0">
       <router-link
         to="/"
         :aria-label="t('brand')"
         @click="closeMobile"
         class="shrink-0"
       >
-        <!-- Logo placeholder -->
-        <div class="flex items-center gap-2.5 select-none" aria-hidden="false">
-          <div class="w-8 h-8 border border-gold/60 flex items-center justify-center">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-gold-dark">
-              <circle cx="12" cy="8" r="4"/>
-              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <span class="text-[11px] uppercase tracking-[0.3em] font-light text-ink-muted">{{ t('brand') }}</span>
-        </div>
+        <!-- Brand "N" neural-brain mark; wordmark appears on wide (xl) screens. -->
+        <span class="flex items-center gap-2.5 select-none">
+          <BrandMark :size="36" tone="mono" class="text-gold-dark" />
+          <span class="hidden xl:inline-block text-[11px] uppercase tracking-[0.3em] font-light text-ink-muted">{{ t('brand') }}</span>
+        </span>
       </router-link>
 
-      <nav class="hidden md:flex items-center gap-7 lg:gap-9">
+      <nav class="hidden lg:flex items-center gap-6">
         <router-link
           v-for="link in links"
           :key="link.to"
@@ -73,8 +67,10 @@ const pickLocale = (code) => { setLocale(code); langOpen.value = false }
       </nav>
     </div>
 
-    <!-- Language selector + mobile toggle (right in LTR, left in RTL) -->
-    <div class="flex items-center gap-5">
+    <!-- Language selector + mobile toggle (right in LTR, left in RTL).
+         shrink-0 + a fixed inline-start margin guarantee the mode toggle never
+         touches the last nav tab, in any locale. -->
+    <div class="flex items-center gap-5 ms-8 shrink-0">
       <!-- Dark mode toggle -->
       <button
         type="button"
@@ -125,7 +121,7 @@ const pickLocale = (code) => { setLocale(code); langOpen.value = false }
 
       <button
         type="button"
-        class="md:hidden text-ink p-1"
+        class="lg:hidden text-ink p-1"
         @click="mobileOpen = !mobileOpen"
         :aria-label="mobileOpen ? 'Close menu' : 'Open menu'"
       >
@@ -140,7 +136,7 @@ const pickLocale = (code) => { setLocale(code); langOpen.value = false }
   </div>
 
   <Transition name="fade">
-    <div v-if="mobileOpen" class="md:hidden bg-parchment-light border-t border-parchment-deep">
+    <div v-if="mobileOpen" class="lg:hidden bg-parchment-light border-t border-parchment-deep">
       <nav class="px-8 py-6 flex flex-col gap-4">
         <router-link
           v-for="link in links"

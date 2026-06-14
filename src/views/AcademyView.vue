@@ -87,7 +87,6 @@ useReveal()
         <div class="mt-16 grid md:grid-cols-2 gap-8">
           <!-- Free -->
           <LuxeCard class="reveal group relative overflow-hidden lux-card hover:-translate-y-0.5 hover:border-gold/50">
-            <span class="pointer-events-none absolute top-0 inset-inline-start-0 h-12 w-12 border-t border-gold/40" style="border-inline-start:1px solid rgb(var(--c-gold)/0.4);"></span>
             <div class="flex items-center gap-3">
               <span class="grid place-items-center h-9 w-9 rounded-full border border-gold/40 text-gold-dark">
                 <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A2 2 0 0 1 5 5h5a2 2 0 0 1 2 2v12a1.5 1.5 0 0 0-1.5-1.5H5A2 2 0 0 1 3 15.5z"/><path d="M21 6.5A2 2 0 0 0 19 5h-5a2 2 0 0 0-2 2v12a1.5 1.5 0 0 1 1.5-1.5H19a2 2 0 0 0 2-1.5z"/></svg>
@@ -107,7 +106,6 @@ useReveal()
 
           <!-- Premium -->
           <LuxeCard class="reveal group relative overflow-hidden lux-card hover:-translate-y-0.5 hover:border-gold/50" style="transition-delay: 80ms;">
-            <span class="pointer-events-none absolute top-0 inset-inline-end-0 h-12 w-12 border-t border-gold/40" style="border-inline-end:1px solid rgb(var(--c-gold)/0.4);"></span>
             <div class="flex items-center justify-between gap-4">
               <div class="flex items-center gap-3">
                 <span class="grid place-items-center h-9 w-9 rounded-full border border-gold/40 text-gold-dark">

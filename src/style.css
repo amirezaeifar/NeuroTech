@@ -96,6 +96,12 @@ html.dark .neural-glow {
 .academy-hero { background: #14110E; }
 .dark .academy-page .academy-hero { background: #272E37; }
 
+/* Dark-mode Academy backdrop = brand deep charcoal (#323A45), not a generic
+   grey. The big library band used bg-parchment (a lighter slate); pin it to the
+   brand charcoal so the whole dark Academy reads as one deep-charcoal surface.
+   (Light mode is untouched.) Cards/plates keep their own lifted tones for depth. */
+.dark .academy-page .library-section { background-color: #323A45; }
+
 /* Soft amber light-pool behind the hero — barely-there depth, no clutter. */
 .academy-hero-glow {
   background: radial-gradient(60% 80% at 50% 0%, rgba(237, 192, 113, 0.16), transparent 70%);
