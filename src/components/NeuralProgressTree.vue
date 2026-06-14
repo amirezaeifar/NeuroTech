@@ -1,42 +1,37 @@
 <script setup>
 /**
- * NeuralProgressTree — the "Browse the Library" left sidebar.
+ * NeuralProgressTree — an organic, luminous neuron for "Browse the Library".
  *
- * A vertical neural tree of the learner's progress, rendered as layered SVG with
- * a high-end glassmorphism + simulated-3D treatment:
+ * A procedurally-grown biological neuron (soma, apical trunk, asymmetric
+ * dendritic arbor, basal roots) rendered as pure-white light on a STRICTLY
+ * transparent background — no panel, no glass, no border. It overlays directly
+ * on whatever sits behind it.
  *
- *   • Frosted-glass panel  — backdrop blur/saturate, hairline white border, lift.
- *   • Volumetric tubes     — the trunk and dendrite branches are glass cylinders
- *                            (horizontal gloss gradient + specular streak) with a
- *                            metallic-gold inner glow that reads as emissive.
- *   • 3-D nodes            — course/module beads use a radial dark-metal fill plus
- *                            an SVG lighting filter (feSpecularLighting +
- *                            feDistantLight) for a real, consistent relief.
+ *   • Shape      — every stroke is an organic Bézier branch grown from a seeded
+ *                  RNG, so the arbor is asymmetric and fractal (never rigid).
+ *                  Main branches carry Course nodes; dendrites sprouting off
+ *                  them carry the learner's module / "video watched" nodes.
+ *   • Light      — layered feGaussianBlur + feMerge bloom gives an intense,
+ *                  shiny white neon glow with zero CSS background tricks.
+ *   • Currents   — scrolling fires "action potentials": bright pulses of light
+ *                  travel down the trunk and branches. Their travel is tied to
+ *                  scroll position & velocity via a @vueuse/motion useSpring,
+ *                  so a fast flick sends a surge of current through the arbor.
+ *   • The Pulse  — the node for the last-watched video (currentNodeId) emits a
+ *                  continuous expanding glow, driven by useMotion().
  *
- * Animation — ALL driven by @vueuse/motion (the Vue Motion Plugin):
- *   • Scroll fill  — useSpring() smooths raw scroll progress into a buttery,
- *                    velocity-aware value that we bind to the gold glow's
- *                    stroke-dashoffset, the travelling "comet" head, branch
- *                    reveals and node lighting. (Plugin = the animation engine;
- *                    no hand-rolled rAF easing.)
- *   • Node reveal  — the v-motion directive (:initial / :visibleOnce) pops each
- *                    bead in with a staggered spring as it enters view.
- *   • The Pulse    — useMotion() drives the active "You are here" node: an
- *                    expanding, fading inner-light ripple, repeating forever.
+ * Sticky: the component pins itself (position: sticky; top) so the neuron stays
+ * fixed in the viewport while the long library page scrolls past — the scroll is
+ * what energises the currents.
  *
- * Accessibility / perf: respects prefers-reduced-motion (via useReducedMotion —
- * pulse + reveal + spring smoothing are disabled, fill tracks scroll directly);
- * animates only opacity / transform / dashoffset; lighting filters apply to
- * static node geometry so the browser caches them (60fps target).
+ * Accessibility / perf: respects prefers-reduced-motion (currents freeze, the
+ * pulse stops); the heavy bloom is rasterised over the STATIC arbor (cached),
+ * while only lightweight dash-offsets animate per frame, targeting 60fps.
  *
- * Scope note: like the other Atlas wayfinders (see IndexSpine), development is
- * locked to LTR — physical CSS/SVG coordinates only, no BiDi mirroring.
- *
- * Scroll source: the component measures progress over the nearest ancestor
- * carrying [data-progress-track] (fallback: parent element). Pass `track` to
- * point at a specific selector.
+ * Scope note: LTR-only, like the other Atlas wayfinders — physical coordinates.
  */
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
 import { useSpring, useMotion, useReducedMotion } from '@vueuse/motion'
 import { userProgress } from '../data/userProgress.js'
 
@@ -45,91 +40,235 @@ const props = defineProps({
   data: { type: Object, default: () => userProgress },
   /** Optional CSS selector for the scroll track; defaults to [data-progress-track]. */
   track: { type: String, default: '' },
-  /** Panel header eyebrow. */
-  label: { type: String, default: 'Your pathway' },
+  /** Sticky offset from the top of the viewport, in px. */
+  stickyTop: { type: Number, default: 24 },
+  /**
+   * Whether the component positions itself `sticky`. Set false when an outer
+   * wrapper owns the stickiness (e.g. so a faded underlay travels with it).
+   */
+  sticky: { type: Boolean, default: true },
+  /** How many traversals a full page-scroll drives through the arbor. */
+  currentSpeed: { type: Number, default: 3.2 },
+  /**
+   * Maps a clicked node → a router target. Receives the node
+   * ({ id, type:'course'|'module', courseIndex, title, status, code }).
+   * Defaults to the existing course-detail route, keyed by course index.
+   */
+  resolveRoute: { type: Function, default: null },
 })
 
-/* ── Geometry constants (SVG user units; LTR) ──────────────────────────────── */
-const VB_W = 300
-const SPINE_X = 74          // trunk x — course nodes ride this
-const MODULE_X = 212        // module beads branch out to here
-const COURSE_R = 13
-const MODULE_R = 7
-const PAD_TOP = 54
-const PAD_BOTTOM = 46
-const AFTER_COURSE = 26     // course centre → first module centre
-const MODULE_STEP = 46      // module → module
-const AFTER_MODULES = 18    // last module → next course centre
-
+/* ── Canvas ────────────────────────────────────────────────────────────────── */
+const VB_W = 380
+const VB_H = 860
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v)
+const TAU = Math.PI * 2
 
-/* ── Layout: flatten the curriculum into positioned nodes + branch paths ───── */
-const layout = computed(() => {
+/* Deterministic RNG so the arbor is identical every render (no jitter on
+   re-computation). mulberry32. */
+function makeRng(seed) {
+  let a = seed >>> 0
+  return () => {
+    a = (a + 0x6d2b79f5) | 0
+    let t = Math.imul(a ^ (a >>> 15), 1 | a)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+/* Grow one organic branch as a chain of quadratic Béziers that wanders away
+   from `angle`, tapering as it goes. Returns the path `d`, the sampled points
+   (for placing nodes & child branches) and the final heading. */
+function growBranch(sx, sy, angle, length, segs, curl, rng) {
+  let x = sx
+  let y = sy
+  let a = angle
+  const pts = [{ x, y }]
+  const segLen = length / segs
+  let d = `M ${x.toFixed(1)} ${y.toFixed(1)}`
+  for (let i = 0; i < segs; i++) {
+    a += (rng() - 0.5) * curl
+    const cx = x + Math.cos(a) * segLen * 0.5 + (rng() - 0.5) * segLen * 0.35
+    const cy = y + Math.sin(a) * segLen * 0.5 + (rng() - 0.5) * segLen * 0.35
+    x += Math.cos(a) * segLen
+    y += Math.sin(a) * segLen
+    d += ` Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`
+    pts.push({ x, y })
+  }
+  return { d, pts, endAngle: a, end: { x, y }, length }
+}
+
+/* Linear sample of a point a fraction `f` (0→1) along a branch's points. */
+function pointAt(pts, f) {
+  const i = clamp01(f) * (pts.length - 1)
+  const lo = Math.floor(i)
+  const hi = Math.min(lo + 1, pts.length - 1)
+  const t = i - lo
+  return { x: pts[lo].x + (pts[hi].x - pts[lo].x) * t, y: pts[lo].y + (pts[hi].y - pts[lo].y) * t }
+}
+
+/* ── Grow the whole arbor from the learner's curriculum ────────────────────── */
+const arbor = computed(() => {
+  const rng = makeRng(20240611)
   const courses = props.data?.courses ?? []
+
+  const filaments = [] // decorative fractal twigs / roots (dim)
+  const branches = [] // main course branches (mid)
+  const currents = [] // paths the action potentials travel along
   const courseNodes = []
   const moduleNodes = []
-  const branches = []
-  let y = PAD_TOP
-  let order = 0
-  let maxY = PAD_TOP
 
-  for (const c of courses) {
-    const cy = y
-    courseNodes.push({
-      id: c.id, code: c.code, title: c.title, status: c.status,
-      cx: SPINE_X, cy, order: order++,
-    })
-    maxY = Math.max(maxY, cy)
-    y += AFTER_COURSE
+  const soma = { x: VB_W * 0.5, y: VB_H * 0.7 }
 
-    for (const m of c.modules ?? []) {
-      const my = y
-      moduleNodes.push({
-        id: m.id, title: m.title, status: m.status,
-        cx: MODULE_X, cy: my, order: order++,
-      })
-      // dendrite: rises off the trunk, then sweeps out to the bead
-      branches.push({ id: `${m.id}__b`, fx: SPINE_X, fy: my - 20, tx: MODULE_X - 13, ty: my, my })
-      maxY = Math.max(maxY, my)
-      y += MODULE_STEP
+  // Recursively spawn small child filaments off a parent branch for density.
+  function fractal(parent, depth, lengthScale) {
+    if (depth <= 0) return
+    const spawnCount = 2
+    for (let s = 0; s < spawnCount; s++) {
+      const f = 0.35 + rng() * 0.6
+      const p = pointAt(parent.pts, f)
+      const side = rng() < 0.5 ? -1 : 1
+      const a = parent.endAngle + side * (0.5 + rng() * 0.7)
+      const child = growBranch(p.x, p.y, a, parent.length * lengthScale, 5 + ((rng() * 3) | 0), 0.5, rng)
+      filaments.push({ d: child.d, w: Math.max(0.5, 1.4 * lengthScale), o: 0.16 + depth * 0.05 })
+      fractal(child, depth - 1, lengthScale * 0.62)
     }
-    y += AFTER_MODULES
   }
 
-  const top = PAD_TOP
-  const bottom = maxY
-  const span = Math.max(1, bottom - top)
-  const norm = (yy) => (yy - top) / span
-  courseNodes.forEach((n) => (n.norm = norm(n.cy)))
-  moduleNodes.forEach((n) => (n.norm = norm(n.cy)))
-  branches.forEach((b) => (b.norm = norm(b.my)))
+  // ── Apical trunk: rises from the soma; courses branch off it. ──
+  const trunk = growBranch(soma.x, soma.y, -Math.PI / 2, VB_H * 0.6, 16, 0.16, rng)
+  currents.push({ d: trunk.d, phase: 0 })
 
-  return { courseNodes, moduleNodes, branches, top, bottom, span, vbW: VB_W, vbH: bottom + PAD_BOTTOM }
+  // ── Course main-branches, alternating sides up the trunk. ──
+  courses.forEach((course, ci) => {
+    const f = 0.14 + (ci / Math.max(courses.length, 1)) * 0.74 + rng() * 0.05
+    const base = pointAt(trunk.pts, f)
+    const side = ci % 2 === 0 ? -1 : 1
+    const a = -Math.PI / 2 + side * (0.55 + rng() * 0.35)
+    const len = 150 + rng() * 70
+    const branch = growBranch(base.x, base.y, a, len, 10, 0.34, rng)
+    branches.push({ d: branch.d })
+    currents.push({ d: branch.d, phase: 0.12 + ci * 0.21 })
+
+    // Course node sits a little way out along its branch.
+    const cn = pointAt(branch.pts, 0.18)
+    courseNodes.push({
+      id: course.id, x: cn.x, y: cn.y, status: course.status,
+      title: course.title, code: course.code, type: 'course', courseIndex: ci,
+    })
+
+    // Module nodes distributed along the branch; each sprouts a dendrite tuft.
+    const mods = course.modules ?? []
+    mods.forEach((m, mi) => {
+      const mf = 0.42 + (mi / Math.max(mods.length, 1)) * 0.5
+      const mp = pointAt(branch.pts, mf)
+      moduleNodes.push({
+        id: m.id, x: mp.x, y: mp.y, status: m.status,
+        title: m.title, type: 'module', courseIndex: ci,
+      })
+      // dendrite tuft off the module
+      const tuft = growBranch(mp.x, mp.y, a + (rng() - 0.5) * 1.4, 34 + rng() * 26, 5, 0.6, rng)
+      filaments.push({ d: tuft.d, w: 0.9, o: 0.28 })
+      fractal(tuft, 2, 0.55)
+    })
+
+    fractal(branch, 2, 0.5)
+  })
+
+  // ── Apical tuft: dense canopy where the trunk ends. ──
+  const tip = trunk.end
+  for (let i = 0; i < 7; i++) {
+    const a = -Math.PI / 2 + (rng() - 0.5) * 1.7
+    const t = growBranch(tip.x, tip.y, a, 70 + rng() * 80, 7, 0.45, rng)
+    filaments.push({ d: t.d, w: 1.1, o: 0.3 })
+    fractal(t, 2, 0.55)
+  }
+
+  // ── Basal roots & axon: fan downward/out from the soma. ──
+  for (let i = 0; i < 7; i++) {
+    const a = Math.PI / 2 + (rng() - 0.5) * 2.4
+    const t = growBranch(soma.x, soma.y, a, 90 + rng() * 110, 9, 0.4, rng)
+    filaments.push({ d: t.d, w: 1.0, o: 0.24 })
+    fractal(t, 2, 0.58)
+  }
+
+  return { soma, trunkD: trunk.d, filaments, branches, currents, courseNodes, moduleNodes }
 })
 
-const branchD = (b) => `M ${b.fx} ${b.fy} C ${b.fx + 48} ${b.fy}, ${b.tx - 50} ${b.ty}, ${b.tx} ${b.ty}`
-
-/* The active "You are here" node — could be a course or a module. */
+/* The last-watched node — pulses. */
 const currentNode = computed(() => {
   const id = props.data?.currentNodeId
   return (
-    layout.value.moduleNodes.find((n) => n.id === id) ||
-    layout.value.courseNodes.find((n) => n.id === id) ||
+    arbor.value.moduleNodes.find((n) => n.id === id) ||
+    arbor.value.courseNodes.find((n) => n.id === id) ||
     null
   )
 })
 
+const nodeGlow = (status) =>
+  status === 'completed' ? 0.95 : status === 'in-progress' ? 0.9 : 0.32
+const nodeR = (status, base) => (status === 'completed' || status === 'in-progress' ? base : base * 0.7)
+
+/* Every interactive node (courses + modules), in one list for the hit layer. */
+const allNodes = computed(() => [...arbor.value.courseNodes, ...arbor.value.moduleNodes])
+
+/* ── Hover tooltip + click navigation ──────────────────────────────────────── */
+const router = useRouter()
+
+const STATUS_LABEL = { completed: 'Completed', 'in-progress': 'In progress', locked: 'Locked' }
+const statusLabel = (s) => STATUS_LABEL[s] || s
+const typeLabel = (n) => (n.type === 'course' ? 'Course' : 'Module')
+
+const hovered = ref(null)
+// Pointer position + container width, in the overlay's local coordinates.
+const ptr = reactive({ x: 0, y: 0, w: 0 })
+
+function updatePtr(e) {
+  const r = rootEl.value?.getBoundingClientRect()
+  if (!r) return
+  ptr.x = e.clientX - r.left
+  ptr.y = e.clientY - r.top
+  ptr.w = r.width
+}
+function onNodeEnter(node, e) {
+  hovered.value = node
+  updatePtr(e)
+}
+function onNodeMove(e) {
+  if (hovered.value) updatePtr(e)
+}
+function onNodeLeave() {
+  hovered.value = null
+}
+
+// Flip the tooltip to the cursor's left when near the right edge.
+const tipStyle = computed(() => {
+  const flip = ptr.x > ptr.w - 200
+  return {
+    left: `${ptr.x}px`,
+    top: `${ptr.y}px`,
+    transform: `translate(${flip ? 'calc(-100% - 16px)' : '16px'}, -50%)`,
+  }
+})
+
+const defaultRoute = (node) => `/academy/course/${node.courseIndex}`
+function onNodeClick(node) {
+  const to = (props.resolveRoute || defaultRoute)(node)
+  if (to) router.push(to)
+}
+
 /* ── Reduced motion ────────────────────────────────────────────────────────── */
 const reduced = useReducedMotion()
 
-/* ── Scroll → spring fill (THE Motion Plugin animation engine) ─────────────────
-   `fill.t` (0→1) is written by the spring's onChange; binding it into the SVG
-   gives velocity-aware, buttery fill. Reduced motion sets it directly. */
-const fill = reactive({ t: 0 })
-const fillSpring = useSpring(fill, { stiffness: 90, damping: 24, mass: 0.9 })
+/* ── Scroll → spring → travelling currents (the Motion Plugin engine) ──────────
+   `flow.t` is the spring-smoothed scroll progress. Each current path offsets its
+   dash pattern by `flow.t * currentSpeed (+ phase)`, so pulses stream down the
+   arbor as you scroll, surging with scroll velocity (spring momentum). */
+const flow = reactive({ t: 0 })
+const flowSpring = useSpring(flow, { stiffness: 120, damping: 18, mass: 0.7 })
+
+const dashOffset = (phase) => -((flow.t * props.currentSpeed + phase) % 1)
 
 const rootEl = ref(null)
-
 function computeProgress() {
   const el = rootEl.value
   if (!el) return 0
@@ -144,55 +283,23 @@ function computeProgress() {
   if (dist <= 4) return clamp01((vh * 0.5 - r.top) / Math.max(vh, 1))
   return clamp01(-r.top / dist)
 }
-
-// Read scroll progress synchronously (one cheap getBoundingClientRect per event)
-// and hand the target to the spring, which does its own rAF-smoothed easing.
-// Reduced motion skips the spring and tracks scroll position 1:1.
 function onScroll() {
   const p = computeProgress()
-  if (reduced.value) fill.t = p
-  else fillSpring.set({ t: p })
+  if (reduced.value) flow.t = p
+  else flowSpring.set({ t: p })
 }
 
-/* ── Fill-derived lighting helpers (reactive via fill.t) ───────────────────── */
-// How "lit" a node is as the gold front sweeps past it (0→1), damped for locked.
-function nodeLit(n) {
-  const r = clamp01((fill.t - n.norm + 0.015) / 0.09)
-  return n.status === 'locked' ? r * 0.4 : r
-}
-function branchReveal(b) {
-  return clamp01((fill.t - b.norm + 0.01) / 0.05)
-}
-const ringOpacity = (n) =>
-  n.status === 'completed' ? 0.95 : n.status === 'in-progress' ? 0.82 : 0.32
-const cometY = computed(() => layout.value.top + fill.t * layout.value.span)
-const cometOpacity = computed(() => (fill.t > 0.003 && fill.t < 0.997 ? 1 : 0))
-const fillPct = computed(() => Math.round(fill.t * 100))
-
-/* ── Node reveal variants (v-motion directive) ─────────────────────────────── */
-const revealInitial = computed(() =>
-  reduced.value ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.4 },
-)
-function revealEnter(order) {
-  if (reduced.value) return { opacity: 1, scale: 1 }
-  return {
-    opacity: 1,
-    scale: 1,
-    transition: { delay: 140 + order * 60, type: 'spring', stiffness: 220, damping: 18 },
-  }
-}
-
-/* ── The Pulse — useMotion() on the active node's ripple ring ───────────────── */
+/* ── The Pulse — useMotion() on the active node's expanding ring ───────────── */
 const pulseEl = ref(null)
 const pulseVariants = computed(() =>
   reduced.value
     ? { initial: { opacity: 0 }, enter: { opacity: 0 } }
     : {
-        initial: { scale: 0.5, opacity: 0.6 },
+        initial: { scale: 0.4, opacity: 0.85 },
         enter: {
-          scale: 2.9,
+          scale: 3.4,
           opacity: 0,
-          transition: { duration: 1700, repeat: Infinity, repeatType: 'loop', ease: 'easeOut' },
+          transition: { duration: 1600, repeat: Infinity, repeatType: 'loop', ease: 'easeOut' },
         },
       },
 )
@@ -210,334 +317,229 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <aside ref="rootEl" class="npt" aria-label="Learning pathway progress">
-    <div class="npt__panel">
-      <!-- ── Header ─────────────────────────────────────────────────────── -->
-      <header class="npt__head">
-        <p class="npt__eyebrow">{{ label }}</p>
-        <h3 class="npt__user">{{ data.user }}</h3>
-        <div class="npt__meter" role="progressbar" :aria-valuenow="fillPct" aria-valuemin="0" aria-valuemax="100">
-          <span class="npt__meter-fill" :style="{ width: fillPct + '%' }"></span>
-        </div>
-        <p class="npt__meter-label">{{ fillPct }}% explored</p>
-      </header>
+  <div ref="rootEl" :class="['npt', { 'npt--sticky': sticky }]" :style="{ '--npt-top': stickyTop + 'px' }" aria-label="Learning pathway — neural progress">
+    <svg
+      class="npt__svg"
+      :viewBox="`0 0 ${VB_W} ${VB_H}`"
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="Organic neuron visualising course and module progress"
+    >
+      <defs>
+        <!-- Intense white bloom: stacked blurs merged back over the source. -->
+        <filter id="npt-bloom" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="1.4" result="b1" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b2" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="13" result="b3" />
+          <feMerge>
+            <feMergeNode in="b3" />
+            <feMergeNode in="b2" />
+            <feMergeNode in="b3" />
+            <feMergeNode in="b1" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <!-- Tighter, hotter bloom for the travelling currents & nodes. -->
+        <filter id="npt-core" x="-200%" y="-200%" width="500%" height="500%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="c1" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="c2" />
+          <feMerge>
+            <feMergeNode in="c2" />
+            <feMergeNode in="c1" />
+            <feMergeNode in="c1" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
 
-      <!-- ── The tree ───────────────────────────────────────────────────── -->
-      <div class="npt__stage">
-        <svg
-          class="npt__svg"
-          :viewBox="`0 0 ${layout.vbW} ${layout.vbH}`"
-          :style="{ aspectRatio: `${layout.vbW} / ${layout.vbH}` }"
-          preserveAspectRatio="xMidYMin meet"
-          role="img"
-          aria-label="Neural progress tree"
-        >
-          <defs>
-            <!-- Glass cylinder shading (across tube width) -->
-            <linearGradient id="npt-trunkGlass" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.03" />
-              <stop offset="22%" stop-color="#ffffff" stop-opacity="0.18" />
-              <stop offset="50%" stop-color="#ffffff" stop-opacity="0.06" />
-              <stop offset="78%" stop-color="#ffffff" stop-opacity="0.02" />
-              <stop offset="100%" stop-color="#000000" stop-opacity="0.24" />
-            </linearGradient>
+      <!-- ░░ STATIC ARBOR (bloomed once, cached) ░░ -->
+      <g filter="url(#npt-bloom)" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+        <!-- decorative fractal filaments / roots -->
+        <path
+          v-for="(f, i) in arbor.filaments"
+          :key="`f-${i}`"
+          :d="f.d"
+          :stroke-width="f.w"
+          :stroke-opacity="f.o"
+        />
+        <!-- main course branches -->
+        <path
+          v-for="(b, i) in arbor.branches"
+          :key="`b-${i}`"
+          :d="b.d"
+          stroke-width="1.7"
+          stroke-opacity="0.55"
+        />
+        <!-- apical trunk -->
+        <path :d="arbor.trunkD" stroke-width="2.6" stroke-opacity="0.72" />
+        <!-- soma (cell body) -->
+        <circle :cx="arbor.soma.x" :cy="arbor.soma.y" r="9" fill="#FFFFFF" stroke="none" opacity="0.9" />
+      </g>
 
-            <!-- Gold inner glow — intensity varies along the tube length -->
-            <linearGradient id="npt-goldGlow" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#F4D791" stop-opacity="0.55" />
-              <stop offset="50%" stop-color="#FBE9BE" stop-opacity="0.95" />
-              <stop offset="100%" stop-color="#F4D791" stop-opacity="0.6" />
-            </linearGradient>
+      <!-- ░░ NEURAL CURRENTS — action potentials streaming with scroll ░░ -->
+      <g filter="url(#npt-core)" fill="none" stroke="#FFFFFF" stroke-linecap="round">
+        <path
+          v-for="(c, i) in arbor.currents"
+          :key="`c-${i}`"
+          :d="c.d"
+          pathLength="1"
+          :stroke-width="i === 0 ? 2.4 : 1.7"
+          stroke-dasharray="0.012 0.2"
+          :stroke-dashoffset="dashOffset(c.phase)"
+          stroke-opacity="0.95"
+        />
+      </g>
 
-            <!-- Metallic dark-glass node body (offset highlight → top-left light) -->
-            <radialGradient id="npt-courseGlass" cx="0.38" cy="0.32" r="0.85">
-              <stop offset="0%" stop-color="#3b4654" />
-              <stop offset="46%" stop-color="#2b333d" />
-              <stop offset="100%" stop-color="#171c23" />
-            </radialGradient>
-            <radialGradient id="npt-moduleGlass" cx="0.38" cy="0.30" r="0.9">
-              <stop offset="0%" stop-color="#46525f" />
-              <stop offset="55%" stop-color="#2c343e" />
-              <stop offset="100%" stop-color="#191e25" />
-            </radialGradient>
+      <!-- ░░ NODES ░░ -->
+      <g filter="url(#npt-core)" fill="#FFFFFF" stroke="none">
+        <circle
+          v-for="n in arbor.courseNodes"
+          :key="n.id"
+          :cx="n.x" :cy="n.y" :r="nodeR(n.status, 3.4)"
+          :opacity="nodeGlow(n.status)"
+        />
+        <circle
+          v-for="n in arbor.moduleNodes"
+          :key="n.id"
+          :cx="n.x" :cy="n.y" :r="nodeR(n.status, 2.2)"
+          :opacity="nodeGlow(n.status)"
+        />
+      </g>
 
-            <!-- Emissive gold core that grows as the fill reaches a node -->
-            <radialGradient id="npt-goldCore" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0%" stop-color="#FFF6DD" />
-              <stop offset="42%" stop-color="#F4D791" />
-              <stop offset="100%" stop-color="#F4D791" stop-opacity="0" />
-            </radialGradient>
+      <!-- ░░ THE PULSE — last watched video ░░ -->
+      <g v-if="currentNode" filter="url(#npt-core)" :transform="`translate(${currentNode.x} ${currentNode.y})`">
+        <circle ref="pulseEl" class="npt-pulse" r="4" fill="none" stroke="#FFFFFF" stroke-width="1.2" />
+        <circle r="2.8" fill="#FFFFFF" />
+      </g>
 
-            <!-- Soft warm light-spill halo -->
-            <radialGradient id="npt-halo" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0%" stop-color="#F4D791" stop-opacity="0.85" />
-              <stop offset="100%" stop-color="#F4D791" stop-opacity="0" />
-            </radialGradient>
+      <!-- ░░ HIT AREAS — invisible, pointer-enabled (hover + click) ░░
+           Drawn last so they sit on top for hit-testing; transparent fill with
+           pointer-events:all so the whole disc is grabbable. The decorative
+           layers stay pointer-events:none, leaving the page beneath clickable. -->
+      <g class="npt-hits">
+        <circle
+          v-for="n in allNodes"
+          :key="`hit-${n.id}`"
+          class="npt-hit"
+          :cx="n.x" :cy="n.y"
+          :r="n.type === 'course' ? 14 : 10"
+          fill="transparent"
+          @mouseenter="onNodeEnter(n, $event)"
+          @mousemove="onNodeMove($event)"
+          @mouseleave="onNodeLeave"
+          @click="onNodeClick(n)"
+        />
+      </g>
+    </svg>
 
-            <!-- Metallic gold accent ring -->
-            <linearGradient id="npt-ring" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#FBE9BE" />
-              <stop offset="50%" stop-color="#F4D791" />
-              <stop offset="100%" stop-color="#B8922A" />
-            </linearGradient>
-
-            <!-- Halo / light-spill blur. Applied only to static, opacity-animated
-                 geometry so the GPU rasterises once and composites cheaply. -->
-            <filter id="npt-haloBlur" x="-80%" y="-80%" width="260%" height="260%">
-              <feGaussianBlur stdDeviation="6" />
-            </filter>
-
-            <!-- Volumetric relief: specular lighting from a consistent distant light -->
-            <filter id="npt-relief" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="1.7" result="b" />
-              <feSpecularLighting
-                in="b" surfaceScale="3.4" specularConstant="0.9" specularExponent="20"
-                lighting-color="#FFF3D6" result="spec"
-              >
-                <feDistantLight azimuth="235" elevation="60" />
-              </feSpecularLighting>
-              <feComposite in="spec" in2="SourceAlpha" operator="in" result="specClip" />
-              <feComposite
-                in="SourceGraphic" in2="specClip"
-                operator="arithmetic" k1="0" k2="1" k3="0.92" k4="0"
-              />
-            </filter>
-          </defs>
-
-          <!-- ░░ Light spill cast onto the frosted glass by lit nodes ░░ -->
-          <g class="npt-spill" filter="url(#npt-haloBlur)">
-            <circle
-              v-for="n in layout.courseNodes" :key="`sp-${n.id}`"
-              :cx="n.cx" :cy="n.cy" r="30"
-              fill="url(#npt-halo)" :opacity="0.55 * nodeLit(n)"
-            />
-            <circle
-              v-for="n in layout.moduleNodes" :key="`spm-${n.id}`"
-              :cx="n.cx" :cy="n.cy" r="20"
-              fill="url(#npt-halo)" :opacity="0.5 * nodeLit(n)"
-            />
-          </g>
-
-          <!-- ░░ Branch tubes (glass body + reveal-driven gold glow) ░░ -->
-          <g class="npt-branches">
-            <template v-for="b in layout.branches" :key="b.id">
-              <path :d="branchD(b)" fill="none" stroke="#1c222a" stroke-width="9" stroke-linecap="round" stroke-opacity="0.9" />
-              <path :d="branchD(b)" fill="none" stroke="url(#npt-trunkGlass)" stroke-width="8" stroke-linecap="round" />
-              <path
-                class="npt-glow"
-                :d="branchD(b)" pathLength="1" fill="none" stroke="url(#npt-goldGlow)"
-                stroke-width="3.4" stroke-linecap="round"
-                stroke-dasharray="1 1" :stroke-dashoffset="1 - branchReveal(b)"
-              />
-            </template>
-          </g>
-
-          <!-- ░░ Trunk tube ░░ -->
-          <g class="npt-trunk">
-            <!-- dark rim -->
-            <line :x1="SPINE_X" :y1="layout.top" :x2="SPINE_X" :y2="layout.bottom" stroke="#161b22" stroke-width="17" stroke-linecap="round" />
-            <!-- glass body -->
-            <line :x1="SPINE_X" :y1="layout.top" :x2="SPINE_X" :y2="layout.bottom" stroke="url(#npt-trunkGlass)" stroke-width="15" stroke-linecap="round" />
-            <!-- specular gloss streak -->
-            <line :x1="SPINE_X - 3.4" :y1="layout.top + 2" :x2="SPINE_X - 3.4" :y2="layout.bottom - 2" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round" />
-            <!-- gold inner glow, revealed by scroll fill -->
-            <line
-              class="npt-glow"
-              :x1="SPINE_X" :y1="layout.top" :x2="SPINE_X" :y2="layout.bottom"
-              pathLength="1" stroke="url(#npt-goldGlow)" stroke-width="6.5" stroke-linecap="round"
-              stroke-dasharray="1 1" :stroke-dashoffset="1 - fill.t"
-            />
-            <!-- travelling comet head: brightest point at the fill front (soft via
-                 radial gradient, no per-frame blur → cheap to move every frame) -->
-            <g :transform="`translate(0 ${cometY - layout.top})`" :opacity="cometOpacity">
-              <circle :cx="SPINE_X" :cy="layout.top" r="11" fill="url(#npt-halo)" />
-              <circle :cx="SPINE_X" :cy="layout.top" r="3" fill="#FFF6DD" />
-            </g>
-          </g>
-
-          <!-- ░░ Module beads ░░ -->
-          <g
-            v-for="n in layout.moduleNodes" :key="n.id"
-            :transform="`translate(${n.cx} ${n.cy})`"
-          >
-            <g
-              class="npt-node"
-              v-motion
-              :initial="revealInitial"
-              :visible-once="revealEnter(n.order)"
-            >
-              <title>{{ n.title }}</title>
-              <circle r="9" fill="url(#npt-goldCore)" :opacity="nodeLit(n)" />
-              <circle :r="MODULE_R" fill="url(#npt-moduleGlass)" filter="url(#npt-relief)" />
-              <circle :r="MODULE_R" fill="none" stroke="url(#npt-ring)" stroke-width="1.6" :opacity="ringOpacity(n)" />
-              <circle r="2.4" fill="url(#npt-goldCore)" :opacity="Math.max(nodeLit(n), n.status === 'completed' ? 0.9 : 0)" />
-            </g>
-          </g>
-
-          <!-- ░░ Course nodes ░░ -->
-          <g
-            v-for="n in layout.courseNodes" :key="n.id"
-            :transform="`translate(${n.cx} ${n.cy})`"
-          >
-            <g
-              class="npt-node"
-              v-motion
-              :initial="revealInitial"
-              :visible-once="revealEnter(n.order)"
-            >
-              <title>{{ n.code }} — {{ n.title }}</title>
-              <circle :r="COURSE_R" fill="url(#npt-courseGlass)" filter="url(#npt-relief)" />
-              <circle :r="COURSE_R" fill="none" stroke="url(#npt-ring)" stroke-width="2.2" :opacity="ringOpacity(n)" />
-              <!-- emissive core fills with the gold front -->
-              <circle :r="COURSE_R - 3.5" fill="url(#npt-goldCore)" :opacity="0.85 * nodeLit(n)" />
-              <!-- completed check -->
-              <path
-                v-if="n.status === 'completed'"
-                d="M -4.4 0.4 L -1.4 3.4 L 4.6 -3.2"
-                fill="none" stroke="#2b333d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                :opacity="Math.max(0.25, nodeLit(n))"
-              />
-            </g>
-          </g>
-
-          <!-- ░░ The Pulse — active "You are here" node ░░ -->
-          <g v-if="currentNode" :transform="`translate(${currentNode.cx} ${currentNode.cy})`">
-            <!-- expanding ripple (useMotion) -->
-            <circle ref="pulseEl" class="npt-pulse" r="11" fill="none" stroke="#F4D791" stroke-width="1.4" />
-            <!-- steady marker so reduced-motion users still see it -->
-            <circle r="3.4" fill="url(#npt-goldCore)" />
-            <circle r="3.4" fill="none" stroke="#FFF6DD" stroke-width="0.8" stroke-opacity="0.8" />
-          </g>
-        </svg>
+    <!-- ░░ HOVER TOOLTIP — dark-glass, low-opacity, follows the cursor ░░ -->
+    <Transition name="npt-tip">
+      <div v-if="hovered" class="npt-tip" :style="tipStyle" aria-hidden="true">
+        <span class="npt-tip__type">
+          {{ typeLabel(hovered) }}<template v-if="hovered.code"> · {{ hovered.code }}</template>
+        </span>
+        <span class="npt-tip__title">{{ hovered.title }}</span>
+        <span class="npt-tip__status" :data-s="hovered.status">
+          <i class="npt-tip__dot"></i>{{ statusLabel(hovered.status) }}
+        </span>
       </div>
-
-      <p class="npt__hint">Scroll to fill the pathway · the pulse marks where you are</p>
-    </div>
-  </aside>
+    </Transition>
+  </div>
 </template>
 
 <style scoped>
-/* LTR-only: physical properties throughout (matches the Atlas wayfinders). */
-
+/* Strictly transparent — no background, panel, border or glass. LTR-only. */
 .npt {
+  position: relative;
   width: 100%;
-  max-width: 320px;
-  font-family: 'Inter', sans-serif;
-  color: #E9ECF1;
+  background: transparent;
+  pointer-events: none; /* purely decorative overlay */
 }
-
-/* ── Frosted-glass panel ───────────────────────────────────────────────────── */
-.npt__panel {
-  position: relative;
-  border-radius: 22px;
-  padding: 22px 18px 18px;
-  background: linear-gradient(158deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.03));
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px) saturate(180%);
-  -webkit-backdrop-filter: blur(10px) saturate(180%);
-  box-shadow:
-    0 18px 50px -18px rgba(0, 0, 0, 0.6),
-    0 2px 8px -4px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  overflow: hidden;
-}
-/* top sheen */
-.npt__panel::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 40%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), transparent);
-  pointer-events: none;
-}
-/* faint warm spill pooled where the tree lives */
-.npt__panel::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(60% 40% at 30% 60%, rgba(244, 215, 145, 0.07), transparent 70%);
-  pointer-events: none;
-}
-
-/* ── Header ─────────────────────────────────────────────────────────────────── */
-.npt__head { position: relative; z-index: 1; }
-.npt__eyebrow {
-  margin: 0;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.32em;
-  color: #EDC071;
-  font-weight: 300;
-}
-.npt__user {
-  margin: 6px 0 0;
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-weight: 400;
-  font-size: 21px;
-  letter-spacing: 0.01em;
-  color: #F6F3EC;
-}
-.npt__meter {
-  margin-top: 12px;
-  height: 3px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.10);
-  overflow: hidden;
-}
-.npt__meter-fill {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #B8922A, #F4D791 60%, #FBE9BE);
-  box-shadow: 0 0 8px rgba(244, 215, 145, 0.6);
-}
-.npt__meter-label {
-  margin: 7px 0 0;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(233, 236, 241, 0.55);
-}
-
-/* ── Stage ─────────────────────────────────────────────────────────────────── */
-.npt__stage {
-  position: relative;
-  z-index: 1;
-  margin-top: 14px;
+.npt--sticky {
+  position: sticky;
+  top: var(--npt-top, 24px);
 }
 .npt__svg {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 380 / 860; /* matches the viewBox; tall portrait, fits viewport */
+  margin: 0 auto;
   overflow: visible;
 }
 
-.npt__hint {
-  position: relative;
-  z-index: 1;
-  margin: 10px 2px 2px;
-  font-size: 9.5px;
-  line-height: 1.5;
-  letter-spacing: 0.08em;
-  color: rgba(233, 236, 241, 0.42);
-}
-
-/* ── Node reveal / pulse transform origins (SVG needs fill-box) ─────────────── */
-.npt-node,
+/* The active-node ripple scales about its own centre. */
 .npt-pulse {
   transform-box: fill-box;
   transform-origin: center;
 }
-.npt-node { transition: filter 0.3s ease; }
-.npt-node:hover { filter: brightness(1.18); cursor: default; }
 
-/* The gold inner glow reads as emissive light over the glass — a compositor-only
-   blend (no per-frame re-raster), so the scroll fill stays at 60fps. */
-.npt-glow { mix-blend-mode: screen; }
+/* Invisible node hit-discs: opt back into pointer events (the overlay is none)
+   and make the whole transparent disc grabbable. */
+.npt-hit {
+  pointer-events: all;
+  cursor: pointer;
+}
 
-/* ── Reduced motion ────────────────────────────────────────────────────────── */
+/* ── Hover tooltip — dark glass, low opacity, minimal blur ─────────────────── */
+.npt-tip {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  pointer-events: none; /* never blocks the network or the cursor */
+  min-width: 116px;
+  max-width: 210px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(16, 20, 27, 0.42); /* semi-transparent so the glow shows through */
+  backdrop-filter: blur(3px) saturate(140%);
+  -webkit-backdrop-filter: blur(3px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.7);
+  font-family: 'Inter', sans-serif;
+  white-space: normal;
+  will-change: left, top, transform;
+}
+.npt-tip__type {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244, 215, 145, 0.92);
+}
+.npt-tip__title {
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: #F6F8FB;
+}
+.npt-tip__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(234, 240, 246, 0.72);
+}
+.npt-tip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+}
+.npt-tip__status[data-s='completed'] .npt-tip__dot { background: #F4D791; box-shadow: 0 0 6px #F4D791; }
+.npt-tip__status[data-s='in-progress'] .npt-tip__dot { background: #9FD0FF; box-shadow: 0 0 6px #9FD0FF; }
+
+.npt-tip-enter-active,
+.npt-tip-leave-active { transition: opacity 0.16s ease; }
+.npt-tip-enter-from,
+.npt-tip-leave-to { opacity: 0; }
+
 @media (prefers-reduced-motion: reduce) {
   .npt-pulse { display: none; }
-  .npt__meter-fill { box-shadow: none; }
+  .npt-tip-enter-active,
+  .npt-tip-leave-active { transition: none; }
 }
 </style>

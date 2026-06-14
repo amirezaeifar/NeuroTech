@@ -3,9 +3,8 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LuxeCard from '../components/LuxeCard.vue'
 import BrandMark from '../components/BrandMark.vue'
-import AtlasLayout from '../components/AtlasLayout.vue'
 import SpecimenPlate from '../components/SpecimenPlate.vue'
-import FieldMap from '../components/FieldMap.vue'
+import NeuralProgressTree from '../components/NeuralProgressTree.vue'
 import { courseCode } from '../utils/catalog.js'
 import { useReveal } from '../composables/useReveal.js'
 
@@ -39,32 +38,6 @@ const filtered = computed(() => courses.value.filter((c) =>
   (activeStatus.value === 'all' || c.tier === activeStatus.value) &&
   (activeField.value === 'all' || c.field === activeField.value)
 ))
-
-// The Index Spine indexes the live (filtered) plate stack. Ids are keyed to the
-// stable course index so they survive filtering; labels are the course titles.
-// Treasure-map waypoints, keyed to the live (filtered) plate stack so the map
-// mirrors what's on the right. Mock progress: free courses are partway through,
-// premium courses are not started.
-const lessonsOf = (c) => {
-  const m = (c.duration || '').match(/(\d+)\s*lesson/i)
-  return m ? Number(m[1]) : 6
-}
-const mapSections = computed(() => filtered.value.map((c) => {
-  const i = courseIndex(c)
-  const lessons = lessonsOf(c)
-  // Demo progress: first course fully charted (X marks the spot), other free
-  // courses partway, premium courses uncharted.
-  const done = c.tier === 'free' ? (i === 0 ? lessons : Math.min(2, lessons)) : 0
-  return {
-    id: `plate-${i}`,
-    code: courseCode(courses.value, i),
-    field: c.field,
-    title: c.title,
-    progress: done / Math.max(lessons, 1),
-    // Direct course redirection — the map waypoint links straight to the detail page.
-    to: `/academy/course/${i}`,
-  }
-}))
 
 useReveal()
 </script>
@@ -158,19 +131,25 @@ useReveal()
       </div>
     </section>
 
-    <!-- ───────────── Course library — Atlas substrate + plates ───────────── -->
+    <!-- ───────────── Course library — Neural rail + plates ───────────── -->
     <section class="bg-parchment border-t border-parchment-deep">
-      <AtlasLayout max-width="84rem">
-        <!-- Spine: the index of the live plate stack -->
-        <template #spine>
-          <FieldMap
-            v-if="filtered.length"
-            :sections="mapSections"
-            :label="t('academy.filterTitle')"
-          />
-        </template>
+      <!-- The grid is the scroll-track: its height drives the neural currents. -->
+      <div class="lib-grid" data-progress-track>
+        <!-- Rail: the living progress neuron. Sticky wrapper owns the position so
+             the faded radial underlay travels with the (transparent) network. -->
+        <aside class="lib-rail">
+          <div class="lib-rail__sticky">
+            <!-- Massive atmospheric halo — spans ~half the screen, locks with the
+                 tree so it's always behind it. -->
+            <div class="neural-glow" aria-hidden="true"></div>
+            <div class="neural-underlay">
+              <NeuralProgressTree :sticky="false" />
+            </div>
+          </div>
+        </aside>
 
         <!-- Field: editorial control header, then the specimen plates -->
+        <div class="lib-field">
         <header id="library" class="scroll-mt-24">
           <h2 class="font-serif font-light text-3xl md:text-4xl text-ink">{{ t('academy.filterTitle') }}</h2>
           <div class="mt-5 h-px w-16 bg-gold/50"></div>
@@ -226,7 +205,113 @@ useReveal()
         <p v-if="!filtered.length" class="mt-16 text-sm text-ink-muted font-light italic">
           {{ t('academy.fields.all') }} — {{ t('academy.filters.all') }}
         </p>
-      </AtlasLayout>
+        </div>
+      </div>
     </section>
   </div>
 </template>
+
+<style scoped>
+/* ── Library: living neural rail + specimen plates ─────────────────────────── */
+.lib-grid {
+  display: grid;
+  grid-template-columns: 1fr;              /* mobile: rail stacked above the list */
+  column-gap: clamp(2rem, 6vw, 5rem);
+  row-gap: clamp(1rem, 4vw, 2rem);
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+
+.lib-field {
+  min-width: 0;                            /* let plates shrink inside the grid */
+  padding-top: clamp(3rem, 8vh, 7rem);
+  padding-bottom: clamp(3rem, 8vh, 7rem);
+}
+
+/* Mobile: a slim accent neuron above the list. */
+.lib-rail { display: flex; justify-content: center; padding-top: clamp(2rem, 6vh, 4rem); }
+.lib-rail__sticky { width: 100%; max-width: 270px; }
+
+/* The network sits above the halo. */
+.neural-underlay { position: relative; z-index: 1; width: 100%; }
+.neural-underlay > * { position: relative; z-index: 1; }
+
+/* ── Massive left-side atmospheric halo ────────────────────────────────────────
+   A huge, very soft radial pool — a slightly deeper shade of the charcoal theme
+   (#323A45 → #212833) — anchored behind the tree and reaching out across roughly
+   half the screen width before melting completely to 0. It lives inside the
+   sticky box, so it locks and travels WITH the network. No border, no hard
+   shadow: the seam toward the centre of the page is invisible. */
+.neural-glow {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 56vw;                              /* ~half the viewport, behind the tree */
+  height: 132%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 58% 50% at 50% 50%,
+    rgba(33, 40, 51, 0.88) 0%,
+    rgba(33, 40, 51, 0.55) 30%,
+    rgba(33, 40, 51, 0.25) 52%,
+    rgba(33, 40, 51, 0.08) 70%,
+    rgba(33, 40, 51, 0) 82%
+  );
+  filter: blur(8px);                        /* extra atmospheric softness */
+}
+
+@media (min-width: 1024px) {
+  .lib-grid {
+    /* Rail / field — sized so the neuron reads as a companion, not a centrepiece. */
+    grid-template-columns: minmax(240px, 4fr) minmax(0, 8fr);
+    /* Fixed neuron height < viewport guarantees the whole tree can be fully
+       visible at once (a prerequisite for the bottom-pin lock). */
+    --neuron-h: min(660px, 72vh);
+    /* Initial offset so the TOP of the tree starts just below the field row
+       ("All fields / Neurology / Psychiatric Emergency / General"). */
+    --neuron-start: clamp(11rem, 7vh + 11.9rem, 18rem);
+  }
+  /* The rail cell stretches to the full row height (= the plate list), giving the
+     sticky neuron room to slide up and then lock at the bottom. */
+  .lib-rail { display: block; padding-top: 0; height: 100%; }
+
+  .lib-rail__sticky {
+    position: sticky;
+    /* ── THE BOTTOM-PIN LOCK ──────────────────────────────────────────────────
+       Not pinned at the top or middle: the tree slides up naturally with the
+       cards, and LOCKS only once its bottom edge clears the viewport bottom —
+       i.e. when the ENTIRE tree is fully on screen. It then stays pinned 20px
+       off the bottom while the cards keep scrolling, releasing when the field
+       row scrolls back into view on the way up. */
+    bottom: 20px;
+    height: var(--neuron-h);
+    margin-top: var(--neuron-start);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: none;
+  }
+
+  .neural-underlay {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Drive the SVG by HEIGHT so it matches --neuron-h exactly (overrides the
+     component's width-driven aspect-ratio). */
+  .neural-underlay :deep(.npt__svg) {
+    height: var(--neuron-h);
+    width: auto;
+    max-width: 100%;
+    aspect-ratio: auto;
+  }
+}
+</style>

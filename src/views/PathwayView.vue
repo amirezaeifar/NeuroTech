@@ -25,11 +25,9 @@ const statusLabel = { completed: 'Completed', 'in-progress': 'In progress', lock
       </header>
 
       <div class="grid">
-        <!-- ── Left sidebar: the Neural Pathway Progress Tree ── -->
+        <!-- ── Left sidebar: the Neural Pathway Progress Tree (self-sticky) ── -->
         <div class="rail">
-          <div class="rail__sticky">
-            <NeuralProgressTree :data="userProgress" />
-          </div>
+          <NeuralProgressTree :data="userProgress" :sticky-top="28" />
         </div>
 
         <!-- ── Right: the scrollable course list that drives the fill ── -->
@@ -118,13 +116,10 @@ const statusLabel = { completed: 'Completed', 'in-progress': 'In progress', lock
 }
 @media (max-width: 820px) {
   .grid { grid-template-columns: 1fr; }
-  .rail__sticky { position: static !important; }
+  .rail :deep(.npt) { position: static; }
 }
 
-.rail__sticky {
-  position: sticky;
-  top: 28px;
-}
+.rail { min-width: 0; }
 
 /* ── Right column ──────────────────────────────────────────────────────────── */
 .content { display: flex; flex-direction: column; gap: 40px; }
