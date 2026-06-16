@@ -27,6 +27,9 @@ const stats = computed(() => [
   { label: t('events.active.stats.countries'), value: 14 },
 ])
 
+// Dismissible "you're registered" banner.
+const showRegistered = ref(true)
+
 // ---- Side panel tabs ----
 const panel = ref('chat')
 
@@ -73,6 +76,11 @@ const agenda = [
 const statusLabel = (s) => ({ done: t('events.active.done'), live: t('events.active.now'), soon: t('events.active.soon'), upcoming: '' }[s] || '')
 
 // ---- Speakers ----
+// Cross-link speakers who also appear in the Partners directory: clicking such a
+// card routes to /partners?focus=<index>, which scrolls to + highlights them.
+const partners = computed(() => tm('partners.people'))
+const partnerIndex = (name) => partners.value.findIndex((p) => p.name === name)
+
 const speakers = [
   { name: 'Dr. A. Karimi', title: 'Functional Neurosurgeon', org: 'Tehran Neurology Institute', tag: 'Presenting', live: true, talks: 142 },
   { name: 'Dr. L. Hashemi', title: 'Clinical Neurophysiologist', org: 'Milad Medical Centre', tag: 'Moderator', live: false, talks: 87 },
@@ -94,32 +102,37 @@ useReveal()
 </script>
 
 <template>
-  <div v-if="item" class="bg-parchment-light min-h-screen pb-20">
-    <!-- Live header bar -->
+  <div v-if="item" class="event-hub-page bg-parchment-light min-h-screen pb-20">
+    <!-- Live header bar — just the back link (the Live badge and viewer count
+         that used to sit here have been removed for a cleaner header). -->
     <div class="bg-ink">
       <div class="max-w-6xl mx-auto px-6 py-5 flex flex-wrap items-center gap-4">
         <router-link to="/events" class="text-[11px] uppercase tracking-[0.25em] text-gold/80 hover:text-gold transition-colors inline-flex items-center gap-2">
           <span aria-hidden="true">←</span> {{ t('events.active.back') }}
         </router-link>
-        <div class="flex items-center gap-3 ms-auto">
-          <span class="inline-flex items-center gap-2 bg-red-600 text-white text-[10px] uppercase tracking-[0.25em] font-medium px-3 py-1.5 rounded">
-            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse-dot"></span> {{ t('events.active.live') }}
-          </span>
-          <span class="inline-flex items-center gap-1.5 text-parchment-light/80 text-xs font-light">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>
-            {{ viewers.toLocaleString() }} {{ t('events.active.viewers') }}
-          </span>
-        </div>
       </div>
     </div>
 
-    <!-- Registered confirmation -->
-    <div class="bg-gold/10 border-b border-gold/30">
-      <div class="max-w-6xl mx-auto px-6 py-2.5 flex items-center gap-2.5 text-xs text-ink-soft font-light">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="text-gold-dark shrink-0"><path d="M5 12l5 5L19 8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        {{ t('events.active.registered') }}
+    <!-- Registered confirmation — dismissible. The X collapses it out with a
+         smooth fade + slide-up <Transition> (alert-collapse). -->
+    <Transition name="alert-collapse">
+      <div v-if="showRegistered" class="bg-gold/10 border-b border-gold/30">
+        <div class="max-w-6xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs text-ink-soft font-light">
+          <span class="flex items-center gap-2.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="text-gold-dark shrink-0"><path d="M5 12l5 5L19 8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>{{ t('events.active.registered') }}</span>
+          </span>
+          <button
+            type="button"
+            @click="showRegistered = false"
+            :aria-label="t('events.active.dismiss')"
+            class="shrink-0 p-1 text-ink-muted hover:text-gold-dark transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M6 18L18 6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
       </div>
-    </div>
+    </Transition>
 
     <div class="max-w-6xl mx-auto px-6 pt-6 grid lg:grid-cols-12 gap-6">
       <!-- ================= MAIN COLUMN ================= -->
@@ -178,14 +191,20 @@ useReveal()
         <div class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card p-7">
           <h2 class="font-serif font-light text-lg text-ink mb-5">{{ t('events.active.speakersTitle') }}</h2>
           <div class="grid sm:grid-cols-3 gap-5">
-            <div v-for="sp in speakers" :key="sp.name" class="text-center sm:text-left">
+            <component
+              :is="partnerIndex(sp.name) >= 0 ? 'router-link' : 'div'"
+              v-for="sp in speakers"
+              :key="sp.name"
+              :to="partnerIndex(sp.name) >= 0 ? { path: '/partners', query: { focus: partnerIndex(sp.name) } } : undefined"
+              :class="['speaker-card text-center sm:text-left block rounded-lg', partnerIndex(sp.name) >= 0 ? 'is-linked -m-2 p-2 transition-colors hover:bg-gold/5' : '']"
+            >
               <div class="flex items-center gap-3 sm:block">
                 <div class="relative shrink-0 w-12 h-12 rounded-full bg-ink text-parchment-light flex items-center justify-center font-serif text-sm sm:mb-3">
                   {{ initials(sp.name) }}
                   <span v-if="sp.live" class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-500 border-2 border-parchment"></span>
                 </div>
                 <div class="min-w-0">
-                  <p class="text-sm text-ink font-light leading-snug">{{ sp.name }}</p>
+                  <p class="text-sm font-light leading-snug" :class="partnerIndex(sp.name) >= 0 ? 'text-ink group-hover:text-gold-dark' : 'text-ink'">{{ sp.name }}</p>
                   <p class="text-[11px] text-ink-muted font-light">{{ sp.title }}</p>
                 </div>
               </div>
@@ -195,7 +214,10 @@ useReveal()
                       :class="sp.live ? 'bg-red-500/10 text-red-600 dark:text-red-400' : 'text-gold-dark border border-gold/40'">{{ sp.tag }}</span>
                 <span class="text-[10px] text-ink-hint font-light">{{ sp.talks }} talks</span>
               </div>
-            </div>
+              <span v-if="partnerIndex(sp.name) >= 0" class="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-gold-dark font-light">
+                {{ t('events.active.viewProfile') }} <span aria-hidden="true">→</span>
+              </span>
+            </component>
           </div>
         </div>
       </div>
@@ -203,7 +225,7 @@ useReveal()
       <!-- ================= SIDE COLUMN ================= -->
       <aside class="lg:col-span-4 space-y-6">
         <!-- Live chat / Q&A -->
-        <div class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card flex flex-col h-[560px] lg:sticky lg:top-24 overflow-hidden">
+        <div class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card flex flex-col h-[560px] overflow-hidden">
           <div class="px-4 pt-4">
             <h2 class="font-serif font-light text-lg text-ink mb-3 px-1">{{ t('events.active.chatTitle') }}</h2>
             <div class="flex p-1 rounded-md bg-parchment-light border border-parchment-deep/60 text-[11px] uppercase tracking-[0.15em]">
@@ -288,3 +310,23 @@ useReveal()
     </button>
   </div>
 </template>
+
+<style scoped>
+/* Dismiss animation for the "you're registered" banner — fades out while
+   sliding up and collapsing its height, so the content below glides into place
+   rather than snapping. */
+.alert-collapse-leave-active {
+  transition: opacity 300ms ease, transform 360ms cubic-bezier(0.4, 0, 0.2, 1), max-height 360ms ease;
+  overflow: hidden;
+  max-height: 120px;
+}
+.alert-collapse-leave-to {
+  opacity: 0;
+  transform: translateY(-12px);
+  max-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .alert-collapse-leave-active { transition: opacity 200ms ease; }
+  .alert-collapse-leave-to { transform: none; }
+}
+</style>

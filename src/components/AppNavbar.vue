@@ -1,13 +1,22 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useLocale } from '../composables/useLocale.js'
 import { useTheme } from '../composables/useTheme.js'
-import BrandMark from './BrandMark.vue'
+import { useAuth } from '../composables/useAuth.js'
+import logo from '../assets/logo.png'
 
 const { t } = useI18n()
+const router = useRouter()
 const { locale, setLocale, locales } = useLocale()
 const { isDark, toggle: toggleTheme } = useTheme()
+const { isAuthenticated, logout } = useAuth()
+
+const onAuthClick = () => {
+  if (isAuthenticated.value) { logout(); router.push('/') }
+  else { router.push('/login') }
+}
 
 const scrolled = ref(false)
 const mobileOpen = ref(false)
@@ -42,35 +51,40 @@ const pickLocale = (code) => { setLocale(code); langOpen.value = false }
   ]"
 >
   <div class="max-w-7xl mx-auto px-8 min-h-[80px] h-20 flex items-center justify-between gap-6">
-    <!-- Logo + Nav group (left in LTR, right in RTL) -->
-    <div class="flex items-center gap-6 min-w-0">
-      <router-link
-        to="/"
-        :aria-label="t('brand')"
-        @click="closeMobile"
-        class="shrink-0"
-      >
-        <!-- Brand "N" neural-brain mark; wordmark appears on wide (xl) screens. -->
-        <span class="flex items-center gap-2.5 select-none">
-          <BrandMark :size="36" tone="mono" class="text-gold-dark" />
-          <span class="hidden xl:inline-block text-[11px] uppercase tracking-[0.3em] font-light text-ink-muted">{{ t('brand') }}</span>
+    <!-- Logo (left in LTR, right in RTL) -->
+    <router-link
+      to="/"
+      :aria-label="t('brand')"
+      @click="closeMobile"
+      class="shrink-0"
+    >
+      <span class="flex items-center gap-3 select-none">
+        <img :src="logo" alt="" aria-hidden="true" class="brand-logo-img h-11 w-auto" />
+        <!-- Two-line wordmark — typographically identical to the footer BrandLogo
+             (Cormorant "Neuro Tech" over Inter "NEUROLOGY · CRAFTED" + hairline). -->
+        <span class="brand-wordmark hidden xl:flex">
+          <span class="brand-wordmark-name">Neuro Tech</span>
+          <span class="brand-wordmark-sub">NEUROLOGY&nbsp;·&nbsp;CRAFTED</span>
         </span>
-      </router-link>
+      </span>
+    </router-link>
 
-      <nav class="hidden lg:flex items-center gap-6">
-        <router-link
-          v-for="link in links"
-          :key="link.to"
-          :to="link.to"
-          class="nav-link whitespace-nowrap"
-        >{{ t('nav.' + link.key) }}</router-link>
-      </nav>
-    </div>
+    <!-- Menu links — centred in the bar between the logo and the controls.
+         flex-1 + justify-center keeps them evenly spaced and centred in any
+         locale (LTR/RTL). Hidden below lg, where the mobile menu takes over. -->
+    <nav class="hidden lg:flex flex-1 items-center justify-center gap-6 xl:gap-10">
+      <router-link
+        v-for="link in links"
+        :key="link.to"
+        :to="link.to"
+        class="nav-link whitespace-nowrap"
+      >{{ t('nav.' + link.key) }}</router-link>
+    </nav>
 
     <!-- Language selector + mobile toggle (right in LTR, left in RTL).
          shrink-0 + a fixed inline-start margin guarantee the mode toggle never
          touches the last nav tab, in any locale. -->
-    <div class="flex items-center gap-5 ms-8 shrink-0">
+    <div class="flex items-center gap-5 shrink-0">
       <!-- Dark mode toggle -->
       <button
         type="button"
@@ -85,6 +99,17 @@ const pickLocale = (code) => { setLocale(code); langOpen.value = false }
           <circle cx="12" cy="12" r="4"/>
           <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" stroke-linecap="round"/>
         </svg>
+      </button>
+
+      <!-- Sign in / out -->
+      <button
+        type="button"
+        @click="onAuthClick"
+        :aria-label="isAuthenticated ? t('nav.logout') : t('nav.login')"
+        :title="isAuthenticated ? t('nav.logout') : t('nav.login')"
+        class="hidden sm:inline-flex items-center text-ink-muted hover:text-gold-dark transition-colors p-1"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0" stroke-linecap="round"/></svg>
       </button>
 
       <div class="relative">
@@ -163,3 +188,47 @@ const pickLocale = (code) => { setLocale(code); langOpen.value = false }
   </Transition>
 </header>
 </template>
+
+<style scoped>
+/* The navbar row is a strict `flex items-center` container (see the header
+   markup). Every child — logo, wordmark, nav tabs, and the utility cluster
+   (user, language, theme) — is vertically centred by flexbox alone. No
+   per-item translate-y / margin nudges are used: any such offset is what threw
+   the icons off the shared centre-line previously. */
+
+/* Two-line wordmark — a faithful HTML/CSS rendition of the footer's BrandLogo
+   SVG so the masthead and footer brand identities are pixel-for-pixel alike:
+     · "Neuro Tech"         — Cormorant Garamond 300, ~0.083em tracking
+     · "NEUROLOGY · CRAFTED" — Inter 300, 0.5em tracking, capitalised
+     · a hairline rule beneath, exactly as in the footer mark.
+   Always rendered LTR (English) regardless of locale, like the footer. */
+.brand-wordmark {
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1;
+  direction: ltr !important;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+.brand-wordmark-name {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 25px;
+  font-weight: 300;
+  letter-spacing: 0.083em;
+  line-height: 1;
+  color: var(--ink);
+  font-feature-settings: 'liga' 1, 'dlig' 1;
+}
+.brand-wordmark-sub {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 8.5px;
+  font-weight: 300;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--ink-muted);
+  margin-top: 5px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgb(var(--c-ink) / 0.32);
+}
+</style>

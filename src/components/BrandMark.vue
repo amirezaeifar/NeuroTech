@@ -69,6 +69,7 @@ defineProps({
 
 <style scoped>
 .brand-mark.is-gold { color: #B8922A; }
-.brand-mark.is-parchment { color: #FAF7F2; }
+/* Theme-aware so it always contrasts the inverting `bg-ink` surface. */
+.brand-mark.is-parchment { color: var(--parchment-light); }
 .brand-mark.is-mono { color: currentColor; }
 </style>

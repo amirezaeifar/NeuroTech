@@ -2,8 +2,8 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LuxeCard from '../components/LuxeCard.vue'
-import BrandMark from '../components/BrandMark.vue'
 import SpecimenPlate from '../components/SpecimenPlate.vue'
+import logo from '../assets/logo.png'
 import NeuralProgressTree from '../components/NeuralProgressTree.vue'
 import { courseCode } from '../utils/catalog.js'
 import { useReveal } from '../composables/useReveal.js'
@@ -49,25 +49,26 @@ useReveal()
       <!-- Depth layers: faint hairline grid, amber light-pool, brand watermark -->
       <div class="academy-hero-grid pointer-events-none absolute inset-0"></div>
       <div class="academy-hero-glow pointer-events-none absolute inset-0"></div>
-      <BrandMark
-        :size="420"
-        tone="mono"
-        class="pointer-events-none absolute -top-16 text-[#F4D791]/[0.04] hidden md:block"
+      <img
+        :src="logo"
+        alt=""
+        aria-hidden="true"
+        class="academy-hero-logo pointer-events-none absolute -top-16 w-[420px] h-auto opacity-[0.05] hidden md:block"
         style="inset-inline-end: -3rem;"
       />
 
       <div class="relative max-w-5xl mx-auto px-8 text-center">
-        <p class="text-[11px] uppercase tracking-[0.35em] text-[#EDC071] font-light mb-6">
+        <p class="academy-hero-eyebrow text-[11px] uppercase tracking-[0.35em] text-[#EDC071] font-light mb-6">
           {{ t('academy.hero.eyebrow') }}
         </p>
-        <h1 class="font-serif font-light text-[#F6F3EC] text-5xl md:text-6xl tracking-wide">
+        <h1 class="academy-hero-title font-serif font-light text-[#F6F3EC] text-5xl md:text-6xl tracking-wide">
           {{ t('academy.hero.title') }}
         </h1>
 
         <!-- Diamond rule — a touch more crafted than a plain line -->
-        <div class="mt-10 flex items-center justify-center gap-4">
+        <div class="academy-hero-rule mt-10 flex items-center justify-center gap-4">
           <span class="h-px w-16 bg-gradient-to-r from-transparent to-[#EDC071]/70"></span>
-          <span class="text-[#EDC071] text-[9px] tracking-widest">◆</span>
+          <span class="academy-hero-diamond text-[#EDC071] text-[9px] tracking-widest">◆</span>
           <span class="h-px w-16 bg-gradient-to-l from-transparent to-[#EDC071]/70"></span>
         </div>
       </div>

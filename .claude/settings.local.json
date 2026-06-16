@@ -8,7 +8,8 @@
       "Bash(netstat -ano)",
       "PowerShell($conns = Get-NetTCPConnection -LocalPort 5173 -State Listen -ErrorAction SilentlyContinue; foreach\\($c in $conns\\){ Write-Output \"Killing PID $\\($c.OwningProcess\\)\"; Stop-Process -Id $c.OwningProcess -Force -ErrorAction SilentlyContinue }; Start-Sleep -Milliseconds 500; $still = Get-NetTCPConnection -LocalPort 5173 -State Listen -ErrorAction SilentlyContinue; if\\($still\\){\"still listening\"}else{\"port 5173 free\"})",
       "Bash(node -e \"const e=require\\('./src/locales/en.json'\\); console.log\\(JSON.stringify\\(e.academy, null, 1\\)\\)\")",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(node -e \"const m=require\\('@vueuse/motion'\\);console.log\\(Object.keys\\(m\\)\\)\")"
     ]
   }
 }

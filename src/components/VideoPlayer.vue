@@ -16,7 +16,7 @@ const togglePlay = () => { playing.value = !playing.value }
 </script>
 
 <template>
-  <div class="rounded-lg overflow-hidden border border-parchment-deep/70 shadow-card bg-ink">
+  <div class="video-player rounded-lg overflow-hidden border border-parchment-deep/70 shadow-card bg-ink">
     <!-- Stage -->
     <div class="relative aspect-video w-full select-none">
       <!-- Backdrop -->

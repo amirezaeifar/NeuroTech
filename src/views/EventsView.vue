@@ -26,12 +26,6 @@ const reserveLabel = computed(() => (active.value === 'online' ? t('events.onlin
 const joinLabel = computed(() => (active.value === 'online' ? t('events.online.join') : t('events.onsite.join')))
 const personOf = (item) => item.host || item.venue || ''
 
-const archiveIcon = (type) => ({
-  image: 'M4 5h16v14H4z M4 16l4-4 3 3 5-6 4 4',
-  document: 'M7 3h7l4 4v14H7z M14 3v4h4',
-  blog: 'M5 4h14v3H5z M5 10h14 M5 14h10 M5 18h7',
-}[type] || '')
-
 useReveal()
 </script>
 
@@ -101,12 +95,26 @@ useReveal()
               <h3 class="font-serif font-light text-xl text-ink mt-3 leading-snug">{{ item.title }}</h3>
               <p class="mt-1.5 text-xs text-ink-muted font-light">{{ personOf(item) }}</p>
               <p class="mt-1 text-xs text-ink-hint font-light uppercase tracking-[0.15em]">{{ item.date }}</p>
+
+              <!-- Online sessions stream into a live hub; on-site sessions have no
+                   hub — they show a simple static "is taking place" notice. -->
               <router-link
+                v-if="active === 'online'"
                 :to="`/events/active/${active}/${item.i}`"
                 class="mt-6 inline-flex items-center justify-center gap-2.5 w-full text-[11px] uppercase tracking-[0.3em] font-light px-6 py-3.5 rounded-md bg-ink text-parchment-light hover:bg-gold-dark transition-colors"
               >
                 {{ joinLabel }} <span aria-hidden="true">→</span>
               </router-link>
+              <div
+                v-else
+                class="mt-6 flex items-center gap-2.5 rounded-md border border-gold/30 bg-gold/[0.06] px-4 py-3.5 text-sm text-ink-soft font-light"
+              >
+                <span class="relative flex h-2 w-2 shrink-0">
+                  <span class="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60 animate-ping"></span>
+                  <span class="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
+                </span>
+                <span>{{ t('events.sections.takingPlace', { name: item.title }) }}</span>
+              </div>
             </article>
           </div>
           <p v-else class="reveal mt-9 text-center text-sm text-ink-hint font-light italic">{{ t('events.sections.emptyOngoing') }}</p>
@@ -156,12 +164,12 @@ useReveal()
               <article class="bg-parchment border border-parchment-deep/70 rounded-lg p-8 md:p-10 shadow-card transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-card-hover group-hover:border-gold/50 flex gap-6 h-full">
                 <div class="shrink-0 w-12 h-12 rounded-full border border-gold/40 flex items-center justify-center">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="text-gold">
-                    <path :d="archiveIcon(item.type)" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M4 5h16v15H4z M4 9h16 M8 3v4 M16 3v4" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </div>
                 <div class="flex-1">
                   <div class="flex items-baseline justify-between gap-3">
-                    <span class="text-[10px] uppercase tracking-[0.3em] text-gold-dark font-light">{{ t(`events.archive.types.${item.type}`) }}</span>
+                    <span class="text-[10px] uppercase tracking-[0.3em] text-gold-dark font-light">{{ t('events.sections.completedEvent') }}</span>
                     <span class="text-[11px] uppercase tracking-[0.2em] text-ink-hint font-light shrink-0">{{ item.date }}</span>
                   </div>
                   <h3 class="font-serif font-light text-lg text-ink mt-2 mb-2 leading-snug group-hover:text-gold-dark transition-colors">{{ item.title }}</h3>

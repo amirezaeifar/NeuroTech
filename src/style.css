@@ -46,24 +46,27 @@
   color-scheme: dark;
 }
 
-/* ── Academy page — charcoal immersion (brief: #323A45 primary backdrop) ──
-   Scoped to the Academy page only, and only in dark mode, so the rest of the
-   site keeps its warm dark palette and light mode is untouched. The brief's
-   charcoal family (cool blue-grey) replaces the warm-charcoal tokens, and gold
-   shifts to the brighter champagne/amber that reads best on charcoal. */
-.dark .academy-page {
-  --c-parchment-light: 50 58 69;   /* page base    #323A45  ← primary backdrop */
-  --c-parchment:       58 67 79;   /* raised card  #3A434F */
-  --c-parchment-dark:  66 76 90;   /* lifted panel #424C5A */
-  --c-parchment-deep:  82 94 110;  /* hairline     #525E6E */
-  --c-gold:        237 192 113;    /* amber     #EDC071 — accents / CTAs */
-  --c-gold-light:  244 215 145;    /* champagne #F4D791 — highlights / hover */
-  --c-gold-dark:   224 181 102;    /* deep amber, still legible on charcoal */
-  --c-ink:        236 239 243;     /* primary text  #ECEFF3 */
-  --c-ink-soft:   199 205 214;
-  --c-ink-muted:  142 151 164;     /* cool slate muted */
-  --c-ink-hint:    92 102 117;
+/* ── VideoPlayer: a self-contained always-dark surface ───────────────────────
+   The player's stage is a hard-coded dark gradient in BOTH themes, so its
+   labels must stay light regardless of mode. Rather than fight the global dark
+   inversion with page-level overrides (which broke the Course / Event Hub
+   layouts), the player locally re-pins the handful of tokens it consumes to
+   fixed light-on-dark values. This is scoped to `.video-player` only — it does
+   NOT leak to the page — so the Course, Event Hub and Active-Online pages are
+   free to inherit the standard warm-charcoal dark theme (#12100D base). */
+.video-player {
+  --c-parchment-light: 250 247 242; /* light label text on the dark stage */
+  --c-parchment-deep: 214 204 186;
+  --c-ink: 26 23 20;                 /* dark glyph inside the gold play button */
+  --c-gold: 184 146 42;
+  --c-gold-light: 212 174 90;
 }
+
+/* ── Academy page — synced to the Home dark theme ──────────────────────────
+   The Academy page no longer overrides the palette in dark mode: it inherits
+   the global warm-charcoal `.dark` tokens so it matches the Home page exactly —
+   Primary base #12100D (parchment-light), Secondary surface #1C1915 (parchment),
+   Text / highlight #F2EDE4 (ink). Light mode is untouched (warm parchment). */
 
 /* ── Neural progress tree — dark/light palette ──────────────────────────────
    The component (NeuralProgressTree.vue) defines its LIGHT-mode palette inline:
@@ -78,15 +81,16 @@ html.dark .npt {
 }
 
 /* Academy neural halo — a soft gold aura in light mode (set in AcademyView), a
-   deep-charcoal pool (#323A45 → #212833) in dark mode so the white tree pops. */
+   deep warm-charcoal pool (#12100D) in dark mode so the white tree pops while
+   staying in the Home theme family. */
 html.dark .neural-glow {
   background: radial-gradient(
     ellipse 46% 42% at 38% 50%,
-    rgba(33, 40, 51, 0.92) 0%,
-    rgba(33, 40, 51, 0.6) 24%,
-    rgba(33, 40, 51, 0.32) 44%,
-    rgba(33, 40, 51, 0.12) 62%,
-    rgba(33, 40, 51, 0) 80%
+    rgba(18, 16, 13, 0.92) 0%,
+    rgba(18, 16, 13, 0.6) 24%,
+    rgba(18, 16, 13, 0.32) 44%,
+    rgba(18, 16, 13, 0.12) 62%,
+    rgba(18, 16, 13, 0) 80%
   );
 }
 
@@ -94,13 +98,34 @@ html.dark .neural-glow {
    theme). Warm ink in light mode; deep charcoal a shade below the page in
    dark mode, so the page base lifts above it. */
 .academy-hero { background: #14110E; }
-.dark .academy-page .academy-hero { background: #272E37; }
 
-/* Dark-mode Academy backdrop = brand deep charcoal (#323A45), not a generic
-   grey. The big library band used bg-parchment (a lighter slate); pin it to the
-   brand charcoal so the whole dark Academy reads as one deep-charcoal surface.
-   (Light mode is untouched.) Cards/plates keep their own lifted tones for depth. */
-.dark .academy-page .library-section { background-color: #323A45; }
+/* Dark mode: the Academy hero flips to a warm parchment band (#F2EDE4). Text
+   tones invert to ink so they stay legible against the light surface, the amber
+   light-pool is muted, and the low-opacity background logo is removed entirely. */
+.dark .academy-page .academy-hero { background: #F2EDE4; }
+.dark .academy-page .academy-hero-logo { display: none; }
+.dark .academy-page .academy-hero-glow { opacity: 0; }
+.dark .academy-page .academy-hero-grid { opacity: 0.4; }
+.dark .academy-page .academy-hero-title { color: #14110E; }
+.dark .academy-page .academy-hero-eyebrow { color: #9A7322; }
+.dark .academy-page .academy-hero-diamond { color: #9A7322; }
+.dark .academy-page .academy-hero-rule span:first-child { background-image: linear-gradient(to right, transparent, rgba(154, 115, 34, 0.6)); }
+.dark .academy-page .academy-hero-rule span:last-child { background-image: linear-gradient(to left, transparent, rgba(154, 115, 34, 0.6)); }
+
+/* Global Trade hero — dark-mode inversion (mirrors the Academy hero above).
+   The band flips from deep charcoal to warm parchment #F2EDE4; because that is a
+   light colour, the title switches to dark ink and the eyebrow/rules to a dark
+   amber so the section stays perfectly legible in dark mode. */
+html.dark .trade-hero { background: #F2EDE4; }
+html.dark .trade-hero .trade-hero-title { color: #14110E; }
+html.dark .trade-hero .trade-hero-eyebrow { color: #9A7322; }
+html.dark .trade-hero .trade-hero-rule { background-color: rgba(154, 115, 34, 0.6); }
+
+/* Dark-mode Academy backdrop = the Home primary base (#12100D). The big library
+   band uses bg-parchment (the secondary surface #1C1915); pin it to the primary
+   base so the whole dark Academy reads as one cohesive surface that matches the
+   Home theme. (Light mode is untouched.) Cards/plates keep their lifted tones. */
+.dark .academy-page .library-section { background-color: #12100D; }
 
 /* Soft amber light-pool behind the hero — barely-there depth, no clutter. */
 .academy-hero-glow {

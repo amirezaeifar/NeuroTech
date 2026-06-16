@@ -1,5 +1,5 @@
 <script setup>
-import BrandMark from './BrandMark.vue'
+import logo from '../assets/logo.png'
 
 defineProps({
   width: { type: [Number, String], default: 220 },
@@ -21,7 +21,7 @@ defineProps({
     class="brand-logo-wrap"
     style="direction: ltr; unicode-bidi: isolate; display: inline-flex; align-items: center; gap: 12px; line-height: 0;"
   >
-    <BrandMark :size="height" :tone="tone === 'parchment' ? 'parchment' : 'gold'" />
+    <img :src="logo" alt="" aria-hidden="true" :style="{ height: height + 'px', width: 'auto' }" />
 
     <svg
       :width="width"
@@ -52,7 +52,7 @@ defineProps({
         font-family="'Inter', sans-serif"
         font-size="8"
         font-weight="300"
-        :fill="tone === 'parchment' ? '#D6CCBA' : '#7A7060'"
+        :class="tone === 'parchment' ? 'brand-sub-parchment' : 'brand-sub-gold'"
         letter-spacing="4"
       >NEUROLOGY · CRAFTED</text>
       <line x1="5" y1="54" x2="178" y2="54" stroke="currentColor" stroke-width="0.4" opacity="0.35" />
@@ -61,8 +61,16 @@ defineProps({
 </template>
 
 <style scoped>
+/* Gold reads on any backdrop, so it stays a fixed metallic tone.
+   The "parchment" tone is used on the footer, whose `bg-ink` surface inverts
+   with the theme (dark in light mode, light in dark mode). Binding the wordmark
+   to the theme-aware `--parchment-light` token makes it ALWAYS contrast that
+   surface — no more white-on-white when the footer flips in dark mode. */
 .brand-logo.is-gold { color: #B8922A; }
-.brand-logo.is-parchment { color: #FAF7F2; }
+.brand-logo.is-parchment { color: var(--parchment-light); }
+
+.brand-sub-parchment { fill: var(--parchment-deep); }
+.brand-sub-gold { fill: var(--ink-muted); }
 
 /* Hard guarantee: never inherit RTL or YekanBakh inside the logo */
 .brand-logo-wrap,

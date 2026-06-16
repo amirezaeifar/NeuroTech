@@ -11,7 +11,45 @@
     "agencies": "Agencies",
     "about": "About",
     "contact": "Contact",
-    "admin": "Teacher Dashboard"
+    "admin": "Teacher Dashboard",
+    "login": "Sign In",
+    "logout": "Sign Out"
+  },
+  "auth": {
+    "eyebrow": "Member Access",
+    "brandTagline": "Precision neurology education, crafted for the modern clinician.",
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to continue to your courses.",
+    "registerTitle": "Create your account",
+    "registerSubtitle": "Join the academy and start learning today.",
+    "tabLogin": "Sign In",
+    "tabRegister": "Register",
+    "methodPassword": "Password",
+    "methodSms": "SMS Code",
+    "fields": {
+      "name": "Full name",
+      "email": "Email address",
+      "password": "Password",
+      "phone": "Mobile number",
+      "code": "Verification code"
+    },
+    "rememberMe": "Keep me signed in",
+    "forgot": "Forgot password?",
+    "loginCta": "Sign In",
+    "registerCta": "Create Account",
+    "sendCode": "Send Code",
+    "resendCode": "Resend code",
+    "verifyCta": "Verify & Continue",
+    "codeSent": "We sent a 6-digit code to {phone}.",
+    "codeHint": "Demo code: any 6 digits will be accepted.",
+    "changeNumber": "Change number",
+    "orDivider": "or",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "switchToRegister": "Register",
+    "switchToLogin": "Sign in",
+    "terms": "By continuing you agree to our terms and privacy policy.",
+    "welcome": "Signed in"
   },
   "home": {
     "hero": {
@@ -23,19 +61,43 @@
       "cta": "Discover the portfolio"
     },
     "stats": [
-      { "value": "15", "label": "Years of practice" },
-      { "value": "30+", "label": "Devices represented" },
-      { "value": "10", "label": "Partner countries" },
-      { "value": "200+", "label": "Institutions served" }
+      {
+        "value": "15",
+        "label": "Years of practice"
+      },
+      {
+        "value": "30+",
+        "label": "Devices represented"
+      },
+      {
+        "value": "10",
+        "label": "Partner countries"
+      },
+      {
+        "value": "200+",
+        "label": "Institutions served"
+      }
     ],
     "expertise": {
       "eyebrow": "Our Expertise",
       "title": "Four disciplines, one standard",
       "items": [
-        { "title": "Academic Content & Study System", "desc": "Structured curricula, assessments and progress tracking designed for clinicians and learners alike." },
-        { "title": "Neurology device sales", "desc": "EEG, EMG, neurostimulation and monitoring systems sourced from accredited manufacturers." },
-        { "title": "Medical import & export", "desc": "Full regulatory, customs and logistics handling for cross-border medical equipment trade." },
-        { "title": "Global partnerships", "desc": "Exclusive agency representation and long-term distribution agreements across four continents." }
+        {
+          "title": "Academic Content & Study System",
+          "desc": "Structured curricula, assessments and progress tracking designed for clinicians and learners alike."
+        },
+        {
+          "title": "Neurology device sales",
+          "desc": "EEG, EMG, neurostimulation and monitoring systems sourced from accredited manufacturers."
+        },
+        {
+          "title": "Medical import & export",
+          "desc": "Full regulatory, customs and logistics handling for cross-border medical equipment trade."
+        },
+        {
+          "title": "Global partnerships",
+          "desc": "Exclusive agency representation and long-term distribution agreements across four continents."
+        }
       ]
     },
     "partners": "In confidence with",
@@ -60,34 +122,139 @@
     },
     "inquire": "Inquire",
     "items": [
-      { "name": "Aurelis EEG 32", "category": "eeg", "desc": "Thirty-two channel digital electroencephalography with cloud reporting." },
-      { "name": "Cortica Portable", "category": "eeg", "desc": "Ambulatory EEG headset for remote diagnostics and long-form study." },
-      { "name": "Sentier EMG 8", "category": "emg", "desc": "Eight-channel EMG and nerve-conduction system, surface and needle compatible." },
-      { "name": "Ligne Nerve EX", "category": "emg", "desc": "Compact electromyograph for rehabilitation and sports medicine." },
-      { "name": "Profond DBS-200", "category": "neurostim", "desc": "Implantable deep-brain stimulator with programmable waveform library." },
-      { "name": "Vagus Murmure", "category": "neurostim", "desc": "Non-invasive vagus nerve stimulator for chronic-condition therapy." },
-      { "name": "TMS Atelier", "category": "neurostim", "desc": "Repetitive transcranial magnetic stimulation system for clinical research." },
-      { "name": "ICP Sentinelle", "category": "monitoring", "desc": "Continuous intracranial pressure monitoring for surgical and intensive care." },
-      { "name": "Somno 360", "category": "monitoring", "desc": "Polysomnography suite for the dedicated sleep neurology practice." }
+      {
+        "name": "Aurelis EEG 32",
+        "category": "eeg",
+        "desc": "Thirty-two channel digital electroencephalography with cloud reporting."
+      },
+      {
+        "name": "Cortica Portable",
+        "category": "eeg",
+        "desc": "Ambulatory EEG headset for remote diagnostics and long-form study."
+      },
+      {
+        "name": "Sentier EMG 8",
+        "category": "emg",
+        "desc": "Eight-channel EMG and nerve-conduction system, surface and needle compatible."
+      },
+      {
+        "name": "Ligne Nerve EX",
+        "category": "emg",
+        "desc": "Compact electromyograph for rehabilitation and sports medicine."
+      },
+      {
+        "name": "Profond DBS-200",
+        "category": "neurostim",
+        "desc": "Implantable deep-brain stimulator with programmable waveform library."
+      },
+      {
+        "name": "Vagus Murmure",
+        "category": "neurostim",
+        "desc": "Non-invasive vagus nerve stimulator for chronic-condition therapy."
+      },
+      {
+        "name": "TMS Atelier",
+        "category": "neurostim",
+        "desc": "Repetitive transcranial magnetic stimulation system for clinical research."
+      },
+      {
+        "name": "ICP Sentinelle",
+        "category": "monitoring",
+        "desc": "Continuous intracranial pressure monitoring for surgical and intensive care."
+      },
+      {
+        "name": "Somno 360",
+        "category": "monitoring",
+        "desc": "Polysomnography suite for the dedicated sleep neurology practice."
+      }
     ]
   },
   "academy": {
-    "hero": { "eyebrow": "Neuro Tech Academy", "title": "Learn from those who practise" },
+    "hero": {
+      "eyebrow": "Neuro Tech Academy",
+      "title": "Learn from those who practise"
+    },
     "intro": "A considered library of neurology courses — anatomy, diagnostics and device technique — delivered by practising clinicians and engineers.",
     "tiers": {
-      "free": { "name": "Free", "desc": "Knowledge is a shared wealth. Our free tier makes foundational medical education accessible to every clinician — open lectures, core anatomy, and introductory walkthroughs with no barriers.", "cta": "Start learning" },
-      "premium": { "name": "Premium", "desc": "For clinicians who demand depth. Our premium courses are highly specialized, expert-led clinical deep dives — intensive modules on advanced techniques, rare presentations, and cutting-edge protocols that require dedicated support for our educators.", "cta": "Explore Premium Courses", "badge": "Subscription required" }
+      "free": {
+        "name": "Free",
+        "desc": "Knowledge is a shared wealth. Our free tier makes foundational medical education accessible to every clinician — open lectures, core anatomy, and introductory walkthroughs with no barriers.",
+        "cta": "Start learning"
+      },
+      "premium": {
+        "name": "Premium",
+        "desc": "For clinicians who demand depth. Our premium courses are highly specialized, expert-led clinical deep dives — intensive modules on advanced techniques, rare presentations, and cutting-edge protocols that require dedicated support for our educators.",
+        "cta": "Explore Premium Courses",
+        "badge": "Subscription required"
+      }
     },
     "filterTitle": "Browse the library",
-    "filters": { "all": "All courses", "free": "Free", "premium": "Premium" },
-    "fields": { "all": "All fields", "psychEmergency": "Psychiatric Emergency", "neurology": "Neurology", "general": "General" },
+    "filters": {
+      "all": "All courses",
+      "free": "Free",
+      "premium": "Premium"
+    },
+    "fields": {
+      "all": "All fields",
+      "psychEmergency": "Psychiatric Emergency",
+      "neurology": "Neurology",
+      "general": "General"
+    },
     "courses": [
-      { "title": "Foundations of Clinical EEG", "instructor": "Dr. N. Farahani", "level": "Introductory", "duration": "6 lessons · 3h 20m", "tier": "free", "field": "neurology", "desc": "Reading the trace: montages, artefacts and the normal adult record." },
-      { "title": "EMG & Nerve Conduction in Practice", "instructor": "Dr. S. Moradi", "level": "Intermediate", "duration": "9 lessons · 5h 10m", "tier": "premium", "field": "general", "desc": "Needle technique, waveform interpretation and reporting standards." },
-      { "title": "Programming Deep-Brain Stimulators", "instructor": "Dr. A. Karimi", "level": "Advanced", "duration": "8 lessons · 4h 45m", "tier": "premium", "field": "neurology", "desc": "Device parameters, waveform libraries and patient titration protocols." },
-      { "title": "Neurostimulation: An Introduction", "instructor": "Eng. R. Tabrizi", "level": "Introductory", "duration": "5 lessons · 2h 40m", "tier": "free", "field": "general", "desc": "TMS, VNS and the principles behind non-invasive stimulation therapy." },
-      { "title": "Polysomnography & Sleep Reporting", "instructor": "Dr. L. Hashemi", "level": "Intermediate", "duration": "7 lessons · 4h 05m", "tier": "premium", "field": "psychEmergency", "desc": "Montage set-up, scoring conventions and structuring the sleep report." },
-      { "title": "Intracranial Pressure Monitoring", "instructor": "Dr. M. Saadat", "level": "Advanced", "duration": "6 lessons · 3h 30m", "tier": "premium", "field": "psychEmergency", "desc": "Indications, waveform analysis and intensive-care escalation pathways." }
+      {
+        "title": "Foundations of Clinical EEG",
+        "instructor": "Dr. N. Farahani",
+        "level": "Introductory",
+        "duration": "6 lessons · 3h 20m",
+        "tier": "free",
+        "field": "neurology",
+        "desc": "Reading the trace: montages, artefacts and the normal adult record."
+      },
+      {
+        "title": "EMG & Nerve Conduction in Practice",
+        "instructor": "Dr. S. Moradi",
+        "level": "Intermediate",
+        "duration": "9 lessons · 5h 10m",
+        "tier": "premium",
+        "field": "general",
+        "desc": "Needle technique, waveform interpretation and reporting standards."
+      },
+      {
+        "title": "Programming Deep-Brain Stimulators",
+        "instructor": "Dr. A. Karimi",
+        "level": "Advanced",
+        "duration": "8 lessons · 4h 45m",
+        "tier": "premium",
+        "field": "neurology",
+        "desc": "Device parameters, waveform libraries and patient titration protocols."
+      },
+      {
+        "title": "Neurostimulation: An Introduction",
+        "instructor": "Eng. R. Tabrizi",
+        "level": "Introductory",
+        "duration": "5 lessons · 2h 40m",
+        "tier": "free",
+        "field": "general",
+        "desc": "TMS, VNS and the principles behind non-invasive stimulation therapy."
+      },
+      {
+        "title": "Polysomnography & Sleep Reporting",
+        "instructor": "Dr. L. Hashemi",
+        "level": "Intermediate",
+        "duration": "7 lessons · 4h 05m",
+        "tier": "premium",
+        "field": "psychEmergency",
+        "desc": "Montage set-up, scoring conventions and structuring the sleep report."
+      },
+      {
+        "title": "Intracranial Pressure Monitoring",
+        "instructor": "Dr. M. Saadat",
+        "level": "Advanced",
+        "duration": "6 lessons · 3h 30m",
+        "tier": "premium",
+        "field": "psychEmergency",
+        "desc": "Indications, waveform analysis and intensive-care escalation pathways."
+      }
     ],
     "player": {
       "eyebrow": "Now Playing",
@@ -118,7 +285,7 @@
       "relatedTitle": "Browse the Library",
       "relatedSubtitle": "More courses from the Academy collection.",
       "descriptionTitle": "Course Description",
-      "simulateHint": "Demo — no payment is taken; this simply unlocks the player.",
+      "simulateHint": "Demo — takes you to a mock checkout; lessons unlock when you return.",
       "unlockedNotice": "Subscription active. All lessons are now unlocked — select any lesson to begin."
     },
     "comments": {
@@ -128,16 +295,34 @@
       "submit": "Post",
       "pendingNotice": "Your comment will appear once a teacher approves it.",
       "list": [
-        { "name": "P. Ahmadi", "time": "2 days ago", "body": "Could you clarify the difference between benign variants and true epileptiform discharges around the 14-minute mark?" },
-        { "name": "R. Soleimani", "time": "5 days ago", "body": "Excellent walkthrough of montage selection — the bipolar vs referential comparison finally clicked for me." },
-        { "name": "F. Karbasi", "time": "1 week ago", "body": "Would love a follow-up lesson on paediatric EEG normal variants." }
+        {
+          "name": "P. Ahmadi",
+          "time": "2 days ago",
+          "body": "Could you clarify the difference between benign variants and true epileptiform discharges around the 14-minute mark?"
+        },
+        {
+          "name": "R. Soleimani",
+          "time": "5 days ago",
+          "body": "Excellent walkthrough of montage selection — the bipolar vs referential comparison finally clicked for me."
+        },
+        {
+          "name": "F. Karbasi",
+          "time": "1 week ago",
+          "body": "Would love a follow-up lesson on paediatric EEG normal variants."
+        }
       ]
     }
   },
   "events": {
-    "hero": { "eyebrow": "Calendar", "title": "Events & Sessions" },
+    "hero": {
+      "eyebrow": "Calendar",
+      "title": "Events & Sessions"
+    },
     "intro": "Live-streamed clinical sessions and physical seminars — gathered in one considered calendar, alongside an archive of what came before.",
-    "tabs": { "online": "Online", "onsite": "On-site" },
+    "tabs": {
+      "online": "Online",
+      "onsite": "On-site"
+    },
     "sections": {
       "ongoing": "Ongoing",
       "ongoingDesc": "Sessions broadcasting live right now — registered attendees can join immediately.",
@@ -146,16 +331,46 @@
       "past": "Past",
       "pastDesc": "Recordings, galleries and write-ups from sessions that have concluded.",
       "liveNow": "Live now",
+      "takingPlace": "{name} is currently taking place.",
+      "completedEvent": "Completed event",
       "emptyOngoing": "No sessions are live at the moment. Browse what's coming up below."
     },
     "online": {
       "title": "Live-streamed surgeries & treatments",
       "desc": "Watch procedures and case discussions broadcast directly from partner clinics, with real-time commentary from the operating specialist.",
       "items": [
-        { "title": "Live DBS Implantation — Case Review", "host": "Dr. A. Karimi · Tehran Neurology Institute", "date": "Streaming now · 17:00 (GMT+3:30)", "tag": "Surgical broadcast", "status": "Live now", "phase": "ongoing" },
-        { "title": "EEG Reading Clinic — Live Case Stream", "host": "Dr. N. Farahani", "date": "In session · 16:00 (GMT+3:30)", "tag": "Teaching clinic", "status": "Live now", "phase": "ongoing" },
-        { "title": "Vagus Nerve Stimulation: Patient Selection Roundtable", "host": "Dr. S. Moradi & panel", "date": "27 June 2026 · 18:30 (GMT+3:30)", "tag": "Panel discussion", "status": "Upcoming", "phase": "upcoming" },
-        { "title": "Intra-operative Neuromonitoring Masterclass", "host": "Dr. M. Saadat", "date": "4 July 2026 · 16:00 (GMT+3:30)", "tag": "Teaching clinic", "status": "Registration open", "phase": "upcoming" }
+        {
+          "title": "Live DBS Implantation — Case Review",
+          "host": "Dr. A. Karimi · Tehran Neurology Institute",
+          "date": "Streaming now · 17:00 (GMT+3:30)",
+          "tag": "Surgical broadcast",
+          "status": "Live now",
+          "phase": "ongoing"
+        },
+        {
+          "title": "EEG Reading Clinic — Live Case Stream",
+          "host": "Dr. N. Farahani",
+          "date": "In session · 16:00 (GMT+3:30)",
+          "tag": "Teaching clinic",
+          "status": "Live now",
+          "phase": "ongoing"
+        },
+        {
+          "title": "Vagus Nerve Stimulation: Patient Selection Roundtable",
+          "host": "Dr. S. Moradi & panel",
+          "date": "27 June 2026 · 18:30 (GMT+3:30)",
+          "tag": "Panel discussion",
+          "status": "Upcoming",
+          "phase": "upcoming"
+        },
+        {
+          "title": "Intra-operative Neuromonitoring Masterclass",
+          "host": "Dr. M. Saadat",
+          "date": "4 July 2026 · 16:00 (GMT+3:30)",
+          "tag": "Teaching clinic",
+          "status": "Registration open",
+          "phase": "upcoming"
+        }
       ],
       "watch": "Reserve a seat",
       "join": "Join live session"
@@ -164,9 +379,30 @@
       "title": "Physical seminars & workshops",
       "desc": "Hands-on sessions held at partner institutes and clinics — device workshops, anatomy labs and standards briefings.",
       "items": [
-        { "title": "Neurostimulation Devices — Hands-on Workshop", "venue": "Tehran Neurology Institute, Hall B", "date": "Happening now · Today–Tomorrow", "tag": "Workshop", "status": "In progress", "phase": "ongoing" },
-        { "title": "Regulatory Standards for Medical Import & Export", "venue": "Neuro Tech Studio, Valiasr Ave.", "date": "5 July 2026", "tag": "Briefing", "status": "Open registration", "phase": "upcoming" },
-        { "title": "Annual Clinical Neurophysiology Seminar", "venue": "Milad Conference Centre", "date": "14–15 September 2026", "tag": "Seminar", "status": "Save the date", "phase": "upcoming" }
+        {
+          "title": "Neurostimulation Devices — Hands-on Workshop",
+          "venue": "Tehran Neurology Institute, Hall B",
+          "date": "Happening now · Today–Tomorrow",
+          "tag": "Workshop",
+          "status": "In progress",
+          "phase": "ongoing"
+        },
+        {
+          "title": "Regulatory Standards for Medical Import & Export",
+          "venue": "Neuro Tech Studio, Valiasr Ave.",
+          "date": "5 July 2026",
+          "tag": "Briefing",
+          "status": "Open registration",
+          "phase": "upcoming"
+        },
+        {
+          "title": "Annual Clinical Neurophysiology Seminar",
+          "venue": "Milad Conference Centre",
+          "date": "14–15 September 2026",
+          "tag": "Seminar",
+          "status": "Save the date",
+          "phase": "upcoming"
+        }
       ],
       "register": "Register interest",
       "join": "Enter live hub"
@@ -174,13 +410,37 @@
     "archive": {
       "title": "Archive",
       "subtitle": "A record of sessions, seminars and the writing they produced.",
-      "types": { "image": "Gallery", "document": "Document", "blog": "Recap" },
+      "types": {
+        "image": "Gallery",
+        "document": "Document",
+        "blog": "Recap"
+      },
       "viewDetail": "View details",
       "items": [
-        { "type": "image", "title": "EEG Reading Clinic — Spring Cohort", "date": "March 2026", "summary": "Photographs from a three-day teaching clinic held with residents from four partner hospitals." },
-        { "type": "document", "title": "Regulatory Briefing: Customs Handbook 2026", "date": "February 2026", "summary": "Slides and reference handbook distributed at the import & export standards briefing." },
-        { "type": "blog", "title": "Notes from the DBS Programming Roundtable", "date": "December 2025", "summary": "A recap of the discussion on titration protocols and long-term patient follow-up." },
-        { "type": "image", "title": "Annual Seminar 2025 — Gallery", "date": "September 2025", "summary": "Highlights from two days of sessions, workshops and the partner exhibition floor." }
+        {
+          "type": "image",
+          "title": "EEG Reading Clinic — Spring Cohort",
+          "date": "March 2026",
+          "summary": "Photographs from a three-day teaching clinic held with residents from four partner hospitals."
+        },
+        {
+          "type": "document",
+          "title": "Regulatory Briefing: Customs Handbook 2026",
+          "date": "February 2026",
+          "summary": "Slides and reference handbook distributed at the import & export standards briefing."
+        },
+        {
+          "type": "blog",
+          "title": "Notes from the DBS Programming Roundtable",
+          "date": "December 2025",
+          "summary": "A recap of the discussion on titration protocols and long-term patient follow-up."
+        },
+        {
+          "type": "image",
+          "title": "Annual Seminar 2025 — Gallery",
+          "date": "September 2025",
+          "summary": "Highlights from two days of sessions, workshops and the partner exhibition floor."
+        }
       ]
     },
     "pastDetail": {
@@ -188,11 +448,92 @@
       "back": "Back to Archive",
       "overview": "This session brought together over sixty clinicians from neurology, neurophysiology, emergency medicine, and intensive care for a structured day of expert-led presentations and case-based workshops. The programme centred on the practical management of complex neurological emergencies, with particular attention to the evidence base for current treatment protocols and the clinical situations where that evidence is absent or contested. Speakers were drawn from tertiary referral centres across the region, and the case discussions reflected the genuine diagnostic uncertainty that characterises daily practice at the interface of neurology and critical care. Participants rated the session highly for relevance, and several of the clinical frameworks introduced during the workshops have since been integrated into institutional protocols by attending teams.",
       "galleryTitle": "Gallery",
+      "viewFull": "View fullscreen",
+      "prevImage": "Previous image",
+      "nextImage": "Next image",
+      "closeImage": "Close gallery",
       "relatedTitle": "Related Materials",
       "blogsLabel": "Related blog",
       "documentsLabel": "Clinical document",
       "infoLabel": "Event information",
-      "infoBody": "For access to full session recordings, transcripts or supporting documentation, please write to the atelier — references are shared individually with academy members."
+      "infoBody": "For access to full session recordings, transcripts or supporting documentation, please write to the atelier — references are shared individually with academy members.",
+      "descriptionTitle": "General Description",
+      "agendaTitle": "Syllabus & Agenda",
+      "agenda": [
+        {
+          "time": "09:00",
+          "title": "Registration & welcome address",
+          "detail": "Opening remarks and an overview of the day's clinical themes."
+        },
+        {
+          "time": "09:30",
+          "title": "Keynote: the deteriorating neurological patient",
+          "detail": "A framework for rapid assessment in the acute setting."
+        },
+        {
+          "time": "11:00",
+          "title": "Hands-on workshop — EEG in the ICU",
+          "detail": "Small-group review of challenging traces with faculty guidance."
+        },
+        {
+          "time": "13:30",
+          "title": "Panel: evidence, uncertainty & protocol",
+          "detail": "Where the evidence base is strong, and where clinical judgement must lead."
+        },
+        {
+          "time": "15:00",
+          "title": "Case-based breakout sessions",
+          "detail": "Worked diagnostic cases drawn from partner referral centres."
+        },
+        {
+          "time": "16:30",
+          "title": "Closing discussion & certificates",
+          "detail": "Synthesis of the day and issuance of attendance certificates."
+        }
+      ],
+      "faqTitle": "Key Q&A",
+      "faq": [
+        {
+          "q": "Were the sessions recorded?",
+          "a": "Yes — full recordings are archived and shared individually with registered academy members on request."
+        },
+        {
+          "q": "Can I obtain a certificate of attendance?",
+          "a": "Certificates were issued to all registered attendees on the day and can be reissued by writing to the atelier."
+        },
+        {
+          "q": "Are the workshop materials available?",
+          "a": "The slide decks, reading pack and case material are available in the Documents & Resources section below."
+        },
+        {
+          "q": "Will this event run again?",
+          "a": "Selected sessions are repeated each year; upcoming dates are published on the Events calendar."
+        }
+      ],
+      "resourcesTitle": "Documents & Resources",
+      "documents": [
+        {
+          "name": "Full programme & speaker biographies",
+          "type": "PDF",
+          "size": "1.8 MB"
+        },
+        {
+          "name": "Keynote slide deck — acute neurology",
+          "type": "PDF",
+          "size": "4.2 MB"
+        },
+        {
+          "name": "EEG workshop — annotated trace pack",
+          "type": "PDF",
+          "size": "6.7 MB"
+        },
+        {
+          "name": "Case-based breakout — reference sheet",
+          "type": "XLSX",
+          "size": "240 KB"
+        }
+      ],
+      "downloadLabel": "Download"
     },
     "active": {
       "back": "Back to Events",
@@ -204,6 +545,8 @@
       "qaTab": "Q&A",
       "chatPlaceholder": "Ask a question or say hello…",
       "send": "Send",
+      "dismiss": "Dismiss",
+      "viewProfile": "View profile",
       "you": "You",
       "agendaTitle": "Session Agenda",
       "speakersTitle": "Speakers & Faculty",
@@ -227,22 +570,79 @@
       "intro": "Complete the form below to secure your place at this session. A confirmation will be sent to your email shortly after submission.",
       "eventDesc": "This focused half-day programme brings together neurologists, neurophysiologists, and allied clinical teams for a series of expert-led presentations built around real case material, with time reserved after each talk for questions from the floor.\n\nThe morning addresses the acute assessment of the neurologically deteriorating patient — new-onset seizures in the emergency setting, the management of status epilepticus, and a practical framework for evaluating encephalopathy. The afternoon turns to procedural topics: EEG monitoring in the ICU and a workshop-style review of challenging traces.\n\nAll registered attendees receive a pre-reading pack, a printed programme on the day, and access to the session slide deck within 72 hours. Certificates of attendance are issued automatically, and seats are limited, so early registration is strongly recommended.",
       "summaryTitle": "Session",
+      "infoTitle": "Event Info",
+      "descriptionTitle": "About This Event",
+      "hostLabel": "Host",
+      "venueLabel": "Venue",
+      "dateLabel": "Date",
+      "statusLabel": "Status",
+      "capacityLabel": "Capacity",
+      "filledLabel": "Spots Filled",
+      "spotsRemaining": "{count} spots remaining",
+      "signInHint": "You'll be asked to sign in to confirm your seat.",
+      "modalTitle": "Reservation Confirmed",
+      "modalBody": "Your seat for \"{title}\" is reserved. A confirmation will follow by email.",
+      "modalClose": "Done",
       "formTitle": "Your Details",
-      "fields": { "name": "Full name", "email": "Email", "phone": "Telephone", "seats": "Number of seats", "notes": "Notes (optional)" },
+      "fields": {
+        "name": "Full name",
+        "email": "Email",
+        "phone": "Telephone",
+        "seats": "Number of seats",
+        "notes": "Notes (optional)"
+      },
       "submit": "Confirm Reservation",
       "success": "Your reservation has been received. A confirmation will follow by email.",
       "backCta": "Back to Events"
     }
   },
   "globalTrade": {
-    "hero": { "eyebrow": "Network & Trade", "title": "Global Trade" },
+    "hero": {
+      "eyebrow": "Network & Trade",
+      "title": "Global Trade"
+    },
     "intro": "Through measured, long-form partnerships we connect accredited manufacturers with hospitals, clinics and research institutes — and move neurology equipment across borders with care.",
     "regionsTitle": "Regions of practice",
     "regions": [
-      { "name": "Europe", "countries": ["Germany", "Italy", "France", "Netherlands"], "note": "Long-standing partnerships with EU-certified manufacturers." },
-      { "name": "Middle East", "countries": ["United Arab Emirates", "Saudi Arabia", "Qatar", "Iran"], "note": "Regional studio and rapid logistics network." },
-      { "name": "Asia", "countries": ["Japan", "South Korea", "Singapore", "India"], "note": "Sourcing from the premier Asian medtech ateliers." },
-      { "name": "Americas", "countries": ["United States", "Canada", "Brazil"], "note": "Selected distribution and import accords." }
+      {
+        "name": "Europe",
+        "countries": [
+          "Germany",
+          "Italy",
+          "France",
+          "Netherlands"
+        ],
+        "note": "Long-standing partnerships with EU-certified manufacturers."
+      },
+      {
+        "name": "Middle East",
+        "countries": [
+          "United Arab Emirates",
+          "Saudi Arabia",
+          "Qatar",
+          "Iran"
+        ],
+        "note": "Regional studio and rapid logistics network."
+      },
+      {
+        "name": "Asia",
+        "countries": [
+          "Japan",
+          "South Korea",
+          "Singapore",
+          "India"
+        ],
+        "note": "Sourcing from the premier Asian medtech ateliers."
+      },
+      {
+        "name": "Americas",
+        "countries": [
+          "United States",
+          "Canada",
+          "Brazil"
+        ],
+        "note": "Selected distribution and import accords."
+      }
     ],
     "importExport": {
       "eyebrow": "Capability",
@@ -251,12 +651,22 @@
       "import": {
         "title": "Import",
         "desc": "Licensed import of neurology devices into regional markets, including registration, customs clearance and clinical handover.",
-        "items": ["Regulatory registration & licensing", "Customs clearance and bonded logistics", "Cold-chain and sensitive-equipment handling", "Clinical installation and staff training"]
+        "items": [
+          "Regulatory registration & licensing",
+          "Customs clearance and bonded logistics",
+          "Cold-chain and sensitive-equipment handling",
+          "Clinical installation and staff training"
+        ]
       },
       "export": {
         "title": "Export",
         "desc": "Export-readiness for manufacturers seeking representation and distribution across our partner regions.",
-        "items": ["Market assessment and entry strategy", "Documentation, certification and labelling support", "Freight forwarding and insured transit", "After-sales service network coordination"]
+        "items": [
+          "Market assessment and entry strategy",
+          "Documentation, certification and labelling support",
+          "Freight forwarding and insured transit",
+          "After-sales service network coordination"
+        ]
       }
     },
     "caseStudies": {
@@ -265,10 +675,50 @@
       "subtitle": "Selected import and export engagements with partner manufacturers, hospitals and research institutes.",
       "viewReport": "View report",
       "items": [
-        { "company": "NeuroSpan GmbH", "country": "Germany", "type": "import", "category": "EEG Systems", "title": "32-Channel EEG Rollout — Hospital Network Modernisation", "summary": "Coordinated import, customs clearance and clinical installation of eighteen digital EEG systems across six partner hospitals, including staff training and a twelve-month service agreement.", "year": "2025", "volume": "18 units · €620,000", "outcome": "Reduced diagnostic backlog by roughly 40% within the first quarter of full deployment, and established a regional service hub for ongoing maintenance." },
-        { "company": "Atlas Neurodevices Inc.", "country": "United States", "type": "export", "category": "Neurostimulation", "title": "Representation Agreement — Vagus Nerve Stimulator Line", "summary": "Secured exclusive regional distribution rights for a non-invasive vagus nerve stimulation platform, including regulatory registration and a tiered clinical training programme for partner neurologists.", "year": "2024", "volume": "Distribution accord · 5-year term", "outcome": "Platform now active in eleven clinics across three countries, supported by a dedicated after-sales service network." },
-        { "company": "SilkRoad Medtech", "country": "South Korea", "type": "import", "category": "Intracranial Monitoring", "title": "ICU Monitoring Suite — Critical Care Expansion", "summary": "Managed end-to-end import of intracranial pressure monitoring suites for three intensive care units, including cold-chain logistics, customs bonding and clinical handover.", "year": "2025", "volume": "9 units · €410,000", "outcome": "Enabled continuous ICP monitoring capability in two cities for the first time, shortening escalation decision time in critical cases." },
-        { "company": "Cedar Biomedical", "country": "Canada", "type": "export", "category": "EMG Systems", "title": "Export Readiness Programme — Compact EMG Devices", "summary": "Guided a manufacturer through market assessment, documentation, certification and freight arrangements for entry into Middle Eastern distribution channels.", "year": "2023", "volume": "Market-entry programme · 14 months", "outcome": "Achieved first regional sale within five months of certification, with a standing order now in place for quarterly shipments." }
+        {
+          "company": "NeuroSpan GmbH",
+          "country": "Germany",
+          "type": "import",
+          "category": "EEG Systems",
+          "title": "32-Channel EEG Rollout — Hospital Network Modernisation",
+          "summary": "Coordinated import, customs clearance and clinical installation of eighteen digital EEG systems across six partner hospitals, including staff training and a twelve-month service agreement.",
+          "year": "2025",
+          "volume": "18 units · €620,000",
+          "outcome": "Reduced diagnostic backlog by roughly 40% within the first quarter of full deployment, and established a regional service hub for ongoing maintenance."
+        },
+        {
+          "company": "Atlas Neurodevices Inc.",
+          "country": "United States",
+          "type": "export",
+          "category": "Neurostimulation",
+          "title": "Representation Agreement — Vagus Nerve Stimulator Line",
+          "summary": "Secured exclusive regional distribution rights for a non-invasive vagus nerve stimulation platform, including regulatory registration and a tiered clinical training programme for partner neurologists.",
+          "year": "2024",
+          "volume": "Distribution accord · 5-year term",
+          "outcome": "Platform now active in eleven clinics across three countries, supported by a dedicated after-sales service network."
+        },
+        {
+          "company": "SilkRoad Medtech",
+          "country": "South Korea",
+          "type": "import",
+          "category": "Intracranial Monitoring",
+          "title": "ICU Monitoring Suite — Critical Care Expansion",
+          "summary": "Managed end-to-end import of intracranial pressure monitoring suites for three intensive care units, including cold-chain logistics, customs bonding and clinical handover.",
+          "year": "2025",
+          "volume": "9 units · €410,000",
+          "outcome": "Enabled continuous ICP monitoring capability in two cities for the first time, shortening escalation decision time in critical cases."
+        },
+        {
+          "company": "Cedar Biomedical",
+          "country": "Canada",
+          "type": "export",
+          "category": "EMG Systems",
+          "title": "Export Readiness Programme — Compact EMG Devices",
+          "summary": "Guided a manufacturer through market assessment, documentation, certification and freight arrangements for entry into Middle Eastern distribution channels.",
+          "year": "2023",
+          "volume": "Market-entry programme · 14 months",
+          "outcome": "Achieved first regional sale within five months of certification, with a standing order now in place for quarterly shipments."
+        }
       ]
     },
     "tradeDetail": {
@@ -295,11 +745,17 @@
         "Considered network of hospitals and clinical buyers",
         "Commitment to a long-form, exclusive relationship"
       ],
-      "cta": "Begin a dialogue"
+      "cta": "Begin a dialogue",
+      "eyebrow": "Partnership",
+      "lead": "We extend only a small number of exclusive territorial partnerships each year — to established operators who share our standard of clinical care and long-form thinking.",
+      "criteriaTitle": "What we look for"
     }
   },
   "partners": {
-    "hero": { "eyebrow": "In Confidence With", "title": "Partners" },
+    "hero": {
+      "eyebrow": "In Confidence With",
+      "title": "Partners"
+    },
     "intro": "The clinicians, instructors and creators who lend their expertise to our devices, our courses and our community.",
     "labels": {
       "qualification": "Educational Qualification",
@@ -307,45 +763,136 @@
       "collaborations": "Collaboration Areas"
     },
     "people": [
-      { "name": "Dr. A. Karimi", "qualification": "MD, Functional Neurosurgery — Tehran University of Medical Sciences", "councilNumber": "IR-NS-10342", "collaborations": ["Device Advisory Board", "Surgical Workshop Lead"], "bio": "Leads deep-brain stimulation programmes at Tehran Neurology Institute; advises on device selection and surgical workflow." },
-      { "name": "Dr. S. Moradi", "qualification": "MD, Clinical Neurophysiology — Shahid Beheshti University of Medical Sciences", "councilNumber": "IR-NP-20567", "collaborations": ["Course Instructor", "Device Validation Consultant"], "bio": "Specialist in EMG and nerve-conduction diagnostics; collaborates on device validation and clinical training." },
-      { "name": "Dr. N. Farahani", "qualification": "MD, Epileptology & EEG — Tabriz University of Medical Sciences", "councilNumber": "IR-EP-30781", "collaborations": ["Course Instructor", "Live Reading Clinic Host"], "bio": "Teaches the Foundations of Clinical EEG course and hosts the Academy's live reading clinics." },
-      { "name": "Dr. L. Hashemi", "qualification": "MD, Sleep Medicine — Isfahan University of Medical Sciences", "councilNumber": "IR-SM-40219", "collaborations": ["Course Instructor", "Curriculum Reviewer"], "bio": "Designs polysomnography curricula and reviews premium-tier course materials before publication." },
-      { "name": "Dr. M. Saadat", "qualification": "MD, Critical Care & Status Epilepticus — Tehran Neurology Institute", "councilNumber": "IR-CC-50934", "collaborations": ["Status Epilepticus Consultant", "Clinical Documentation Lead"], "bio": "Advises on intensive-care escalation pathways and produces case-study writing for the Events archive and Academy library." },
-      { "name": "Eng. R. Tabrizi", "qualification": "MSc, Biomedical Engineering — Sharif University of Technology", "councilNumber": "—", "collaborations": ["Course Instructor", "Device Technique Designer"], "bio": "Builds device-technique modules bridging engineering principles and clinical application." },
-      { "name": "F. Karbasi", "qualification": "BFA, Medical Illustration — Tehran University of Art", "councilNumber": "—", "collaborations": ["Medical Illustrator", "Seminar Material Designer"], "bio": "Creates anatomical and procedural illustration used across courses and seminar materials." }
+      {
+        "name": "Dr. A. Karimi",
+        "qualification": "MD, Functional Neurosurgery — Tehran University of Medical Sciences",
+        "councilNumber": "IR-NS-10342",
+        "collaborations": [
+          "Device Advisory Board",
+          "Surgical Workshop Lead"
+        ],
+        "bio": "Leads deep-brain stimulation programmes at Tehran Neurology Institute; advises on device selection and surgical workflow."
+      },
+      {
+        "name": "Dr. S. Moradi",
+        "qualification": "MD, Clinical Neurophysiology — Shahid Beheshti University of Medical Sciences",
+        "councilNumber": "IR-NP-20567",
+        "collaborations": [
+          "Course Instructor",
+          "Device Validation Consultant"
+        ],
+        "bio": "Specialist in EMG and nerve-conduction diagnostics; collaborates on device validation and clinical training."
+      },
+      {
+        "name": "Dr. N. Farahani",
+        "qualification": "MD, Epileptology & EEG — Tabriz University of Medical Sciences",
+        "councilNumber": "IR-EP-30781",
+        "collaborations": [
+          "Course Instructor",
+          "Live Reading Clinic Host"
+        ],
+        "bio": "Teaches the Foundations of Clinical EEG course and hosts the Academy's live reading clinics."
+      },
+      {
+        "name": "Dr. L. Hashemi",
+        "qualification": "MD, Sleep Medicine — Isfahan University of Medical Sciences",
+        "councilNumber": "IR-SM-40219",
+        "collaborations": [
+          "Course Instructor",
+          "Curriculum Reviewer"
+        ],
+        "bio": "Designs polysomnography curricula and reviews premium-tier course materials before publication."
+      },
+      {
+        "name": "Dr. M. Saadat",
+        "qualification": "MD, Critical Care & Status Epilepticus — Tehran Neurology Institute",
+        "councilNumber": "IR-CC-50934",
+        "collaborations": [
+          "Status Epilepticus Consultant",
+          "Clinical Documentation Lead"
+        ],
+        "bio": "Advises on intensive-care escalation pathways and produces case-study writing for the Events archive and Academy library."
+      },
+      {
+        "name": "Eng. R. Tabrizi",
+        "qualification": "MSc, Biomedical Engineering — Sharif University of Technology",
+        "councilNumber": "—",
+        "collaborations": [
+          "Course Instructor",
+          "Device Technique Designer"
+        ],
+        "bio": "Builds device-technique modules bridging engineering principles and clinical application."
+      },
+      {
+        "name": "F. Karbasi",
+        "qualification": "BFA, Medical Illustration — Tehran University of Art",
+        "councilNumber": "—",
+        "collaborations": [
+          "Medical Illustrator",
+          "Seminar Material Designer"
+        ],
+        "bio": "Creates anatomical and procedural illustration used across courses and seminar materials."
+      }
     ],
-    "cta": { "title": "Collaborate with us", "desc": "We welcome conversations with clinicians, educators and creators who share our standard of care.", "button": "Introduce yourself" }
+    "cta": {
+      "title": "Collaborate with us",
+      "desc": "We welcome conversations with clinicians, educators and creators who share our standard of care.",
+      "button": "Introduce yourself"
+    }
   },
   "checkout": {
-    "hero": { "eyebrow": "Subscription", "title": "Checkout" },
+    "hero": {
+      "eyebrow": "Secure Enrolment",
+      "title": "Checkout"
+    },
+    "heroSubtitle": "Complete your enrolment to unlock the full course library.",
     "summaryTitle": "Order Summary",
     "itemLabel": "Item",
     "tierLabel": "Tier",
     "priceLabel": "Price",
+    "subtotalLabel": "Subtotal",
+    "vatLabel": "VAT (incl.)",
+    "vatNote": "Taxes included where applicable.",
     "totalLabel": "Total due today",
     "mockPrice": "€49.00 / month",
-    "formTitle": "Your Information",
-    "fields": { "name": "Full name", "email": "Email", "phone": "Telephone", "address": "Billing address", "card": "Card details" },
-    "cardNote": "Payment is processed by a third-party provider. No card details are stored by Neuro Tech.",
-    "submit": "Proceed to Checkout",
-    "processing": "Redirecting to secure payment…",
+    "cartTitle": "Your Cart",
+    "cartItemSubtitle": "Full premium access · billed monthly",
+    "includedTitle": "What's included",
+    "included": [
+      "Unlimited access to every premium course",
+      "New lessons added each month",
+      "Certificates of completion",
+      "Cancel anytime — no commitment"
+    ],
+    "emptyTitle": "Your cart is empty",
+    "emptyDesc": "Browse the academy and choose a course to enrol in.",
+    "browseCta": "Browse the Academy",
+    "proceedCta": "Proceed to Payment",
+    "back": "Back to cart",
+    "paymentTitle": "Payment Method",
+    "paymentOptions": {
+      "card": "Credit / Debit Card",
+      "bank": "Bank Transfer"
+    },
+    "securedNote": "Encrypted & secure — your details are protected.",
+    "submit": "Complete Enrolment",
+    "processing": "Confirming your enrolment…",
     "successTitle": "Subscription confirmed",
     "successDesc": "Your access has been unlocked. You may now return to the course.",
     "successToast": "Payment successful — course unlocked.",
     "backCta": "Return to course",
-    "continueCta": "Continue browsing",
-    "stepPersonal": "Personal Information",
-    "stepPayment": "Payment Method",
-    "next": "Next Step",
-    "back": "Back",
-    "paymentTitle": "Choose a Payment Method",
-    "paymentOptions": { "card": "Credit / Debit Card", "paypal": "PayPal", "bank": "Bank Transfer" }
+    "continueCta": "Continue browsing"
   },
   "admin": {
-    "hero": { "eyebrow": "Academy", "title": "Teacher Dashboard" },
+    "hero": {
+      "eyebrow": "Academy",
+      "title": "Teacher Dashboard"
+    },
     "intro": "Review pending discussion before it publishes, and keep the site's living content current.",
-    "nav": { "moderation": "Comment moderation", "content": "Site content" },
+    "nav": {
+      "moderation": "Comment moderation",
+      "content": "Site content"
+    },
     "moderation": {
       "title": "Pending comments",
       "subtitle": "New discussion waits here until a teacher approves or rejects it.",
@@ -353,9 +900,24 @@
       "reject": "Reject",
       "empty": "No comments awaiting review.",
       "queue": [
-        { "name": "P. Ahmadi", "course": "Foundations of Clinical EEG", "time": "2 hours ago", "body": "Could you clarify the difference between benign variants and true epileptiform discharges around the 14-minute mark?" },
-        { "name": "H. Yazdani", "course": "Programming Deep-Brain Stimulators", "time": "6 hours ago", "body": "Is the titration protocol in lesson four applicable to bilateral implants as well?" },
-        { "name": "G. Pourian", "course": "EMG & Nerve Conduction in Practice", "time": "1 day ago", "body": "The needle-technique demonstration was very clear — could we get a downloadable checklist?" }
+        {
+          "name": "P. Ahmadi",
+          "course": "Foundations of Clinical EEG",
+          "time": "2 hours ago",
+          "body": "Could you clarify the difference between benign variants and true epileptiform discharges around the 14-minute mark?"
+        },
+        {
+          "name": "H. Yazdani",
+          "course": "Programming Deep-Brain Stimulators",
+          "time": "6 hours ago",
+          "body": "Is the titration protocol in lesson four applicable to bilateral implants as well?"
+        },
+        {
+          "name": "G. Pourian",
+          "course": "EMG & Nerve Conduction in Practice",
+          "time": "1 day ago",
+          "body": "The needle-technique demonstration was very clear — could we get a downloadable checklist?"
+        }
       ],
       "approved": "Approved — now visible beneath the lesson.",
       "rejected": "Rejected — hidden from learners."
@@ -388,10 +950,45 @@
     "intro": "Through measured, long-form partnerships we connect accredited manufacturers with hospitals, clinics and research institutes across four continents.",
     "regionsTitle": "Regions of practice",
     "regions": [
-      { "name": "Europe", "countries": ["Germany", "Italy", "France", "Netherlands"], "note": "Long-standing partnerships with EU-certified manufacturers." },
-      { "name": "Middle East", "countries": ["United Arab Emirates", "Saudi Arabia", "Qatar", "Iran"], "note": "Regional studio and rapid logistics network." },
-      { "name": "Asia", "countries": ["Japan", "South Korea", "Singapore", "India"], "note": "Sourcing from the premier Asian medtech ateliers." },
-      { "name": "Americas", "countries": ["United States", "Canada", "Brazil"], "note": "Selected distribution and import accords." }
+      {
+        "name": "Europe",
+        "countries": [
+          "Germany",
+          "Italy",
+          "France",
+          "Netherlands"
+        ],
+        "note": "Long-standing partnerships with EU-certified manufacturers."
+      },
+      {
+        "name": "Middle East",
+        "countries": [
+          "United Arab Emirates",
+          "Saudi Arabia",
+          "Qatar",
+          "Iran"
+        ],
+        "note": "Regional studio and rapid logistics network."
+      },
+      {
+        "name": "Asia",
+        "countries": [
+          "Japan",
+          "South Korea",
+          "Singapore",
+          "India"
+        ],
+        "note": "Sourcing from the premier Asian medtech ateliers."
+      },
+      {
+        "name": "Americas",
+        "countries": [
+          "United States",
+          "Canada",
+          "Brazil"
+        ],
+        "note": "Selected distribution and import accords."
+      }
     ],
     "become": {
       "title": "Become a representative",
@@ -426,19 +1023,86 @@
     },
     "teamTitle": "The Atelier",
     "team": [
-      { "initials": "AR", "name": "Dr. A. Rahimi", "role": "Founder & Director" },
-      { "initials": "MS", "name": "M. Saadat", "role": "Operations" },
-      { "initials": "LH", "name": "L. Hashemi", "role": "Partnerships" }
+      {
+        "initials": "AR",
+        "name": "Dr. A. Rahimi",
+        "role": "Founder & Director"
+      },
+      {
+        "initials": "MS",
+        "name": "M. Saadat",
+        "role": "Operations"
+      },
+      {
+        "initials": "LH",
+        "name": "L. Hashemi",
+        "role": "Partnerships"
+      }
     ],
     "timelineTitle": "Milestones",
     "timeline": [
-      { "year": "2010", "event": "Founded as a biomedical engineering practice." },
-      { "year": "2013", "event": "Granted national import licence for neurology devices." },
-      { "year": "2016", "event": "First exclusive agency partnership with a European manufacturer." },
-      { "year": "2019", "event": "Expanded into export markets across the Middle East." },
-      { "year": "2023", "event": "Partner network reaches ten countries and two hundred institutions." },
-      { "year": "2026", "event": "Launch of Neuro Tech Academy and the global events programme." }
-    ]
+      {
+        "year": "2010",
+        "event": "Founded as a biomedical engineering practice."
+      },
+      {
+        "year": "2013",
+        "event": "Granted national import licence for neurology devices."
+      },
+      {
+        "year": "2016",
+        "event": "First exclusive agency partnership with a European manufacturer."
+      },
+      {
+        "year": "2019",
+        "event": "Expanded into export markets across the Middle East."
+      },
+      {
+        "year": "2023",
+        "event": "Partner network reaches ten countries and two hundred institutions."
+      },
+      {
+        "year": "2026",
+        "event": "Launch of Neuro Tech Academy and the global events programme."
+      }
+    ],
+    "values": {
+      "title": "Our Principles",
+      "items": [
+        {
+          "title": "Precision",
+          "desc": "Every device, document and lesson is held to a clinical standard. Nothing ships, prints or publishes until it is exact."
+        },
+        {
+          "title": "Partnership",
+          "desc": "We grow through long, exclusive relationships rather than transactions — with manufacturers, clinicians and educators alike."
+        },
+        {
+          "title": "Pedagogy",
+          "desc": "Knowledge is the product. Our academy turns equipment expertise into teachable, examinable clinical skill."
+        }
+      ]
+    },
+    "collaborate": {
+      "eyebrow": "Collaborate",
+      "title": "Collaborate with us",
+      "desc": "Whether you manufacture neurology equipment, lead a clinical department, or teach the next generation of specialists — there is a place for considered partnership here.",
+      "items": [
+        {
+          "title": "Manufacturers",
+          "desc": "Exclusive distribution and full regulatory representation across our territories."
+        },
+        {
+          "title": "Institutions",
+          "desc": "Equipment sourcing, service contracts and on-site clinical training programmes."
+        },
+        {
+          "title": "Educators",
+          "desc": "Co-author courses and lead live sessions for the Neuro Tech Academy."
+        }
+      ],
+      "cta": "Begin a conversation"
+    }
   },
   "contact": {
     "hero": {
@@ -453,13 +1117,32 @@
       "subject": "Subject",
       "message": "Message",
       "submit": "Send",
-      "success": "Your message has been received."
+      "success": "Your message has been received.",
+      "eyebrow": "Send a message",
+      "title": "Tell us what brings you here"
     },
     "info": {
-      "address": { "title": "Studio", "value": "No. 42, Valiasr Avenue, Tehran" },
-      "phone":   { "title": "Telephone", "value": "+98 21 1234 5678" },
-      "email":   { "title": "Email", "value": "atelier{'@'}neurotech.example" },
-      "hours":   { "title": "Hours", "value": "Saturday – Wednesday, 9.00 – 18.00" }
+      "address": {
+        "title": "Studio",
+        "value": "No. 42, Valiasr Avenue, Tehran"
+      },
+      "phone": {
+        "title": "Telephone",
+        "value": "+98 21 1234 5678"
+      },
+      "email": {
+        "title": "Email",
+        "value": "atelier{'@'}neurotech.example"
+      },
+      "hours": {
+        "title": "Hours",
+        "value": "Saturday – Wednesday, 9.00 – 18.00"
+      }
+    },
+    "rail": {
+      "eyebrow": "The Atelier",
+      "title": "Begin a considered conversation",
+      "desc": "Reach the studio directly. Every enquiry is read by a member of our team — not a queue — and answered within one business day."
     }
   },
   "footer": {

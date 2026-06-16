@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import LuxeCard from '../components/LuxeCard.vue'
@@ -156,24 +156,59 @@ const completed = computed(() => (isFree.value ? Math.min(2, lessonCount.value) 
 const progressPct = computed(() => Math.round((completed.value / Math.max(lessonCount.value, 1)) * 100))
 
 // Premium gating: the player stays unrendered for premium courses until the
-// user simulates a subscription purchase. Free courses show the player always.
-const subscribed = ref(false)
-const showPlayer = computed(() => isFree.value || subscribed.value)
-const simulatePurchase = () => {
-  subscribed.value = true
-  playing.value = 1
+// user has paid. There is NO instant unlock — purchase is confirmed only by
+// returning from a completed checkout with ?purchased=true on the URL (mocking
+// a real post-payment redirect). Free courses always show the player.
+const isPurchased = computed(() => route.query.purchased === 'true')
+const showPlayer = computed(() => isFree.value || isPurchased.value)
+
+// "Subscribe" routes straight to the Checkout flow — it no longer unlocks the
+// player in place. The course index is carried through so Checkout can send the
+// user back here as ?purchased=true on success.
+const goToCheckout = () => {
+  router.push({ path: '/checkout', query: { course: courseIndex.value } })
 }
 
 const playing = ref(isFree.value ? 1 : null)
+// When the user lands back with the purchase confirmed, auto-select lesson 1.
+watch(isPurchased, (v) => { if (v && playing.value === null) playing.value = 1 }, { immediate: true })
 const playLesson = (n) => { if (showPlayer.value) playing.value = n }
 
 const currentLesson = computed(() =>
   videoLessons.value.find((l) => l.index === playing.value) || videoLessons.value[0])
 
+// Every other course in the catalogue feeds the "Browse the Library" carousel.
 const related = computed(() => courses.value
   .map((c, i) => ({ ...c, i }))
-  .filter((c) => c.i !== courseIndex.value)
-  .slice(0, 3))
+  .filter((c) => c.i !== courseIndex.value))
+
+// ── Browse-the-Library carousel ──────────────────────────────────────────────
+// Shows `perView` cards (3 on desktop, 1 on mobile) and slides one card per
+// arrow click along the X-axis. The track itself stays LTR so the prev/next
+// direction is consistent across locales.
+const carouselIndex = ref(0)
+const perView = ref(3)
+const maxIndex = computed(() => Math.max(0, related.value.length - perView.value))
+const canPrev = computed(() => carouselIndex.value > 0)
+const canNext = computed(() => carouselIndex.value < maxIndex.value)
+const slidePrev = () => { if (canPrev.value) carouselIndex.value-- }
+const slideNext = () => { if (canNext.value) carouselIndex.value++ }
+const trackStyle = computed(() => ({
+  transform: `translateX(-${(carouselIndex.value * 100) / perView.value}%)`,
+}))
+const slideStyle = computed(() => ({ flex: `0 0 ${100 / perView.value}%` }))
+
+let mq = null
+const applyPerView = () => {
+  perView.value = mq && mq.matches ? 3 : 1
+  if (carouselIndex.value > maxIndex.value) carouselIndex.value = maxIndex.value
+}
+onMounted(() => {
+  mq = window.matchMedia('(min-width: 768px)')
+  applyPerView()
+  mq.addEventListener('change', applyPerView)
+})
+onUnmounted(() => { if (mq) mq.removeEventListener('change', applyPerView) })
 
 // Thumbnail gradients for the library preview cards (warm parchment/gold tones)
 const thumbGradients = [
@@ -199,7 +234,7 @@ useReveal()
 </script>
 
 <template>
-  <div v-if="course">
+  <div v-if="course" class="course-detail-page">
     <!-- Hero -->
     <section class="bg-ink py-16 md:py-24">
       <div class="max-w-5xl mx-auto px-8">
@@ -215,11 +250,11 @@ useReveal()
     <!-- Description + Syllabus side by side -->
     <section class="py-16 md:py-24 bg-parchment-light border-b border-parchment-deep/70">
       <div class="max-w-5xl mx-auto px-8 grid lg:grid-cols-3 gap-x-16 gap-y-14 lg:items-start">
-        <!-- Syllabus (one-third) — now on the left -->
-        <aside class="reveal lg:col-span-1 lg:sticky lg:top-28">
+        <!-- Syllabus (one-third) — static, stays in its original position -->
+        <aside class="reveal lg:col-span-1">
           <div class="bg-parchment border border-parchment-deep/70 rounded-lg shadow-card p-7">
-            <SectionEyebrow :text="t('academy.courseDetail.syllabusTitle')" align="start" />
-            <p class="mt-3 text-[11px] uppercase tracking-[0.25em] text-gold-dark font-light tabular-nums">REF&nbsp;·&nbsp;{{ code }}</p>
+            <SectionEyebrow :text="t('academy.courseDetail.syllabusTitle')" align="center" />
+            <p class="mt-3 text-center text-[11px] uppercase tracking-[0.25em] text-gold-dark font-light tabular-nums">REF&nbsp;·&nbsp;{{ code }}</p>
             <div class="mt-6">
               <StratumStack :items="strata" @select="playLesson" />
             </div>
@@ -228,7 +263,7 @@ useReveal()
 
         <!-- Course Description (two-thirds) — now on the right -->
         <div class="reveal lg:col-span-2" style="transition-delay: 80ms;">
-          <SectionEyebrow :text="t('academy.courseDetail.descriptionTitle')" align="start" />
+          <SectionEyebrow :text="t('academy.courseDetail.descriptionTitle')" align="center" />
           <div class="mt-6 space-y-4 text-[15px] text-ink-soft font-light leading-loose">
             <p v-for="(para, i) in courseDesc.split('\n\n').filter(Boolean)" :key="i">{{ para }}</p>
           </div>
@@ -281,15 +316,42 @@ useReveal()
 
         <!-- Course videos (right) -->
         <div class="md:col-span-8">
-          <SectionEyebrow :text="t('academy.courseDetail.videosTitle')" align="start" />
+          <SectionEyebrow :text="t('academy.courseDetail.videosTitle')" align="center" />
 
-          <!-- Video player — hidden for premium courses until subscription is simulated -->
-          <VideoPlayer
-            v-if="showPlayer"
-            class="reveal mt-7"
-            :title="currentLesson?.title"
-            :subtitle="course.instructor + ' · ' + course.title"
-          />
+          <!-- Subscription box ↔ active player.
+               The premium box sits directly BETWEEN the header and the lesson
+               list. On purchase it crossfades out and the player takes its place
+               (mode out-in), while the list below switches to a playable state. -->
+          <Transition name="purchase-swap" mode="out-in" :duration="{ enter: 520, leave: 260 }">
+            <!-- Premium subscription / paywall box -->
+            <div
+              v-if="!isFree && !isPurchased"
+              key="subbox"
+              class="mt-7 border border-gold/40 bg-gold/5 rounded-lg px-8 py-9 text-center"
+            >
+              <div class="mx-auto w-12 h-12 rounded-full border border-gold/50 flex items-center justify-center text-gold-dark">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg>
+              </div>
+              <p class="mt-5 text-sm text-ink-soft font-light leading-relaxed max-w-sm mx-auto">{{ t('academy.courseDetail.lockedNotice') }}</p>
+              <button
+                type="button"
+                @click="goToCheckout"
+                class="mt-6 inline-flex items-center justify-center gap-2.5 text-[11px] uppercase tracking-[0.3em] font-light px-7 py-3.5 rounded-md border border-gold/60 bg-ink text-parchment-light hover:bg-gold hover:text-ink hover:border-gold transition-colors"
+              >
+                {{ t('academy.courseDetail.subscribeCta') }} <span aria-hidden="true">→</span>
+              </button>
+              <p class="mt-4 text-[11px] text-ink-muted font-light italic">{{ t('academy.courseDetail.simulateHint') }}</p>
+            </div>
+
+            <!-- Active video player (free courses, or after purchase) -->
+            <VideoPlayer
+              v-else-if="showPlayer"
+              key="player"
+              class="mt-7"
+              :title="currentLesson?.title"
+              :subtitle="course.instructor + ' · ' + course.title"
+            />
+          </Transition>
 
           <ul class="mt-7 space-y-3">
             <li
@@ -316,28 +378,15 @@ useReveal()
             </li>
           </ul>
 
-          <div v-if="!isFree && !subscribed" class="reveal mt-9 border border-gold/40 bg-gold/5 rounded-lg px-8 py-9 text-center">
-            <div class="mx-auto w-12 h-12 rounded-full border border-gold/50 flex items-center justify-center text-gold-dark">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg>
+          <!-- Confirmation once purchased -->
+          <Transition name="purchase-swap">
+            <div v-if="!isFree && isPurchased" class="mt-9 border border-gold/40 bg-gold/5 rounded-lg px-8 py-6 flex items-center gap-4">
+              <span class="shrink-0 w-9 h-9 rounded-full border border-gold/60 flex items-center justify-center text-gold-dark">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12l5 5L19 8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <p class="text-sm text-ink-soft font-light">{{ t('academy.courseDetail.unlockedNotice') }}</p>
             </div>
-            <p class="mt-5 text-sm text-ink-soft font-light leading-relaxed max-w-sm mx-auto">{{ t('academy.courseDetail.lockedNotice') }}</p>
-            <button
-              type="button"
-              @click="simulatePurchase"
-              class="mt-6 inline-flex items-center justify-center gap-2.5 text-[11px] uppercase tracking-[0.3em] font-light px-7 py-3.5 rounded-md border border-gold/60 text-ink hover:bg-ink hover:text-parchment-light hover:border-ink transition-colors"
-            >
-              {{ t('academy.courseDetail.subscribeCta') }} <span aria-hidden="true">→</span>
-            </button>
-            <p class="mt-4 text-[10px] uppercase tracking-[0.2em] text-ink-hint font-light">{{ t('academy.courseDetail.simulateHint') }}</p>
-          </div>
-
-          <!-- Confirmation once subscribed -->
-          <div v-else-if="!isFree && subscribed" class="reveal mt-9 border border-gold/40 bg-gold/5 rounded-lg px-8 py-6 flex items-center gap-4">
-            <span class="shrink-0 w-9 h-9 rounded-full border border-gold/60 flex items-center justify-center text-gold-dark">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12l5 5L19 8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <p class="text-sm text-ink-soft font-light">{{ t('academy.courseDetail.unlockedNotice') }}</p>
-          </div>
+          </Transition>
         </div>
       </div>
     </section>
@@ -381,13 +430,29 @@ useReveal()
         <SectionEyebrow :text="t('academy.courseDetail.relatedTitle')" align="center" />
         <p class="mt-4 text-center text-sm text-ink-soft font-light leading-relaxed max-w-xl mx-auto">{{ t('academy.courseDetail.relatedSubtitle') }}</p>
 
-        <div class="mt-12 grid md:grid-cols-3 gap-8">
-          <router-link
-            v-for="rc in related"
-            :key="'related-' + rc.i"
-            :to="`/academy/course/${rc.i}`"
-            class="reveal group block"
+        <div class="lib-carousel mt-12">
+          <!-- Prev -->
+          <button
+            type="button"
+            class="lib-arrow"
+            :class="{ 'is-disabled': !canPrev }"
+            :disabled="!canPrev"
+            @click="slidePrev"
+            :aria-label="t('academy.courseDetail.relatedTitle') + ' — previous'"
           >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <!-- Viewport: clips the track; the track slides one card per click. -->
+          <div class="lib-carousel-viewport">
+            <div class="lib-carousel-track" :style="trackStyle">
+              <div
+                v-for="rc in related"
+                :key="'related-' + rc.i"
+                class="lib-slide"
+                :style="slideStyle"
+              >
+                <router-link :to="`/academy/course/${rc.i}`" class="group block h-full">
             <article class="bg-parchment border border-parchment-deep/70 rounded-lg overflow-hidden h-full flex flex-col shadow-card transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-card-hover group-hover:border-gold/50">
               <!-- Thumbnail -->
               <div class="relative aspect-video w-full" :style="thumbStyle(rc.i)">
@@ -415,7 +480,22 @@ useReveal()
                 </div>
               </div>
             </article>
-          </router-link>
+                </router-link>
+              </div>
+            </div>
+          </div>
+
+          <!-- Next -->
+          <button
+            type="button"
+            class="lib-arrow"
+            :class="{ 'is-disabled': !canNext }"
+            :disabled="!canNext"
+            @click="slideNext"
+            :aria-label="t('academy.courseDetail.relatedTitle') + ' — next'"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
         </div>
       </div>
     </section>
@@ -428,3 +508,76 @@ useReveal()
     </button>
   </div>
 </template>
+
+<style scoped>
+/* ── Subscription box ↔ player crossfade ─────────────────────────────────────
+   A soft fade + lift so the paywall hands off to the player (and the unlocked
+   notice slides in) without any jarring snap. */
+.purchase-swap-enter-active { transition: opacity 480ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1); }
+.purchase-swap-leave-active { transition: opacity 260ms ease, transform 260ms ease; }
+.purchase-swap-enter-from { opacity: 0; transform: translateY(14px) scale(0.985); }
+.purchase-swap-leave-to { opacity: 0; transform: translateY(-10px) scale(0.99); }
+
+/* ── Browse-the-Library carousel ─────────────────────────────────────────────
+   Arrows flank a clipped viewport; the flex track slides one card-width per
+   click along the X-axis with a long, high-end easing curve. */
+.lib-carousel {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 2vw, 1.25rem);
+}
+.lib-carousel-viewport {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  /* Track is LTR so prev/next stay consistent regardless of page direction. */
+  direction: ltr;
+}
+.lib-carousel-track {
+  display: flex;
+  will-change: transform;
+  transition: transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lib-slide {
+  /* flex-basis is set inline (100% / perView) so 1-up on mobile, 3-up on md+. */
+  box-sizing: border-box;
+  padding-inline: clamp(0.5rem, 1.4vw, 1rem);
+}
+/* The viewport forces LTR for a consistent prev/next; restore RTL text flow
+   inside each card so Persian course content reads in its natural direction. */
+:global(html[dir='rtl']) .lib-slide { direction: rtl; }
+
+/* Round, restrained arrow buttons that echo the gold accent on hover. */
+.lib-arrow {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(var(--c-gold) / 0.45);
+  color: rgb(var(--c-ink) / 0.85);
+  background: rgb(var(--c-parchment-light) / 0.6);
+  cursor: pointer;
+  transition: color 240ms ease, background 240ms ease, border-color 240ms ease, transform 240ms ease, box-shadow 240ms ease;
+}
+.lib-arrow:hover {
+  color: rgb(var(--c-parchment-light));
+  background: rgb(var(--c-ink));
+  border-color: rgb(var(--c-ink));
+  box-shadow: 0 10px 24px -12px rgb(var(--c-ink) / 0.6);
+  transform: translateY(-1px);
+}
+.lib-arrow.is-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+/* The chevrons are drawn LTR; mirror them in RTL so they point the right way. */
+:global(html[dir='rtl']) .lib-arrow svg { transform: scaleX(-1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-carousel-track { transition: none; }
+  .purchase-swap-enter-active, .purchase-swap-leave-active { transition: opacity 200ms ease; }
+}
+</style>
