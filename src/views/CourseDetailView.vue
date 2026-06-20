@@ -9,9 +9,16 @@ import VideoPlayer from '../components/VideoPlayer.vue'
 import { courseCode, sectionLetter } from '../utils/catalog.js'
 import { useReveal } from '../composables/useReveal.js'
 
-const { t, tm } = useI18n()
+const { t, tm, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
+
+// Writing direction — drives native RTL chevron glyphs (no scaleX mirroring).
+const isRtl = computed(() => ['fa', 'ar'].includes(locale.value))
+// Chevron pointing toward the carousel's start / end edge in the current
+// direction. In LTR the start edge is the left; in RTL it is the right.
+const chevronToStart = computed(() => (isRtl.value ? 'M9 6l6 6-6 6' : 'M15 6l-6 6 6 6'))
+const chevronToEnd = computed(() => (isRtl.value ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6'))
 
 const courses = computed(() => tm('academy.courses'))
 const courseIndex = computed(() => Number(route.params.id))
@@ -170,6 +177,10 @@ const goToCheckout = () => {
 }
 
 const playing = ref(isFree.value ? 1 : null)
+// Dismissible post-purchase banner (sits below the hero). Re-shown whenever a
+// fresh purchase is confirmed.
+const showUnlocked = ref(true)
+watch(isPurchased, (v) => { if (v) showUnlocked.value = true })
 // When the user lands back with the purchase confirmed, auto-select lesson 1.
 watch(isPurchased, (v) => { if (v && playing.value === null) playing.value = 1 }, { immediate: true })
 const playLesson = (n) => { if (showPlayer.value) playing.value = n }
@@ -239,13 +250,37 @@ useReveal()
     <section class="bg-ink py-16 md:py-24">
       <div class="max-w-5xl mx-auto px-8">
         <router-link to="/academy" class="text-[11px] uppercase tracking-[0.25em] text-gold/80 hover:text-gold transition-colors inline-flex items-center gap-2">
-          <span aria-hidden="true">←</span> {{ t('academy.courseDetail.back') }}
+          <span class="dir-arrow-back" aria-hidden="true"></span> {{ t('academy.courseDetail.back') }}
         </router-link>
         <p class="mt-8 text-[11px] uppercase tracking-[0.35em] text-gold/80 font-light">{{ t('academy.courseDetail.eyebrow') }}</p>
         <h1 class="mt-3 font-serif font-light text-parchment-light text-4xl md:text-5xl tracking-wide leading-snug">{{ course.title }}</h1>
         <p class="mt-4 text-sm text-parchment-light/70 uppercase tracking-[0.2em] font-light">{{ course.instructor }}</p>
       </div>
     </section>
+
+    <!-- Post-purchase notification — dismissible banner sitting directly below the
+         hero and above the Description / Syllabus grid. Mirrors the "You're
+         registered" alert: an X collapses it out with a fade + slide-up. -->
+    <Transition name="alert-collapse">
+      <div v-if="!isFree && isPurchased && showUnlocked" class="bg-gold/10 border-b border-gold/30">
+        <div class="max-w-5xl mx-auto px-8 py-3 flex items-center justify-between gap-4 text-sm text-ink-soft font-light">
+          <span class="flex items-center gap-3">
+            <span class="shrink-0 grid place-items-center w-7 h-7 rounded-full border border-gold/50 text-gold-dark">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 12l5 5L19 8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span>{{ t('academy.courseDetail.unlockedNotice') }}</span>
+          </span>
+          <button
+            type="button"
+            @click="showUnlocked = false"
+            :aria-label="t('academy.courseDetail.dismiss')"
+            class="shrink-0 p-1 text-ink-muted hover:text-gold-dark transition-colors"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M6 18L18 6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </Transition>
 
     <!-- Description + Syllabus side by side -->
     <section class="py-16 md:py-24 bg-parchment-light border-b border-parchment-deep/70">
@@ -338,7 +373,7 @@ useReveal()
                 @click="goToCheckout"
                 class="mt-6 inline-flex items-center justify-center gap-2.5 text-[11px] uppercase tracking-[0.3em] font-light px-7 py-3.5 rounded-md border border-gold/60 bg-ink text-parchment-light hover:bg-gold hover:text-ink hover:border-gold transition-colors"
               >
-                {{ t('academy.courseDetail.subscribeCta') }} <span aria-hidden="true">→</span>
+                {{ t('academy.courseDetail.subscribeCta') }} <span class="dir-arrow" aria-hidden="true"></span>
               </button>
               <p class="mt-4 text-[11px] text-ink-muted font-light italic">{{ t('academy.courseDetail.simulateHint') }}</p>
             </div>
@@ -377,16 +412,6 @@ useReveal()
               </span>
             </li>
           </ul>
-
-          <!-- Confirmation once purchased -->
-          <Transition name="purchase-swap">
-            <div v-if="!isFree && isPurchased" class="mt-9 border border-gold/40 bg-gold/5 rounded-lg px-8 py-6 flex items-center gap-4">
-              <span class="shrink-0 w-9 h-9 rounded-full border border-gold/60 flex items-center justify-center text-gold-dark">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12l5 5L19 8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <p class="text-sm text-ink-soft font-light">{{ t('academy.courseDetail.unlockedNotice') }}</p>
-            </div>
-          </Transition>
         </div>
       </div>
     </section>
@@ -418,7 +443,7 @@ useReveal()
             <button
               type="submit"
               class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink hover:text-gold-dark transition-colors border-b border-gold/50 pb-1"
-            >{{ t('academy.comments.submit') }} <span aria-hidden="true">→</span></button>
+            >{{ t('academy.comments.submit') }} <span class="dir-arrow" aria-hidden="true"></span></button>
           </div>
         </form>
       </div>
@@ -440,7 +465,7 @@ useReveal()
             @click="slidePrev"
             :aria-label="t('academy.courseDetail.relatedTitle') + ' — previous'"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path :d="chevronToStart" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
 
           <!-- Viewport: clips the track; the track slides one card per click. -->
@@ -494,7 +519,7 @@ useReveal()
             @click="slideNext"
             :aria-label="t('academy.courseDetail.relatedTitle') + ' — next'"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path :d="chevronToEnd" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </div>
       </div>
@@ -517,6 +542,24 @@ useReveal()
 .purchase-swap-leave-active { transition: opacity 260ms ease, transform 260ms ease; }
 .purchase-swap-enter-from { opacity: 0; transform: translateY(14px) scale(0.985); }
 .purchase-swap-leave-to { opacity: 0; transform: translateY(-10px) scale(0.99); }
+
+/* ── Post-purchase banner dismiss ─────────────────────────────────────────────
+   Fades + slides up while collapsing its height, so the page below glides into
+   place rather than snapping. */
+.alert-collapse-leave-active {
+  transition: opacity 300ms ease, transform 360ms cubic-bezier(0.4, 0, 0.2, 1), max-height 360ms ease;
+  overflow: hidden;
+  max-height: 120px;
+}
+.alert-collapse-leave-to {
+  opacity: 0;
+  transform: translateY(-12px);
+  max-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .alert-collapse-leave-active { transition: opacity 200ms ease; }
+  .alert-collapse-leave-to { transform: none; }
+}
 
 /* ── Browse-the-Library carousel ─────────────────────────────────────────────
    Arrows flank a clipped viewport; the flex track slides one card-width per
@@ -573,8 +616,6 @@ useReveal()
   cursor: not-allowed;
   pointer-events: none;
 }
-/* The chevrons are drawn LTR; mirror them in RTL so they point the right way. */
-:global(html[dir='rtl']) .lib-arrow svg { transform: scaleX(-1); }
 
 @media (prefers-reduced-motion: reduce) {
   .lib-carousel-track { transition: none; }

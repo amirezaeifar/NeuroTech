@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import AppNavbar from './components/AppNavbar.vue'
 import AppFooter from './components/AppFooter.vue'
+import ScrollToTop from './components/ScrollToTop.vue'
 import { useLocale } from './composables/useLocale.js'
 
 useLocale()
@@ -24,5 +25,6 @@ const showChrome = computed(() => !route.meta.hideChrome)
       </RouterView>
     </main>
     <AppFooter v-if="showChrome" />
+    <ScrollToTop v-if="showChrome" />
   </div>
 </template>

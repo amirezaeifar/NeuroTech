@@ -96,25 +96,15 @@ useReveal()
               <p class="mt-1.5 text-xs text-ink-muted font-light">{{ personOf(item) }}</p>
               <p class="mt-1 text-xs text-ink-hint font-light uppercase tracking-[0.15em]">{{ item.date }}</p>
 
-              <!-- Online sessions stream into a live hub; on-site sessions have no
-                   hub — they show a simple static "is taking place" notice. -->
+              <!-- Both online and on-site sessions stream into the same Live
+                   Event hub. On-site sessions additionally surface the admin
+                   broadcast ("Events messages") panel inside that hub. -->
               <router-link
-                v-if="active === 'online'"
                 :to="`/events/active/${active}/${item.i}`"
                 class="mt-6 inline-flex items-center justify-center gap-2.5 w-full text-[11px] uppercase tracking-[0.3em] font-light px-6 py-3.5 rounded-md bg-ink text-parchment-light hover:bg-gold-dark transition-colors"
               >
-                {{ joinLabel }} <span aria-hidden="true">→</span>
+                {{ joinLabel }} <span class="dir-arrow" aria-hidden="true"></span>
               </router-link>
-              <div
-                v-else
-                class="mt-6 flex items-center gap-2.5 rounded-md border border-gold/30 bg-gold/[0.06] px-4 py-3.5 text-sm text-ink-soft font-light"
-              >
-                <span class="relative flex h-2 w-2 shrink-0">
-                  <span class="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60 animate-ping"></span>
-                  <span class="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
-                </span>
-                <span>{{ t('events.sections.takingPlace', { name: item.title }) }}</span>
-              </div>
             </article>
           </div>
           <p v-else class="reveal mt-9 text-center text-sm text-ink-hint font-light italic">{{ t('events.sections.emptyOngoing') }}</p>
@@ -141,7 +131,7 @@ useReveal()
               <div class="flex flex-col items-start md:items-end gap-2 shrink-0">
                 <span class="text-[11px] uppercase tracking-[0.2em] text-ink-muted font-light">{{ item.status }}</span>
                 <router-link :to="`/events/reserve/${active}/${item.i}`" class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink hover:text-gold-dark transition-colors border-b border-gold/50 pb-1">
-                  {{ reserveLabel }} <span aria-hidden="true">→</span>
+                  {{ reserveLabel }} <span class="dir-arrow" aria-hidden="true"></span>
                 </router-link>
               </div>
             </LuxeCard>
@@ -175,7 +165,7 @@ useReveal()
                   <h3 class="font-serif font-light text-lg text-ink mt-2 mb-2 leading-snug group-hover:text-gold-dark transition-colors">{{ item.title }}</h3>
                   <p class="text-sm text-ink-soft font-light leading-relaxed">{{ item.summary }}</p>
                   <span class="mt-4 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink group-hover:text-gold-dark transition-colors border-b border-gold/40 pb-1">
-                    {{ t('events.archive.viewDetail') }} <span aria-hidden="true">→</span>
+                    {{ t('events.archive.viewDetail') }} <span class="dir-arrow" aria-hidden="true"></span>
                   </span>
                 </div>
               </article>

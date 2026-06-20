@@ -45,7 +45,7 @@ useReveal()
     <section class="bg-ink py-16 md:py-24">
       <div class="max-w-5xl mx-auto px-8">
         <router-link to="/events" class="text-[11px] uppercase tracking-[0.25em] text-gold/80 hover:text-gold transition-colors inline-flex items-center gap-2">
-          <span aria-hidden="true">←</span> {{ t('events.reservation.backCta') }}
+          <span class="dir-arrow-back" aria-hidden="true"></span> {{ t('events.reservation.backCta') }}
         </router-link>
         <p class="mt-8 text-[11px] uppercase tracking-[0.35em] text-gold/80 font-light">{{ t('events.reservation.eyebrow') }}</p>
         <h1 class="mt-3 font-serif font-light text-parchment-light text-4xl md:text-5xl tracking-wide">{{ t('events.reservation.title') }}</h1>
@@ -105,7 +105,7 @@ useReveal()
               @click="confirmReservation"
               class="ml-auto inline-flex items-center justify-center gap-2.5 text-[11px] uppercase tracking-[0.3em] font-light px-8 py-4 rounded-md bg-ink text-parchment-light border border-ink hover:bg-gold hover:text-ink hover:border-gold transition-colors"
             >
-              {{ t('events.reservation.submit') }} <span aria-hidden="true">→</span>
+              {{ t('events.reservation.submit') }} <span class="dir-arrow" aria-hidden="true"></span>
             </button>
             <p v-if="!isAuthenticated" class="mt-3 text-[11px] text-ink-muted font-light italic text-end">{{ t('events.reservation.signInHint') }}</p>
           </div>

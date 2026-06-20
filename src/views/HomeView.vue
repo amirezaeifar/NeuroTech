@@ -32,7 +32,7 @@ useReveal()
         <div class="reveal mt-14" style="transition-delay: 240ms">
           <router-link to="/products" class="btn-ghost-gold">
             {{ t('home.hero.cta') }}
-            <span aria-hidden="true">→</span>
+            <span class="dir-arrow" aria-hidden="true"></span>
           </router-link>
         </div>
       </div>
@@ -99,7 +99,7 @@ useReveal()
         <div class="mt-12">
           <router-link to="/contact" class="btn-ghost-gold">
             {{ t('home.finalCta.button') }}
-            <span aria-hidden="true">→</span>
+            <span class="dir-arrow" aria-hidden="true"></span>
           </router-link>
         </div>
       </div>

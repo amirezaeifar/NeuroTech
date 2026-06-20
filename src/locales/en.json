@@ -1,6 +1,9 @@
 {
   "brand": "Neuro Tech",
   "tagline": "Neurology, crafted",
+  "common": {
+    "scrollTop": "Back to top"
+  },
   "nav": {
     "home": "Home",
     "academy": "Academy",
@@ -44,6 +47,9 @@
     "codeHint": "Demo code: any 6 digits will be accepted.",
     "changeNumber": "Change number",
     "orDivider": "or",
+    "continueWith": "or continue with",
+    "continueGoogle": "Continue with Google",
+    "continueApple": "Continue with Apple",
     "noAccount": "Don't have an account?",
     "haveAccount": "Already have an account?",
     "switchToRegister": "Register",
@@ -121,6 +127,69 @@
       "monitoring": "Monitoring"
     },
     "inquire": "Inquire",
+    "viewCta": "View details",
+    "detail": {
+      "brand": "Neuro Tech Maison",
+      "home": "Home",
+      "products": "Collection",
+      "notFound": "This product could not be found.",
+      "back": "Back to the Collection",
+      "skuLabel": "Reference",
+      "availability": "Available to order",
+      "leadTime": "Typical lead time 4–6 weeks",
+      "priceLabel": "Pricing",
+      "priceValue": "On application",
+      "priceNote": "Each system is configured to your clinical specification.",
+      "ctaPrimary": "Request a quote",
+      "ctaSecondary": "Download brochure",
+      "badges": ["CE Marked", "ISO 13485", "2-Year Warranty", "Clinical-grade"],
+      "featuresTitle": "Key Features",
+      "keyFeatures": [
+        "Medical-grade signal acquisition with clinical noise isolation",
+        "Intuitive clinician workflow with one-touch protocols",
+        "Encrypted cloud reporting and EHR-ready export",
+        "Modular, serviceable design for a long operating life"
+      ],
+      "viewsLabel": "Views",
+      "views": ["Full system", "Console detail", "Interface & ports", "Accessories"],
+      "tabs": {
+        "overview": "Overview",
+        "specs": "Specifications",
+        "docs": "Documentation",
+        "reviews": "Reviews"
+      },
+      "overviewTitle": "Overview",
+      "overviewLead": "Engineered for the modern neurology suite.",
+      "overviewBody": "Every device in the collection is selected for clinical merit and engineering integrity, then finished to the standards of the maison. Precise, quiet and dependable in daily use — built to earn a clinician's trust across years of service.",
+      "specsTitle": "Technical Specifications",
+      "specs": [
+        { "label": "Acquisition channels", "value": "32 referential / 16 bipolar" },
+        { "label": "Sampling rate", "value": "Up to 16 kHz per channel" },
+        { "label": "Resolution", "value": "24-bit" },
+        { "label": "Input impedance", "value": "> 1 GΩ" },
+        { "label": "Connectivity", "value": "Gigabit Ethernet · Wi-Fi 6 · USB-C" },
+        { "label": "Power", "value": "Medical-grade isolated supply (IEC 60601-1)" },
+        { "label": "Compliance", "value": "CE · ISO 13485 · IEC 60601" },
+        { "label": "Dimensions", "value": "320 × 240 × 90 mm" },
+        { "label": "Weight", "value": "3.4 kg" },
+        { "label": "Warranty", "value": "24 months, extendable" }
+      ],
+      "docsTitle": "Clinical Documentation",
+      "docsNote": "Full documentation is released to verified clinical accounts.",
+      "docs": [
+        { "name": "Product datasheet", "type": "PDF", "size": "1.8 MB" },
+        { "name": "Clinical evaluation summary", "type": "PDF", "size": "3.2 MB" },
+        { "name": "Quick-start guide", "type": "PDF", "size": "760 KB" },
+        { "name": "Declaration of conformity", "type": "PDF", "size": "420 KB" }
+      ],
+      "reviewsTitle": "Clinical Testimonials",
+      "ratingSuffix": "based on verified clinical accounts",
+      "reviews": [
+        { "author": "Dr. A. Karimi", "role": "Functional Neurosurgeon", "rating": 5, "text": "Dependable acquisition and a workflow my team trusts in theatre. It has become part of our standard setup." },
+        { "author": "Dr. S. Moradi", "role": "Clinical Neurophysiologist", "rating": 5, "text": "Clean signal, quiet operation and reporting that integrates neatly with our records. Excellent build quality." },
+        { "author": "Eng. R. Tabrizi", "role": "Biomedical Engineer", "rating": 4, "text": "Serviceable, well-documented and robust. Calibration and maintenance are refreshingly straightforward." }
+      ]
+    },
     "items": [
       {
         "name": "Aurelis EEG 32",
@@ -286,7 +355,8 @@
       "relatedSubtitle": "More courses from the Academy collection.",
       "descriptionTitle": "Course Description",
       "simulateHint": "Demo — takes you to a mock checkout; lessons unlock when you return.",
-      "unlockedNotice": "Subscription active. All lessons are now unlocked — select any lesson to begin."
+      "unlockedNotice": "Subscription active. All lessons are now unlocked — select any lesson to begin.",
+      "dismiss": "Dismiss"
     },
     "comments": {
       "title": "Discussion",
@@ -376,14 +446,14 @@
       "join": "Join live session"
     },
     "onsite": {
-      "title": "Physical seminars & workshops",
-      "desc": "Hands-on sessions held at partner institutes and clinics — device workshops, anatomy labs and standards briefings.",
+      "title": "Physical seminars & symposia",
+      "desc": "Hands-on sessions held at partner institutes and clinics — device symposia, anatomy labs and standards briefings.",
       "items": [
         {
-          "title": "Neurostimulation Devices — Hands-on Workshop",
+          "title": "Neurostimulation Devices — Clinical Symposium",
           "venue": "Tehran Neurology Institute, Hall B",
           "date": "Happening now · Today–Tomorrow",
-          "tag": "Workshop",
+          "tag": "Symposium",
           "status": "In progress",
           "phase": "ongoing"
         },
@@ -540,6 +610,11 @@
       "live": "Live",
       "registered": "You're registered — welcome to the live session.",
       "viewers": "watching now",
+      "onsiteLive": "On-site session in progress",
+      "onsiteMonitorTitle": "Live Monitoring Feed",
+      "broadcastTitle": "Admin Broadcast",
+      "onsiteTakingPlace": "{title} is taking place on-site.",
+      "onsiteFallbackNote": "Live updates from the organiser will appear here as the session unfolds.",
       "chatTitle": "Live Chat & Q&A",
       "chatTab": "Chat",
       "qaTab": "Q&A",
@@ -562,6 +637,21 @@
         "questions": "Questions asked",
         "elapsed": "Elapsed",
         "countries": "Countries"
+      },
+      "recordingTitle": "Event Recording",
+      "recordingSubtitle": "Recorded on-site · Main Clinical Auditorium",
+      "scheduleTitle": "Event Schedule",
+      "commentsTitle": "Discussion",
+      "commentPlaceholder": "Share a comment…",
+      "venueTitle": "Venue Guide & Event Agenda",
+      "venueAddress": "Conference Centre, Level 2 — Olympic Blvd, Tehran",
+      "venueMapLabel": "Hall Map",
+      "venueAgendaLabel": "Event Agenda",
+      "onsiteStats": {
+        "attendees": "Attendees",
+        "sessions": "Sessions",
+        "duration": "Total runtime",
+        "materials": "Materials"
       }
     },
     "reservation": {
@@ -771,7 +861,22 @@
           "Device Advisory Board",
           "Surgical Workshop Lead"
         ],
-        "bio": "Leads deep-brain stimulation programmes at Tehran Neurology Institute; advises on device selection and surgical workflow."
+        "bio": "Leads deep-brain stimulation programmes at Tehran Neurology Institute; advises on device selection and surgical workflow.",
+        "title": "Functional Neurosurgeon",
+        "affiliation": "Tehran Neurology Institute",
+        "experience": [
+          { "role": "Head of Functional Neurosurgery", "org": "Tehran Neurology Institute", "period": "2016 — Present" },
+          { "role": "Consultant Neurosurgeon", "org": "Milad Medical Centre", "period": "2011 — 2016" },
+          { "role": "Device Advisory Board Member", "org": "Neuro Tech", "period": "2018 — Present" }
+        ],
+        "education": [
+          { "degree": "Fellowship, Functional & Stereotactic Neurosurgery", "school": "Tehran University of Medical Sciences", "period": "2009 — 2011" },
+          { "degree": "MD, Medicine", "school": "Tehran University of Medical Sciences", "period": "1999 — 2007" }
+        ],
+        "publications": [
+          { "title": "Long-term outcomes of subthalamic deep-brain stimulation in Parkinson's disease", "venue": "Iranian Journal of Neurology · 2022" },
+          { "title": "Lead-trajectory planning with intra-operative microelectrode recording", "venue": "Stereotactic & Functional Neurosurgery · 2020" }
+        ]
       },
       {
         "name": "Dr. S. Moradi",
@@ -781,7 +886,19 @@
           "Course Instructor",
           "Device Validation Consultant"
         ],
-        "bio": "Specialist in EMG and nerve-conduction diagnostics; collaborates on device validation and clinical training."
+        "bio": "Specialist in EMG and nerve-conduction diagnostics; collaborates on device validation and clinical training.",
+        "title": "Clinical Neurophysiologist",
+        "affiliation": "Shahid Beheshti Medical Centre",
+        "experience": [
+          { "role": "Attending Neurophysiologist", "org": "Shahid Beheshti Medical Centre", "period": "2014 — Present" },
+          { "role": "Device Validation Consultant", "org": "Neuro Tech", "period": "2019 — Present" }
+        ],
+        "education": [
+          { "degree": "MD, Clinical Neurophysiology", "school": "Shahid Beheshti University of Medical Sciences", "period": "2008 — 2014" }
+        ],
+        "publications": [
+          { "title": "Surface versus needle EMG in early carpal-tunnel diagnosis", "venue": "Clinical Neurophysiology Practice · 2021" }
+        ]
       },
       {
         "name": "Dr. N. Farahani",
@@ -791,7 +908,19 @@
           "Course Instructor",
           "Live Reading Clinic Host"
         ],
-        "bio": "Teaches the Foundations of Clinical EEG course and hosts the Academy's live reading clinics."
+        "bio": "Teaches the Foundations of Clinical EEG course and hosts the Academy's live reading clinics.",
+        "title": "Epileptologist & EEG Specialist",
+        "affiliation": "Tabriz Neuroscience Centre",
+        "experience": [
+          { "role": "Director, EEG Reading Clinic", "org": "Tabriz Neuroscience Centre", "period": "2015 — Present" },
+          { "role": "Course Instructor — Clinical EEG", "org": "Neuro Tech Academy", "period": "2019 — Present" }
+        ],
+        "education": [
+          { "degree": "MD, Epileptology & Clinical EEG", "school": "Tabriz University of Medical Sciences", "period": "2006 — 2013" }
+        ],
+        "publications": [
+          { "title": "Interictal epileptiform patterns in long-term ambulatory EEG", "venue": "Epilepsia Open · 2023" }
+        ]
       },
       {
         "name": "Dr. L. Hashemi",
@@ -801,7 +930,19 @@
           "Course Instructor",
           "Curriculum Reviewer"
         ],
-        "bio": "Designs polysomnography curricula and reviews premium-tier course materials before publication."
+        "bio": "Designs polysomnography curricula and reviews premium-tier course materials before publication.",
+        "title": "Sleep Medicine Physician",
+        "affiliation": "Isfahan Sleep Disorders Centre",
+        "experience": [
+          { "role": "Lead Physician, Polysomnography Unit", "org": "Isfahan Sleep Disorders Centre", "period": "2013 — Present" },
+          { "role": "Curriculum Reviewer", "org": "Neuro Tech Academy", "period": "2020 — Present" }
+        ],
+        "education": [
+          { "degree": "MD, Sleep Medicine", "school": "Isfahan University of Medical Sciences", "period": "2005 — 2012" }
+        ],
+        "publications": [
+          { "title": "Home polysomnography protocols for paediatric sleep apnoea", "venue": "Journal of Clinical Sleep Medicine · 2022" }
+        ]
       },
       {
         "name": "Dr. M. Saadat",
@@ -811,7 +952,19 @@
           "Status Epilepticus Consultant",
           "Clinical Documentation Lead"
         ],
-        "bio": "Advises on intensive-care escalation pathways and produces case-study writing for the Events archive and Academy library."
+        "bio": "Advises on intensive-care escalation pathways and produces case-study writing for the Events archive and Academy library.",
+        "title": "Critical Care Neurologist",
+        "affiliation": "Tehran Neurology Institute",
+        "experience": [
+          { "role": "Consultant, Neurocritical Care", "org": "Tehran Neurology Institute", "period": "2012 — Present" },
+          { "role": "Clinical Documentation Lead", "org": "Neuro Tech", "period": "2018 — Present" }
+        ],
+        "education": [
+          { "degree": "MD, Critical Care & Status Epilepticus", "school": "Tehran University of Medical Sciences", "period": "2004 — 2011" }
+        ],
+        "publications": [
+          { "title": "Escalation pathways in refractory status epilepticus", "venue": "Neurocritical Care · 2021" }
+        ]
       },
       {
         "name": "Eng. R. Tabrizi",
@@ -821,7 +974,19 @@
           "Course Instructor",
           "Device Technique Designer"
         ],
-        "bio": "Builds device-technique modules bridging engineering principles and clinical application."
+        "bio": "Builds device-technique modules bridging engineering principles and clinical application.",
+        "title": "Biomedical Engineer",
+        "affiliation": "Neuro Tech",
+        "experience": [
+          { "role": "Senior Biomedical Engineer", "org": "Neuro Tech", "period": "2017 — Present" },
+          { "role": "Device Technique Designer", "org": "Neuro Tech Academy", "period": "2019 — Present" }
+        ],
+        "education": [
+          { "degree": "MSc, Biomedical Engineering", "school": "Sharif University of Technology", "period": "2013 — 2016" }
+        ],
+        "publications": [
+          { "title": "Signal-integrity considerations in multi-channel EMG acquisition", "venue": "IFMBE Proceedings · 2020" }
+        ]
       },
       {
         "name": "F. Karbasi",
@@ -831,13 +996,48 @@
           "Medical Illustrator",
           "Seminar Material Designer"
         ],
-        "bio": "Creates anatomical and procedural illustration used across courses and seminar materials."
+        "bio": "Creates anatomical and procedural illustration used across courses and seminar materials.",
+        "title": "Medical Illustrator",
+        "affiliation": "Neuro Tech Studio",
+        "experience": [
+          { "role": "Lead Medical Illustrator", "org": "Neuro Tech Studio", "period": "2018 — Present" },
+          { "role": "Seminar Material Designer", "org": "Neuro Tech Academy", "period": "2019 — Present" }
+        ],
+        "education": [
+          { "degree": "BFA, Medical Illustration", "school": "Tehran University of Art", "period": "2012 — 2016" }
+        ],
+        "publications": [
+          { "title": "Procedural illustration for neurostimulation training modules", "venue": "Neuro Tech Academy · 2023" }
+        ]
       }
     ],
     "cta": {
       "title": "Collaborate with us",
       "desc": "We welcome conversations with clinicians, educators and creators who share our standard of care.",
       "button": "Introduce yourself"
+    },
+    "viewProfile": "View Profile",
+    "profile": {
+      "back": "Back to Partners",
+      "affiliationLabel": "Clinical Affiliation",
+      "councilLabel": "Medical Council No.",
+      "aboutTitle": "About",
+      "experienceTitle": "Experience & Roles",
+      "educationTitle": "Education",
+      "publicationsTitle": "Publications & Projects",
+      "presentLabel": "Present",
+      "contactTitle": "Work with {name}",
+      "contactDesc": "For collaboration, teaching or device-advisory enquiries, we're glad to make an introduction.",
+      "contactCta": "Get in touch",
+      "notFound": "This profile could not be found.",
+      "recentTitle": "Recent Publications",
+      "upcomingTitle": "Upcoming Clinical Sessions",
+      "upcomingNote": "Open to registered clinicians.",
+      "upcoming": [
+        { "date": "12 Sep 2026", "title": "Live EEG Reading Clinic", "venue": "Neuro Tech Academy" },
+        { "date": "04 Oct 2026", "title": "DBS Programming Clinical Session", "venue": "Tehran Neurology Institute" },
+        { "date": "18 Nov 2026", "title": "Case Conference — Movement Disorders", "venue": "Online" }
+      ]
     }
   },
   "checkout": {

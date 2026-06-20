@@ -22,7 +22,7 @@ useReveal()
     <section class="bg-ink py-16 md:py-24">
       <div class="max-w-3xl mx-auto px-8">
         <router-link to="/global-trade" class="text-[11px] uppercase tracking-[0.25em] text-gold/80 hover:text-gold transition-colors inline-flex items-center gap-2">
-          <span aria-hidden="true">←</span> {{ t('globalTrade.tradeDetail.back') }}
+          <span class="dir-arrow-back" aria-hidden="true"></span> {{ t('globalTrade.tradeDetail.back') }}
         </router-link>
         <p class="mt-8 text-[11px] uppercase tracking-[0.35em] text-gold/80 font-light">
           {{ t('globalTrade.tradeDetail.eyebrow') }} · {{ t(`globalTrade.tradeDetail.${item.type}`) }}

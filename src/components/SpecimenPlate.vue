@@ -11,8 +11,10 @@
  * (e.g. NRO-101) — never a sequential plate number. `flip` alternates the
  * composition (panel to the right column) for editorial rhythm.
  *
- * Scope note: development is locked to LTR (English). This component uses
- * physical CSS properties only — no BiDi / logical-property mirroring.
+ * Scope note: the composition is authored LTR-first with physical CSS
+ * properties. The one reading-direction-sensitive detail — the "view" arrow —
+ * is made native-RTL-correct via flex order + a per-direction SVG path swap
+ * (no scaleX mirroring); see `.plate__view-arrow-*` in the style block.
  */
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
@@ -132,7 +134,12 @@ onBeforeUnmount(() => io?.disconnect())
 
         <span class="plate__view">
           <span class="plate__view-rule" aria-hidden="true"></span>
-          <svg class="plate__view-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          <!-- Two arrowhead paths share one line; CSS draws whichever points
+               along the reading direction (→ in LTR, ← in RTL). No scaleX. -->
+          <svg class="plate__view-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path class="plate__view-arrow-ltr" d="M5 12h14M13 6l6 6-6 6" />
+            <path class="plate__view-arrow-rtl" d="M5 12h14M11 6l-6 6 6 6" />
+          </svg>
         </span>
       </div>
     </router-link>
@@ -334,6 +341,17 @@ onBeforeUnmount(() => io?.disconnect())
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .group:hover .plate__view-arrow { transform: translateX(3px); }
+
+/* ── Direction-aware arrow — native RTL, no scaleX mirroring ─────────────────
+   `.plate__view` is an inline-flex row, so its order already reverses under
+   dir="rtl": the lead rule lands on the reading-start (right) edge and the
+   arrow on the reading-end (left) edge. We only swap which arrowhead path is
+   stroked so the head points along the reading direction — → in LTR, ← in RTL —
+   and flip the hover nudge to the inline axis. */
+.plate__view-arrow-rtl { display: none; }
+html[dir='rtl'] .plate__view-arrow-ltr { display: none; }
+html[dir='rtl'] .plate__view-arrow-rtl { display: inline; }
+html[dir='rtl'] .group:hover .plate__view-arrow { transform: translateX(-3px); }
 
 /* ── Reduced motion ────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {

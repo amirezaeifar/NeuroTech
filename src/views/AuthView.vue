@@ -5,10 +5,22 @@ import { useI18n } from 'vue-i18n'
 import BrandLogo from '../components/BrandLogo.vue'
 import { useAuth } from '../composables/useAuth.js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { login } = useAuth()
+
+// Writing direction — drives the back-chevron glyph and the slide-transition
+// direction natively, without scaleX mirroring or unreliable :global() rules.
+const isRtl = computed(() => ['fa', 'ar'].includes(locale.value))
+const backChevron = computed(() => (isRtl.value ? 'M9 6l6 6-6 6' : 'M15 6l-6 6 6 6'))
+const modeSwapName = computed(() => (isRtl.value ? 'auth-mode-swap-rtl' : 'auth-mode-swap'))
+// The sliding tab pill is anchored to the inline-start edge; in Register mode it
+// glides to the other half. Driven by the logical inset-inline-start (reactive
+// inline) rather than a transform or a [data-mode] cascade, both of which proved
+// unreliable on this element in this build. Being logical, it flips for RTL on
+// its own — no direction-specific math needed.
+const pillStyle = computed(() => (mode.value === 'register' ? { insetInlineStart: '50%' } : {}))
 
 // mode: 'login' | 'register'   ·   method: 'password' | 'sms'
 const mode = ref('login')
@@ -59,7 +71,7 @@ const verifyCode = () => {
 
     <!-- Back to site (no global navbar on this route) -->
     <router-link to="/" class="auth-back" :aria-label="t('nav.home')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path :d="backChevron" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>{{ t('nav.home') }}</span>
     </router-link>
 
@@ -68,7 +80,7 @@ const verifyCode = () => {
       <div class="auth-card-glow" aria-hidden="true"></div>
 
       <!-- Brand -->
-      <div class="auth-brand flex items-center justify-center mb-8 auth-rise" style="--d: 120ms">
+      <div class="auth-brand flex items-center justify-center mb-5 auth-rise" style="--d: 120ms">
         <BrandLogo :width="186" :height="50" tone="gold" />
       </div>
 
@@ -84,7 +96,7 @@ const verifyCode = () => {
 
       <!-- Mode switch with a sliding indicator -->
       <div class="auth-tabs auth-rise" :data-mode="mode" style="--d: 280ms">
-        <span class="auth-tabs-pill" aria-hidden="true"></span>
+        <span class="auth-tabs-pill" :style="pillStyle" aria-hidden="true"></span>
         <button type="button" class="auth-tab" :class="{ 'is-active': isLogin }" @click="setMode('login')">{{ t('auth.tabLogin') }}</button>
         <button type="button" class="auth-tab" :class="{ 'is-active': !isLogin }" @click="setMode('register')">{{ t('auth.tabRegister') }}</button>
       </div>
@@ -96,7 +108,7 @@ const verifyCode = () => {
       </div>
 
       <div class="auth-rise" style="--d: 400ms">
-        <Transition name="auth-mode-swap" mode="out-in">
+        <Transition :name="modeSwapName" mode="out-in">
         <!-- ── Password flow ── -->
         <form v-if="method === 'password'" key="password" class="auth-form" @submit.prevent="submitPassword">
           <Transition name="auth-field">
@@ -173,6 +185,33 @@ const verifyCode = () => {
         </Transition>
       </div>
 
+      <!-- ── Social sign-in ──────────────────────────────────────────────
+           A clean "or continue with" hairline divider, then two flat 2D
+           provider buttons with monochrome brand-aligned marks. No shadows,
+           no 3D — they sit flush on the dark card. -->
+      <div class="auth-divider auth-rise" style="--d: 440ms" role="separator">
+        <span>{{ t('auth.continueWith') }}</span>
+      </div>
+
+      <div class="auth-social auth-rise" style="--d: 480ms">
+        <button type="button" class="auth-social-btn" @click="finish('google.user', 'google')">
+          <svg class="auth-social-icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M21.35 11.1H12v3.2h5.35a4.57 4.57 0 0 1-1.98 3l3.2 2.48c1.87-1.73 2.95-4.28 2.95-7.32 0-.7-.06-1.37-.17-2.04z"/>
+            <path fill="currentColor" d="M12 22c2.7 0 4.96-.9 6.62-2.42l-3.2-2.48c-.9.6-2.05.96-3.42.96-2.63 0-4.86-1.78-5.66-4.17l-3.3 2.55A9.99 9.99 0 0 0 12 22z"/>
+            <path fill="currentColor" d="M6.34 13.89A5.99 5.99 0 0 1 6.02 12c0-.66.11-1.3.3-1.89L3.02 7.56A9.99 9.99 0 0 0 2 12c0 1.61.39 3.14 1.04 4.44l3.3-2.55z"/>
+            <path fill="currentColor" d="M12 5.94c1.48 0 2.8.51 3.85 1.5l2.84-2.84A9.6 9.6 0 0 0 12 2 9.99 9.99 0 0 0 3.02 7.56l3.3 2.55C7.14 7.72 9.37 5.94 12 5.94z"/>
+          </svg>
+          <span>{{ t('auth.continueGoogle') }}</span>
+        </button>
+
+        <button type="button" class="auth-social-btn" @click="finish('apple.user', 'apple')">
+          <svg class="auth-social-icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M16.37 12.78c.03 3.02 2.65 4.02 2.68 4.04-.02.07-.42 1.43-1.38 2.84-.83 1.21-1.69 2.42-3.05 2.45-1.33.02-1.76-.79-3.28-.79-1.52 0-2 .76-3.26.81-1.31.05-2.31-1.31-3.15-2.52-1.71-2.47-3.02-6.99-1.26-10.04.87-1.51 2.43-2.47 4.12-2.5 1.29-.02 2.5.86 3.28.86.79 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.27-2.15 3.79zM13.9 4.6c.69-.84 1.16-2 1.03-3.16-.99.04-2.2.66-2.91 1.49-.64.74-1.2 1.92-1.05 3.05 1.11.09 2.24-.56 2.93-1.38z"/>
+          </svg>
+          <span>{{ t('auth.continueApple') }}</span>
+        </button>
+      </div>
+
       <!-- Switch link -->
       <p class="auth-switch">
         {{ isLogin ? t('auth.noAccount') : t('auth.haveAccount') }}
@@ -195,7 +234,9 @@ const verifyCode = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2.5rem 1.25rem;
+  /* Trimmed vertical padding so the card clears the viewport on shorter
+     screens without scrolling. */
+  padding: 1.25rem 1.25rem;
   overflow: hidden;
   background:
     radial-gradient(120% 80% at 50% -10%, #221E19 0%, #16130F 45%, #100D0A 100%);
@@ -255,7 +296,6 @@ const verifyCode = () => {
   z-index: 3;
 }
 .auth-back:hover { color: #EDC071; }
-:global(html[dir='rtl']) .auth-back svg { transform: scaleX(-1); }
 
 /* ───────────────────────────── Card ───────────────────────────── */
 .auth-card {
@@ -263,7 +303,7 @@ const verifyCode = () => {
   z-index: 2;
   width: 100%;
   max-width: 27rem;
-  padding: 2.75rem 2.5rem 2.25rem;
+  padding: 1.85rem 2.5rem 1.6rem;
   border-radius: 20px;
   background: linear-gradient(165deg, rgba(38, 33, 28, 0.78), rgba(24, 20, 17, 0.82));
   border: 1px solid rgba(237, 192, 113, 0.14);
@@ -305,7 +345,7 @@ const verifyCode = () => {
   color: #F6F3EC;
 }
 .auth-subtitle {
-  margin-top: 0.6rem;
+  margin-top: 0.45rem;
   font-size: 0.825rem;
   font-weight: 300;
   line-height: 1.6;
@@ -317,7 +357,7 @@ const verifyCode = () => {
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-top: 1.9rem;
+  margin-top: 1.3rem;
   padding: 4px;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.28);
@@ -333,10 +373,13 @@ const verifyCode = () => {
   /* Warm parchment #F2EDE4 active tab — brings light balance to the dark card. */
   background: linear-gradient(135deg, #F2EDE4, #E2D7C4);
   box-shadow: 0 6px 18px -6px rgba(242, 237, 228, 0.4);
-  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* Slide via the logical inset (not transform): it animates reliably here and
+     flips automatically under dir="rtl" with no direction-specific code. */
+  transition: inset-inline-start 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.auth-tabs[data-mode='register'] .auth-tabs-pill { transform: translateX(100%); }
-:global(html[dir='rtl']) .auth-tabs[data-mode='register'] .auth-tabs-pill { transform: translateX(-100%); }
+/* The pill's slide transform is applied inline (see pillStyle) so it survives
+   this build's quirky attribute-selector cascade. Only the transition lives
+   here, on the base .auth-tabs-pill rule above. */
 .auth-tab {
   position: relative;
   z-index: 1;
@@ -355,7 +398,7 @@ const verifyCode = () => {
   display: flex;
   justify-content: center;
   gap: 1.75rem;
-  margin-top: 1.4rem;
+  margin-top: 1rem;
 }
 .auth-method {
   position: relative;
@@ -380,10 +423,10 @@ const verifyCode = () => {
 .auth-method.is-active::after { transform: scaleX(1); }
 
 /* ── Form & floating-label inputs ── */
-.auth-form { margin-top: 1.7rem; }
+.auth-form { margin-top: 1.25rem; }
 .auth-field {
   position: relative;
-  margin-bottom: 1.1rem;
+  margin-bottom: 0.85rem;
 }
 .auth-input {
   width: 100%;
@@ -521,7 +564,7 @@ const verifyCode = () => {
 }
 
 .auth-switch {
-  margin-top: 1.7rem;
+  margin-top: 1.15rem;
   text-align: center;
   font-size: 0.78rem;
   font-weight: 300;
@@ -529,7 +572,7 @@ const verifyCode = () => {
 }
 .auth-switch .auth-link { margin-inline-start: 0.4rem; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.72rem; }
 .auth-terms {
-  margin-top: 1.3rem;
+  margin-top: 0.9rem;
   text-align: center;
   font-size: 0.62rem;
   font-weight: 300;
@@ -538,10 +581,71 @@ const verifyCode = () => {
   color: rgba(242, 237, 228, 0.3);
 }
 
+/* ── "or continue with" divider — a centred caption between two hairlines.
+   Logical flex so it reverses cleanly under RTL. */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1.15rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(242, 237, 228, 0.14);
+}
+.auth-divider span {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 300;
+  white-space: nowrap;
+  color: rgba(242, 237, 228, 0.4);
+}
+
+/* ── Social provider buttons — flat 2D, monochrome marks ── */
+.auth-social {
+  margin-top: 0.85rem;
+  display: grid;
+  gap: 0.6rem;
+}
+.auth-social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(242, 237, 228, 0.18);
+  background: rgba(242, 237, 228, 0.04);
+  color: #F2EDE4;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 220ms ease, border-color 220ms ease, color 220ms ease;
+}
+.auth-social-btn:hover {
+  background: rgba(242, 237, 228, 0.09);
+  border-color: rgba(242, 237, 228, 0.4);
+}
+.auth-social-icon {
+  flex-shrink: 0;
+  color: rgba(242, 237, 228, 0.85);
+  transition: color 220ms ease;
+}
+.auth-social-btn:hover .auth-social-icon { color: #EDC071; }
+
 html[lang='fa'] .auth-eyebrow,
 html[lang='fa'] .auth-tab,
 html[lang='fa'] .auth-method,
 html[lang='fa'] .auth-submit,
+html[lang='fa'] .auth-divider span,
+html[lang='fa'] .auth-social-btn,
 html[lang='fa'] .auth-back { letter-spacing: 0; }
 
 /* ───────────────────────── Entrance ─────────────────────────
@@ -569,8 +673,13 @@ html[lang='fa'] .auth-back { letter-spacing: 0; }
 .auth-mode-swap-leave-active { transition: opacity 200ms ease, transform 200ms ease; }
 .auth-mode-swap-enter-from { opacity: 0; transform: translateX(18px); }
 .auth-mode-swap-leave-to { opacity: 0; transform: translateX(-14px); }
-:global(html[dir='rtl']) .auth-mode-swap-enter-from { transform: translateX(-18px); }
-:global(html[dir='rtl']) .auth-mode-swap-leave-to { transform: translateX(14px); }
+/* RTL slide — mirrored horizontally. Driven by a dynamic transition name
+   (modeSwapName) rather than a :global(html[dir]) ancestor, so it always
+   applies regardless of scoped-:global quirks in this build. */
+.auth-mode-swap-rtl-enter-active { transition: opacity 340ms ease, transform 380ms cubic-bezier(0.16, 1, 0.3, 1); }
+.auth-mode-swap-rtl-leave-active { transition: opacity 200ms ease, transform 200ms ease; }
+.auth-mode-swap-rtl-enter-from { opacity: 0; transform: translateX(-18px); }
+.auth-mode-swap-rtl-leave-to { opacity: 0; transform: translateX(14px); }
 
 /* Expanding/collapsing fields (name, SMS code block). */
 .auth-field-enter-active, .auth-field-leave-active {

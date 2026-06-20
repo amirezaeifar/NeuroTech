@@ -79,7 +79,7 @@ useReveal()
         </div>
         <div class="md:col-span-2 md:text-end reveal" style="transition-delay: 120ms">
           <router-link to="/contact" class="btn-ghost-gold">
-            {{ t('agencies.become.cta') }} <span aria-hidden="true">→</span>
+            {{ t('agencies.become.cta') }} <span class="dir-arrow" aria-hidden="true"></span>
           </router-link>
         </div>
       </div>

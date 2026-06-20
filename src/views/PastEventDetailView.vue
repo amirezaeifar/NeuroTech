@@ -6,9 +6,17 @@ import LuxeCard from '../components/LuxeCard.vue'
 import SectionEyebrow from '../components/SectionEyebrow.vue'
 import { useReveal } from '../composables/useReveal.js'
 
-const { t, tm } = useI18n()
+const { t, tm, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
+
+// Writing direction — drives native RTL chevron glyphs (no scaleX mirroring)
+// and the keyboard arrow mapping.
+const isRtl = computed(() => ['fa', 'ar'].includes(locale.value))
+// Chevron pointing toward the gallery's start / end edge in the current
+// direction. In LTR the start edge is the left; in RTL it is the right.
+const chevronToStart = computed(() => (isRtl.value ? 'M9 6l6 6-6 6' : 'M15 6l-6 6 6 6'))
+const chevronToEnd = computed(() => (isRtl.value ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6'))
 
 const archiveItems = computed(() => tm('events.archive.items'))
 const itemIndex = computed(() => Number(route.params.id))
@@ -59,8 +67,9 @@ watch(lightboxOpen, (open) => {
 const onKey = (e) => {
   if (!lightboxOpen.value) return
   if (e.key === 'Escape') closeLightbox()
-  else if (e.key === 'ArrowRight') next()
-  else if (e.key === 'ArrowLeft') prev()
+  // Physical arrow keys map to logical direction: in RTL, ArrowLeft advances.
+  else if (e.key === 'ArrowRight') isRtl.value ? prev() : next()
+  else if (e.key === 'ArrowLeft') isRtl.value ? next() : prev()
 }
 onMounted(() => window.addEventListener('keydown', onKey))
 onUnmounted(() => { window.removeEventListener('keydown', onKey); document.body.style.overflow = '' })
@@ -73,7 +82,7 @@ useReveal()
     <section class="bg-ink py-16 md:py-24">
       <div class="max-w-4xl mx-auto px-8">
         <router-link to="/events" class="text-[11px] uppercase tracking-[0.25em] text-gold/80 hover:text-gold transition-colors inline-flex items-center gap-2">
-          <span aria-hidden="true">←</span> {{ t('events.pastDetail.back') }}
+          <span class="dir-arrow-back" aria-hidden="true"></span> {{ t('events.pastDetail.back') }}
         </router-link>
         <p class="mt-8 text-[11px] uppercase tracking-[0.35em] text-gold/80 font-light">{{ t('events.pastDetail.eyebrow') }} · {{ t('events.sections.completedEvent') }}</p>
         <h1 class="mt-3 font-serif font-light text-parchment-light text-4xl md:text-5xl tracking-wide leading-snug">{{ item.title }}</h1>
@@ -117,10 +126,10 @@ useReveal()
 
               <!-- Prev / Next -->
               <button type="button" class="gal-arrow gal-arrow--prev" @click="prev" :aria-label="t('events.pastDetail.prevImage')">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path :d="chevronToStart" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
               <button type="button" class="gal-arrow gal-arrow--next" @click="next" :aria-label="t('events.pastDetail.nextImage')">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path :d="chevronToEnd" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
 
               <!-- Counter + fullscreen toggle -->
@@ -237,7 +246,7 @@ useReveal()
         </button>
 
         <button type="button" class="lb-arrow lb-arrow--prev" @click="prev" :aria-label="t('events.pastDetail.prevImage')">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path :d="chevronToStart" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
 
         <figure class="lb-stage" :style="{ background: gallery[activeImg].bg }">
@@ -246,7 +255,7 @@ useReveal()
         </figure>
 
         <button type="button" class="lb-arrow lb-arrow--next" @click="next" :aria-label="t('events.pastDetail.nextImage')">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path :d="chevronToEnd" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
 
         <span class="lb-counter">{{ pad(activeImg + 1) }} / {{ pad(count) }}</span>
@@ -334,7 +343,6 @@ useReveal()
 .gal-arrow:hover { background: rgba(10, 8, 6, 0.7); border-color: rgba(246, 243, 236, 0.5); }
 .gal-arrow--prev { inset-inline-start: 0.85rem; }
 .gal-arrow--next { inset-inline-end: 0.85rem; }
-:global(html[dir='rtl']) .gal-arrow svg { transform: scaleX(-1); }
 
 .gal-counter {
   position: absolute;
@@ -467,7 +475,6 @@ useReveal()
   transition: background 220ms ease, border-color 220ms ease, transform 220ms ease;
 }
 .lb-arrow:hover { background: rgba(255, 255, 255, 0.16); border-color: rgba(246, 243, 236, 0.5); transform: scale(1.05); }
-:global(html[dir='rtl']) .lb-arrow svg { transform: scaleX(-1); }
 .lb-counter {
   position: absolute;
   bottom: clamp(1rem, 3vw, 2rem);

@@ -150,7 +150,7 @@ useReveal()
               <p class="text-xs text-ink-muted font-light uppercase tracking-[0.15em]">{{ cs.company }} · {{ cs.category }}</p>
               <p class="mt-4 text-sm text-ink-soft font-light leading-relaxed">{{ cs.summary }}</p>
               <span class="mt-6 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink group-hover:text-gold-dark transition-colors border-b border-gold/40 pb-1">
-                {{ t('globalTrade.caseStudies.viewReport') }} <span aria-hidden="true">→</span>
+                {{ t('globalTrade.caseStudies.viewReport') }} <span class="dir-arrow" aria-hidden="true"></span>
               </span>
             </article>
           </router-link>
@@ -189,7 +189,7 @@ useReveal()
               <div class="mt-auto pt-10">
                 <router-link to="/contact" class="become-cta group">
                   <span>{{ t('globalTrade.become.cta') }}</span>
-                  <span class="become-cta-arrow" aria-hidden="true">→</span>
+                  <span class="become-cta-arrow dir-arrow" aria-hidden="true"></span>
                 </router-link>
               </div>
             </div>
@@ -300,6 +300,7 @@ useReveal()
 .become-cta-arrow { transition: transform 280ms ease; }
 .become-cta:hover .become-cta-arrow { transform: translateX(4px); }
 html[lang='fa'] .become-cta { letter-spacing: 0; font-family: 'YekanBakh', sans-serif; }
-html[dir='rtl'] .become-cta-arrow { transform: scaleX(-1); }
-html[dir='rtl'] .become-cta:hover .become-cta-arrow { transform: scaleX(-1) translateX(4px); }
+/* Native RTL: the arrow glyph itself swaps direction (.dir-arrow) — no scaleX
+   mirroring. The hover nudge stays on the inline axis. */
+html[dir='rtl'] .become-cta:hover .become-cta-arrow { transform: translateX(-4px); }
 </style>

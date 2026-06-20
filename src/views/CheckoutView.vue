@@ -144,7 +144,7 @@ const rise = (delay = 0) => ({
                   @click="goToPayment"
                   class="mt-7 w-full inline-flex items-center justify-center gap-2.5 text-[11px] uppercase tracking-[0.3em] font-light px-6 py-4 rounded-md border border-gold/60 bg-ink text-parchment-light hover:bg-gold hover:text-ink hover:border-gold transition-colors"
                 >
-                  {{ t('checkout.proceedCta') }} <span aria-hidden="true">→</span>
+                  {{ t('checkout.proceedCta') }} <span class="dir-arrow" aria-hidden="true"></span>
                 </button>
               </div>
 
@@ -176,7 +176,7 @@ const rise = (delay = 0) => ({
 
                     <div class="flex items-center gap-5 pt-1">
                       <button type="button" @click="goToCart" class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink-muted hover:text-ink transition-colors border-b border-transparent hover:border-gold/40 pb-1">
-                        <span aria-hidden="true">←</span> {{ t('checkout.back') }}
+                        <span class="dir-arrow-back" aria-hidden="true"></span> {{ t('checkout.back') }}
                       </button>
                       <button
                         type="submit"

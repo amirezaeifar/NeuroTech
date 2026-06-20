@@ -36,14 +36,12 @@ useReveal()
 </script>
 
 <template>
-  <div class="contact-page">
-    <!-- ───────────────────────── Hero ───────────────────────── -->
-    <section class="relative overflow-hidden py-28 md:py-36 bg-parchment-light text-center">
-      <div class="contact-hero-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
-      <div class="contact-hero-pool pointer-events-none absolute inset-0" aria-hidden="true"></div>
-      <div class="relative max-w-5xl mx-auto px-8">
+  <div class="contact-page bg-parchment-light">
+    <!-- ───────────────────────── Hero — flat, generous whitespace ───────────────────────── -->
+    <section class="pt-28 md:pt-36 pb-6 text-center">
+      <div class="max-w-5xl mx-auto px-8">
         <SectionEyebrow :text="t('contact.hero.eyebrow')" />
-        <h1 class="font-serif font-light text-5xl md:text-7xl text-ink tracking-wide mt-8 leading-[1.05]">
+        <h1 class="font-serif font-light text-5xl md:text-7xl lg:text-8xl text-ink tracking-wide mt-8 leading-[1.02]">
           {{ t('contact.hero.title') }}
         </h1>
         <p class="reveal mt-10 max-w-xl mx-auto font-serif italic font-light text-xl md:text-2xl text-ink-soft leading-relaxed">
@@ -52,93 +50,91 @@ useReveal()
       </div>
     </section>
 
-    <!-- ───────────────────────── Split card: info rail + form ───────────────────────── -->
-    <section class="pb-24 md:pb-32 bg-parchment-light">
-      <div class="max-w-6xl mx-auto px-6 md:px-8">
-        <div class="reveal contact-shell grid lg:grid-cols-12 overflow-hidden rounded-[1.75rem]">
+    <!-- ───────────────────────── Unboxed editorial body ─────────────────────────
+         No card, no panel — the information rail and the form sit directly on the
+         page. A single hairline column rule divides them on large screens. The
+         grid reverses naturally under dir="rtl". -->
+    <section class="pt-16 md:pt-24 pb-28 md:pb-36">
+      <div class="max-w-6xl mx-auto px-8">
+        <div class="grid lg:grid-cols-12 gap-16 lg:gap-0">
 
-          <!-- ── Charcoal info rail (#323A45) ── -->
-          <aside class="contact-rail relative lg:col-span-5 p-9 md:p-12 flex flex-col">
-            <div class="contact-rail-aura pointer-events-none absolute inset-0" aria-hidden="true"></div>
-            <div class="contact-rail-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+          <!-- ── Information rail — bare on the background ── -->
+          <aside class="lg:col-span-5 lg:pe-16">
+            <span class="inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.35em] text-gold-dark font-light">
+              <span class="h-px w-8 bg-gold/60"></span>
+              {{ t('contact.rail.eyebrow') }}
+            </span>
+            <h2 class="mt-6 font-serif font-light text-3xl md:text-4xl text-ink leading-[1.12] tracking-wide">
+              {{ t('contact.rail.title') }}
+            </h2>
+            <p class="mt-5 text-sm md:text-base text-ink-soft font-light leading-relaxed max-w-sm">
+              {{ t('contact.rail.desc') }}
+            </p>
 
-            <div class="relative">
-              <span class="inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.35em] text-jade-light font-light">
-                <span class="h-px w-8 bg-jade/60"></span>
-                {{ t('contact.rail.eyebrow') }}
-              </span>
-              <h2 class="mt-6 font-serif font-light text-3xl md:text-[2.4rem] text-[#F4F1EA] leading-[1.12] tracking-wide">
-                {{ t('contact.rail.title') }}
-              </h2>
-              <p class="mt-5 text-sm text-[#C9CDD2] font-light leading-relaxed max-w-sm">
-                {{ t('contact.rail.desc') }}
-              </p>
-            </div>
-
-            <div class="relative mt-10 md:mt-auto md:pt-12 space-y-7">
+            <div class="mt-12 space-y-8">
               <div v-for="key in ['address', 'phone', 'email', 'hours']" :key="key" class="flex items-start gap-4">
-                <span class="contact-chip shrink-0 grid place-items-center w-11 h-11 rounded-xl">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path :d="infoIcons[key]" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="contact-ico shrink-0 text-gold-dark">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path :d="infoIcons[key]" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </span>
                 <div>
-                  <p class="text-[10px] uppercase tracking-[0.3em] text-[#9AA0A8] font-light mb-1.5">{{ t(`contact.info.${key}.title`) }}</p>
-                  <p class="font-serif font-light text-lg text-[#ECE8DF] leading-snug">{{ t(`contact.info.${key}.value`) }}</p>
+                  <p class="text-[10px] uppercase tracking-[0.3em] text-ink-muted font-light mb-1.5">{{ t(`contact.info.${key}.title`) }}</p>
+                  <p class="font-serif font-light text-lg md:text-xl text-ink leading-snug">{{ t(`contact.info.${key}.value`) }}</p>
                 </div>
               </div>
             </div>
           </aside>
 
-          <!-- ── Form panel ── -->
-          <div class="contact-form-panel lg:col-span-7 p-9 md:p-12 lg:p-14">
+          <!-- ── Form — bare fields on the background ── -->
+          <div class="lg:col-span-7 contact-form-col lg:ps-16">
             <Transition name="fade" mode="out-in">
-              <div v-if="submitted" key="success" class="h-full min-h-[420px] flex flex-col items-center justify-center text-center">
-                <div class="mx-auto w-16 h-16 rounded-full border border-jade/50 bg-jade/10 flex items-center justify-center text-jade">
+              <div v-if="submitted" key="success" class="min-h-[420px] flex flex-col items-center lg:items-start justify-center text-center lg:text-start">
+                <div class="w-16 h-16 rounded-full border border-gold/50 flex items-center justify-center text-gold-dark">
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12l5 5L19 8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
-                <p class="mt-7 font-serif italic font-light text-3xl text-gold-dark">
+                <p class="mt-7 font-serif italic font-light text-3xl md:text-4xl text-gold-dark">
                   {{ t('contact.form.success') }}
                 </p>
                 <button @click="submitted = false" class="btn-ghost-gold mt-10">
-                  ← {{ t('nav.contact') }}
+                  <span class="dir-arrow-back" aria-hidden="true"></span> {{ t('nav.contact') }}
                 </button>
               </div>
 
               <form v-else key="form" @submit.prevent="handleSubmit">
                 <p class="text-[11px] uppercase tracking-[0.3em] text-gold-dark font-light">{{ t('contact.form.eyebrow') }}</p>
-                <h3 class="mt-3 font-serif font-light text-3xl text-ink leading-snug">{{ t('contact.form.title') }}</h3>
-                <div class="h-px w-12 bg-gold/70 mt-6 mb-10"></div>
+                <h3 class="mt-3 font-serif font-light text-3xl md:text-4xl text-ink leading-snug">{{ t('contact.form.title') }}</h3>
+                <div class="h-px w-12 bg-gold/70 mt-6 mb-12"></div>
 
-                <div class="space-y-9">
-                  <div class="grid md:grid-cols-2 gap-x-10 gap-y-9">
+                <div class="space-y-10">
+                  <div class="grid md:grid-cols-2 gap-x-10 gap-y-10">
                     <div class="float-field" :class="{ 'is-active': active.name }">
-                      <input id="name" v-model="form.name" type="text" required />
+                      <input id="name" v-model="form.name" type="text" required placeholder=" " />
                       <label for="name">{{ t('contact.form.name') }}</label>
                     </div>
                     <div class="float-field" :class="{ 'is-active': active.email }">
-                      <input id="email" v-model="form.email" type="email" required />
+                      <input id="email" v-model="form.email" type="email" required placeholder=" " />
                       <label for="email">{{ t('contact.form.email') }}</label>
                     </div>
                   </div>
 
-                  <div class="grid md:grid-cols-2 gap-x-10 gap-y-9">
+                  <div class="grid md:grid-cols-2 gap-x-10 gap-y-10">
                     <div class="float-field" :class="{ 'is-active': active.phone }">
-                      <input id="phone" v-model="form.phone" type="tel" />
+                      <input id="phone" v-model="form.phone" type="tel" placeholder=" " />
                       <label for="phone">{{ t('contact.form.phone') }}</label>
                     </div>
                     <div class="float-field" :class="{ 'is-active': active.subject }">
-                      <input id="subject" v-model="form.subject" type="text" required />
+                      <input id="subject" v-model="form.subject" type="text" required placeholder=" " />
                       <label for="subject">{{ t('contact.form.subject') }}</label>
                     </div>
                   </div>
 
                   <div class="float-field" :class="{ 'is-active': active.message }">
-                    <textarea id="message" v-model="form.message" rows="4" required></textarea>
+                    <textarea id="message" v-model="form.message" rows="4" required placeholder=" "></textarea>
                     <label for="message">{{ t('contact.form.message') }}</label>
                   </div>
                 </div>
 
-                <button type="submit" class="btn-ghost-gold w-full justify-center mt-12">
-                  {{ t('contact.form.submit') }} <span aria-hidden="true">→</span>
+                <button type="submit" class="btn-ghost-gold mt-14">
+                  {{ t('contact.form.submit') }} <span class="dir-arrow" aria-hidden="true"></span>
                 </button>
               </form>
             </Transition>
@@ -150,58 +146,26 @@ useReveal()
 </template>
 
 <style scoped>
-.contact-hero-grid {
-  background-image: repeating-linear-gradient(90deg, transparent 0, transparent 119px, rgba(184, 146, 42, 0.035) 119px, rgba(184, 146, 42, 0.035) 120px);
-}
-.contact-hero-pool {
-  background: radial-gradient(50% 60% at 50% 0%, rgba(46, 110, 90, 0.07), transparent 70%);
-}
-
-/* Split shell — charcoal rail welded to a parchment form panel. */
-.contact-shell {
-  border: 1px solid rgb(var(--c-parchment-deep) / 0.7);
-  box-shadow: 0 1px 2px rgb(2 6 12 / 0.12), 0 40px 90px -45px rgb(2 6 12 / 0.5);
+/* The form column carries the only divider on the page — a single hairline
+   on its inline-start edge (logical, so it sits correctly in RTL). */
+@media (min-width: 1024px) {
+  .contact-form-col { border-inline-start: 1px solid rgb(var(--c-parchment-deep)); }
 }
 
-/* ── Charcoal info rail (#323A45) ── */
-.contact-rail {
-  background: linear-gradient(165deg, #3a434f 0%, #323a45 50%, #272d36 100%);
-  --jade: 46 110 90;
-  --jade-light: 122 196 168;
-}
-.contact-rail-aura {
-  background: radial-gradient(60% 50% at 15% 8%, rgba(122, 196, 168, 0.12), transparent 60%),
-              radial-gradient(50% 40% at 100% 100%, rgba(237, 192, 113, 0.08), transparent 65%);
-}
-.contact-rail-grid {
-  background-image: repeating-linear-gradient(90deg, transparent 0, transparent 63px, rgba(255, 255, 255, 0.03) 63px, rgba(255, 255, 255, 0.03) 64px);
-  -webkit-mask-image: linear-gradient(180deg, #000, transparent 90%);
-          mask-image: linear-gradient(180deg, #000, transparent 90%);
-}
-.text-jade-light { color: rgb(var(--jade-light)); }
-.bg-jade\/60 { background-color: rgb(var(--jade) / 0.6); }
+/* Bare channel icon — no chip, no box; just the gold glyph on the background. */
+.contact-ico { display: inline-grid; place-items: center; padding-top: 0.15rem; }
 
-/* Channel chips — metallic gold ring over a jade-tinted glass square. */
-.contact-chip {
-  color: #EAC079;
-  background: rgba(122, 196, 168, 0.08);
-  border: 1px solid rgba(237, 192, 113, 0.3);
-  -webkit-backdrop-filter: blur(4px);
-          backdrop-filter: blur(4px);
-  transition: background 280ms ease, border-color 280ms ease;
+/* Larger, airier floating-label fields for the editorial layout. The base
+   .float-field styles (underline, floating label, RTL handling) live globally
+   in style.css; here we only enlarge the type and let textareas breathe. */
+.float-field :deep(input),
+.float-field :deep(textarea) {
+  font-size: 1.05rem;
+  padding-bottom: 0.65rem;
 }
-.contact-rail .flex:hover .contact-chip {
-  background: rgba(237, 192, 113, 0.14);
-  border-color: rgba(237, 192, 113, 0.55);
+.float-field :deep(textarea) {
+  resize: vertical;
+  min-height: 4.5rem;
+  line-height: 1.6;
 }
-
-/* Form panel surface. */
-.contact-form-panel {
-  background: rgb(var(--c-parchment));
-}
-
-/* Jade accent utilities for the success state. */
-.text-jade { color: #2E6E5A; }
-.border-jade\/50 { border-color: rgba(46, 110, 90, 0.5); }
-.bg-jade\/10 { background-color: rgba(46, 110, 90, 0.1); }
 </style>

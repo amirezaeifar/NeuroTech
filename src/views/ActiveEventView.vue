@@ -14,6 +14,20 @@ const items = computed(() => tm(`events.${eventType.value}.items`))
 const itemIndex = computed(() => Number(route.params.id))
 const item = computed(() => items.value[itemIndex.value])
 const presenter = computed(() => item.value?.host || item.value?.venue || '')
+const isOnsite = computed(() => eventType.value === 'onsite')
+
+// ---- On-site (recorded physical event) data ----
+// An on-site event is a *physical* gathering that is recorded rather than
+// live-streamed. The hub presents the VOD recording, the day's schedule, a
+// venue guide (location, hall map, timings) and an open comments/discussion
+// thread — but no live Q&A.
+const venueSchedule = [
+  { time: '08:30', label: 'Doors open & registration' },
+  { time: '09:00', label: 'Morning sessions — Main Hall' },
+  { time: '12:30', label: 'Lunch & networking' },
+  { time: '14:00', label: 'Hands-on stations — Hall B' },
+  { time: '17:00', label: 'Closing remarks' },
+]
 
 // ---- Live mock state ----
 const viewers = ref(412)
@@ -25,6 +39,14 @@ const stats = computed(() => [
   { label: t('events.active.stats.questions'), value: questionsAsked.value },
   { label: t('events.active.stats.elapsed'), value: elapsed.value },
   { label: t('events.active.stats.countries'), value: 14 },
+])
+
+// On-site recorded event surfaces physical-event figures instead of live ones.
+const onsiteStats = computed(() => [
+  { label: t('events.active.onsiteStats.attendees'), value: 248 },
+  { label: t('events.active.onsiteStats.sessions'), value: 6 },
+  { label: t('events.active.onsiteStats.duration'), value: '1:12:40' },
+  { label: t('events.active.onsiteStats.materials'), value: documents.length },
 ])
 
 // Dismissible "you're registered" banner.
@@ -76,8 +98,9 @@ const agenda = [
 const statusLabel = (s) => ({ done: t('events.active.done'), live: t('events.active.now'), soon: t('events.active.soon'), upcoming: '' }[s] || '')
 
 // ---- Speakers ----
-// Cross-link speakers who also appear in the Partners directory: clicking such a
-// card routes to /partners?focus=<index>, which scrolls to + highlights them.
+// Cross-link speakers who also appear in the Partners directory. The card itself
+// is NOT clickable; only the explicit "View Profile" link routes — to that
+// speaker's dedicated profile page at /partners/<index>.
 const partners = computed(() => tm('partners.people'))
 const partnerIndex = (name) => partners.value.findIndex((p) => p.name === name)
 
@@ -108,7 +131,7 @@ useReveal()
     <div class="bg-ink">
       <div class="max-w-6xl mx-auto px-6 py-5 flex flex-wrap items-center gap-4">
         <router-link to="/events" class="text-[11px] uppercase tracking-[0.25em] text-gold/80 hover:text-gold transition-colors inline-flex items-center gap-2">
-          <span aria-hidden="true">←</span> {{ t('events.active.back') }}
+          <span class="dir-arrow-back" aria-hidden="true"></span> {{ t('events.active.back') }}
         </router-link>
       </div>
     </div>
@@ -116,7 +139,7 @@ useReveal()
     <!-- Registered confirmation — dismissible. The X collapses it out with a
          smooth fade + slide-up <Transition> (alert-collapse). -->
     <Transition name="alert-collapse">
-      <div v-if="showRegistered" class="bg-gold/10 border-b border-gold/30">
+      <div v-if="showRegistered && !isOnsite" class="bg-gold/10 border-b border-gold/30">
         <div class="max-w-6xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs text-ink-soft font-light">
           <span class="flex items-center gap-2.5">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="text-gold-dark shrink-0"><path d="M5 12l5 5L19 8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -144,25 +167,48 @@ useReveal()
           <p class="mt-1 text-sm text-ink-muted font-light">{{ presenter }}</p>
         </div>
 
-        <!-- Focal video player -->
-        <VideoPlayer
-          live
-          :viewers="viewers.toLocaleString()"
-          :title="item.title"
-          :subtitle="presenter"
-        />
+        <!-- ── Focal media ──────────────────────────────────────────────
+             Online sessions stream live. On-site sessions are physical events
+             that are *recorded* — so they present the VOD recording with chapter
+             markers ("Key Moments") rather than a live feed. -->
+        <template v-if="!isOnsite">
+          <VideoPlayer
+            live
+            :viewers="viewers.toLocaleString()"
+            :title="item.title"
+            :subtitle="presenter"
+          />
+        </template>
+
+        <template v-else>
+          <div class="space-y-5">
+            <!-- Recorded-on-site label strip (flat, no live ping) -->
+            <div class="flex items-center gap-2.5 rounded-lg border border-gold/30 bg-gold/10 px-4 py-3">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="shrink-0 text-gold-dark"><path d="m23 7-7 5 7 5V7zM1 5h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="text-[11px] uppercase tracking-[0.22em] text-gold-dark font-light">{{ t('events.active.recordingSubtitle') }}</span>
+            </div>
+
+            <!-- VOD recording of the physical event -->
+            <VideoPlayer
+              :title="item.title"
+              :subtitle="t('events.active.recordingTitle')"
+              duration="1:12:40"
+              elapsed="00:00"
+            />
+          </div>
+        </template>
 
         <!-- Stats strip -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div v-for="s in stats" :key="s.label" class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card px-4 py-3.5 text-center">
+          <div v-for="s in (isOnsite ? onsiteStats : stats)" :key="s.label" class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card px-4 py-3.5 text-center">
             <p class="font-serif text-2xl text-ink leading-none">{{ s.value }}</p>
             <p class="mt-1.5 text-[10px] uppercase tracking-[0.2em] text-ink-muted font-light">{{ s.label }}</p>
           </div>
         </div>
 
-        <!-- Agenda timeline -->
+        <!-- Agenda / schedule timeline -->
         <div class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card p-7">
-          <h2 class="font-serif font-light text-lg text-ink mb-5">{{ t('events.active.agendaTitle') }}</h2>
+          <h2 class="font-serif font-light text-lg text-ink mb-5">{{ isOnsite ? t('events.active.scheduleTitle') : t('events.active.agendaTitle') }}</h2>
           <ol class="relative">
             <li v-for="(a, i) in agenda" :key="i" class="relative flex gap-4 pb-5 last:pb-0">
               <!-- rail -->
@@ -190,42 +236,49 @@ useReveal()
         <!-- Speakers -->
         <div class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card p-7">
           <h2 class="font-serif font-light text-lg text-ink mb-5">{{ t('events.active.speakersTitle') }}</h2>
+          <!-- Cards are no longer clickable as a whole. Routing to a partner's
+               profile happens only via the explicit "View Profile" link below
+               each card (when the speaker is in the Partners directory). -->
           <div class="grid sm:grid-cols-3 gap-5">
-            <component
-              :is="partnerIndex(sp.name) >= 0 ? 'router-link' : 'div'"
+            <div
               v-for="sp in speakers"
               :key="sp.name"
-              :to="partnerIndex(sp.name) >= 0 ? { path: '/partners', query: { focus: partnerIndex(sp.name) } } : undefined"
-              :class="['speaker-card text-center sm:text-left block rounded-lg', partnerIndex(sp.name) >= 0 ? 'is-linked -m-2 p-2 transition-colors hover:bg-gold/5' : '']"
+              class="speaker-card text-center sm:text-left"
             >
               <div class="flex items-center gap-3 sm:block">
                 <div class="relative shrink-0 w-12 h-12 rounded-full bg-ink text-parchment-light flex items-center justify-center font-serif text-sm sm:mb-3">
                   {{ initials(sp.name) }}
-                  <span v-if="sp.live" class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-500 border-2 border-parchment"></span>
+                  <span v-if="sp.live && !isOnsite" class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-500 border-2 border-parchment"></span>
                 </div>
                 <div class="min-w-0">
-                  <p class="text-sm font-light leading-snug" :class="partnerIndex(sp.name) >= 0 ? 'text-ink group-hover:text-gold-dark' : 'text-ink'">{{ sp.name }}</p>
+                  <p class="text-sm font-light leading-snug text-ink">{{ sp.name }}</p>
                   <p class="text-[11px] text-ink-muted font-light">{{ sp.title }}</p>
                 </div>
               </div>
               <p class="mt-2 text-[11px] text-ink-hint font-light">{{ sp.org }}</p>
               <div class="mt-2.5 flex items-center gap-2 justify-center sm:justify-start">
                 <span class="text-[9px] uppercase tracking-[0.2em] font-light px-2 py-0.5 rounded-full"
-                      :class="sp.live ? 'bg-red-500/10 text-red-600 dark:text-red-400' : 'text-gold-dark border border-gold/40'">{{ sp.tag }}</span>
+                      :class="(sp.live && !isOnsite) ? 'bg-red-500/10 text-red-600 dark:text-red-400' : 'text-gold-dark border border-gold/40'">{{ sp.tag }}</span>
                 <span class="text-[10px] text-ink-hint font-light">{{ sp.talks }} talks</span>
               </div>
-              <span v-if="partnerIndex(sp.name) >= 0" class="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-gold-dark font-light">
-                {{ t('events.active.viewProfile') }} <span aria-hidden="true">→</span>
-              </span>
-            </component>
+              <router-link
+                v-if="partnerIndex(sp.name) >= 0"
+                :to="`/partners/${partnerIndex(sp.name)}`"
+                class="speaker-profile-link mt-2.5 inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-gold-dark font-light border-b border-gold/40 pb-0.5 hover:text-gold hover:border-gold transition-colors"
+              >
+                {{ t('events.active.viewProfile') }} <span class="dir-arrow" aria-hidden="true"></span>
+              </router-link>
+            </div>
           </div>
         </div>
+
       </div>
 
       <!-- ================= SIDE COLUMN ================= -->
       <aside class="lg:col-span-4 space-y-6">
-        <!-- Live chat / Q&A -->
-        <div class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card flex flex-col h-[560px] overflow-hidden">
+        <!-- Live chat / Q&A — online sessions only. On-site (recorded physical)
+             events have no live audience interaction, so this is omitted there. -->
+        <div v-if="!isOnsite" class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card flex flex-col h-[560px] overflow-hidden">
           <div class="px-4 pt-4">
             <h2 class="font-serif font-light text-lg text-ink mb-3 px-1">{{ t('events.active.chatTitle') }}</h2>
             <div class="flex p-1 rounded-md bg-parchment-light border border-parchment-deep/60 text-[11px] uppercase tracking-[0.15em]">
@@ -281,7 +334,63 @@ useReveal()
           </form>
         </div>
 
-        <!-- Clinical documents -->
+        <!-- Venue Guide & Event Agenda — on-site (physical) events only.
+             Location details, a flat top-down hall map and the day's timings. -->
+        <div v-if="isOnsite" class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card p-6">
+          <h2 class="font-serif font-light text-lg text-ink mb-4">{{ t('events.active.venueTitle') }}</h2>
+
+          <!-- Location details -->
+          <div class="flex items-start gap-3">
+            <span class="shrink-0 w-9 h-9 rounded border border-gold/40 flex items-center justify-center text-gold-dark">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.5"/></svg>
+            </span>
+            <div class="min-w-0">
+              <p class="text-sm text-ink font-light leading-snug">{{ item.venue || presenter }}</p>
+              <p class="text-[12px] text-ink-muted font-light mt-0.5">{{ t('events.active.venueAddress') }}</p>
+            </div>
+          </div>
+
+          <!-- Flat top-down hall map (decorative schematic) -->
+          <div class="mt-5">
+            <p class="text-[10px] uppercase tracking-[0.25em] text-gold-dark font-light mb-2">{{ t('events.active.venueMapLabel') }}</p>
+            <div class="rounded-md border border-parchment-deep/60 bg-parchment-light p-3">
+              <svg viewBox="0 0 200 120" class="w-full h-auto" role="img" :aria-label="t('events.active.venueMapLabel')">
+                <g fill="none" stroke="rgb(var(--c-gold) / 0.55)" stroke-width="1">
+                  <rect x="6" y="6" width="188" height="108" rx="3" stroke="rgb(var(--c-parchment-deep))"/>
+                  <rect x="16" y="14" width="168" height="22" rx="2" fill="rgb(var(--c-gold) / 0.12)"/>
+                  <rect x="16" y="44" width="100" height="62" rx="2"/>
+                  <rect x="124" y="44" width="60" height="28" rx="2"/>
+                  <rect x="124" y="78" width="60" height="28" rx="2"/>
+                </g>
+                <g fill="rgb(var(--c-ink-soft))" font-size="7" font-family="inherit" letter-spacing="0.5">
+                  <text x="100" y="28" text-anchor="middle" fill="rgb(var(--c-gold-dark))">STAGE</text>
+                  <text x="66" y="78" text-anchor="middle">SEATING</text>
+                  <text x="154" y="60" text-anchor="middle">HALL B</text>
+                  <text x="154" y="94" text-anchor="middle">STATIONS</text>
+                </g>
+                <g fill="rgb(var(--c-gold-dark))">
+                  <circle cx="100" cy="110" r="2.5"/>
+                  <text x="100" y="118" text-anchor="middle" font-size="6" fill="rgb(var(--c-ink-muted))">ENTRANCE</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Event agenda / timings -->
+          <div class="mt-5">
+            <p class="text-[10px] uppercase tracking-[0.25em] text-gold-dark font-light mb-2.5">{{ t('events.active.venueAgendaLabel') }}</p>
+            <ul class="space-y-2">
+              <li v-for="(s, i) in venueSchedule" :key="i" class="flex items-baseline gap-3">
+                <span class="shrink-0 text-[11px] text-gold-dark font-light tabular-nums tracking-[0.1em]">{{ s.time }}</span>
+                <span class="text-sm text-ink-soft font-light leading-snug">{{ s.label }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Clinical Documents — shown for both online and on-site events. For
+             on-site it sits directly below the Venue Guide; for online it closes
+             the sidebar after the live chat/Q&A. Flat editorial download list. -->
         <div class="rounded-lg border border-parchment-deep/70 bg-parchment shadow-card p-6">
           <h2 class="font-serif font-light text-lg text-ink mb-4">{{ t('events.active.docsTitle') }}</h2>
           <ul class="space-y-2.5">
