@@ -138,7 +138,6 @@ html.dark .partners-hero .partners-hero-rule { background-color: rgba(154, 115, 
    build — mirrors the Partners/Trade hero treatment above. The canvas node
    colour is switched in lockstep from JS (ProductsView → syncTheme). */
 html.dark .products-stage {
-  --stage-surface: #1a1714;
   --stage-gold: #edc071;
   --stage-text: #f3ece0;
   --stage-muted: rgba(243, 236, 224, 0.56);
@@ -150,21 +149,30 @@ html.dark .products-stage {
   --glass-bg-hover: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-sheen: rgba(255, 255, 255, 0.07);
-  --vignette: rgba(237, 192, 113, 0.05);
+  /* Device render: silver frame + glowing gold signal on the dark glass. */
+  --media-bg: rgba(255, 255, 255, 0.025);
+  --device-frame: rgba(243, 236, 224, 0.55);
+  --device-signal: #edc071;
 }
 
-/* Products split-tone hero — dark-mode inversion (mirrors the Trade/Partners
-   heroes). The band flips from deep charcoal to warm parchment #F2EDE4, so the
-   title switches to dark ink and the eyebrow/rule to a dark amber. This keeps
-   the page reading "top-light / bottom-dark" in dark mode — the inverse of the
-   light-mode split. */
-html.dark .products-hero { background: #f2ede4; }
+/* Products background bands — dark-mode inversion (mirrors the Trade/Partners
+   heroes). The header band flips from deep charcoal to warm parchment #F2EDE4
+   and the catalogue band flips from parchment to deep charcoal, so the page
+   reads "top-light / bottom-dark" — the inverse of the light-mode split, and
+   exactly what the particle X-ray inversion is tuned against. */
+html.dark .pf-bg-hero {
+  background: #f2ede4;
+}
+html.dark .pf-bg-stage {
+  background-color: #1a1714;
+  background-image: radial-gradient(120% 60% at 50% 0%, rgba(237, 192, 113, 0.05), transparent 60%);
+}
+html.dark .pf-bg-hero .products-hero-aura {
+  background: radial-gradient(60% 90% at 50% 0%, rgba(154, 115, 34, 0.12), transparent 70%);
+}
 html.dark .products-hero .products-hero-title { color: #14110e; }
 html.dark .products-hero .products-hero-eyebrow { color: #9a7322; }
 html.dark .products-hero .products-hero-rule { background: rgba(154, 115, 34, 0.6); }
-html.dark .products-hero .products-hero-aura {
-  background: radial-gradient(60% 90% at 50% 0%, rgba(154, 115, 34, 0.12), transparent 70%);
-}
 
 /* Partner profile — dark-mode gold enrichment. On charcoal the flat parchment
    sections read too monochromatic, so the brand gold #EDC071 is injected into
@@ -450,7 +458,10 @@ html[lang='fa'] .float-field label {
 }
 
 /* ── Ghost gold button — flat 2D fluid-fill ──────────────────────────────────
-   Base: a crisp hairline gold outline with sharp, sophisticated tracked caps.
+   Base: a crisp hairline gold outline with sophisticated tracked caps on a near-
+   square 2px corner radius — a sharp, precise clinical edge. This is the elegant,
+   minimalist primary-action style (Discover the portfolio, Write to us, etc.) —
+   distinct from the solid "Purchase Online" block (.pdx-btn-primary).
    Hover: a solid brand-gold fill sweeps in from the inline-start edge (a ::before
    panel that scales on the X-axis), and the label cleanly inverts to the deep
    charcoal (#323A45). STRICTLY flat — no shadow, no glow, no 3D lift. */
@@ -463,6 +474,7 @@ html[lang='fa'] .float-field label {
   gap: 0.75rem;
   padding: 0.95rem 2.25rem;
   border: 1px solid var(--gold);
+  border-radius: 2px;               /* sharp, precise clinical edge */
   color: var(--gold);
   background: transparent;
   font-family: 'Inter', sans-serif;

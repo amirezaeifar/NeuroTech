@@ -6,7 +6,10 @@ import { useReveal } from '../composables/useReveal.js'
 const { t, tm } = useI18n()
 const stats = tm('home.stats')
 const expertise = tm('home.expertise.items')
-const partners = ['Siemens', 'Philips', 'GE Healthcare', 'Nihon Kohden', 'Natus', 'Compumedics', 'Medtronic', 'Cadwell']
+const partners = ['Forbo', 'GB', 'Oxford', 'Verin']
+// Repeat the four names so the marquee track fills wide screens; the template
+// renders this row twice more for a seamless translateX(-50%) loop.
+const partnerRow = [...partners, ...partners, ...partners, ...partners]
 
 useReveal()
 </script>
@@ -77,12 +80,12 @@ useReveal()
     <!-- Partners marquee -->
     <section class="bg-parchment-dark py-12">
       <div class="max-w-5xl mx-auto px-8 mb-6">
-        <p class="text-center text-[11px] uppercase tracking-[0.3em] text-ink-muted font-light">{{ t('home.partners') }}</p>
+        <p class="text-center text-[12px] uppercase tracking-[0.3em] text-ink-soft font-normal">{{ t('home.partners') }}</p>
       </div>
       <div class="marquee">
         <div class="marquee-track">
-          <span v-for="(p, i) in [...partners, ...partners]" :key="i"
-                class="font-serif italic font-light text-ink-muted text-xl">
+          <span v-for="(p, i) in [...partnerRow, ...partnerRow]" :key="i"
+                class="font-serif italic font-normal text-ink-soft text-2xl">
             {{ p }}
           </span>
         </div>

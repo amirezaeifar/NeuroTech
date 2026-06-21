@@ -144,6 +144,11 @@
       "ctaSecondary": "Download brochure",
       "badges": ["CE Marked", "ISO 13485", "2-Year Warranty", "Clinical-grade"],
       "featuresTitle": "Key Features",
+      "essenceLabel": "Technical Essence",
+      "blueprintTitle": "Technical Blueprint",
+      "blueprintLead": "The engineering that defines the instrument.",
+      "dossierCta": "Request Technical Dossier",
+      "purchaseCta": "Purchase Online",
       "keyFeatures": [
         "Medical-grade signal acquisition with clinical noise isolation",
         "Intuitive clinician workflow with one-touch protocols",
@@ -182,13 +187,39 @@
         { "name": "Quick-start guide", "type": "PDF", "size": "760 KB" },
         { "name": "Declaration of conformity", "type": "PDF", "size": "420 KB" }
       ],
-      "reviewsTitle": "Clinical Testimonials",
-      "ratingSuffix": "based on verified clinical accounts",
+      "reviewsTitle": "Reviews & Ratings",
+      "reviewsKicker": "Clinical Voices",
+      "ratingSuffix": "verified clinical accounts",
       "reviews": [
         { "author": "Dr. A. Karimi", "role": "Functional Neurosurgeon", "rating": 5, "text": "Dependable acquisition and a workflow my team trusts in theatre. It has become part of our standard setup." },
         { "author": "Dr. S. Moradi", "role": "Clinical Neurophysiologist", "rating": 5, "text": "Clean signal, quiet operation and reporting that integrates neatly with our records. Excellent build quality." },
         { "author": "Eng. R. Tabrizi", "role": "Biomedical Engineer", "rating": 4, "text": "Serviceable, well-documented and robust. Calibration and maintenance are refreshingly straightforward." }
-      ]
+      ],
+      "validationTitle": "Clinical Validation & Certifications",
+      "validationKicker": "Trusted Evidence",
+      "validationLead": "Independently verified, regulator-cleared, and proven in daily clinical practice.",
+      "certs": [
+        { "mark": "FDA", "name": "510(k) Cleared", "note": "Cleared for clinical use by the U.S. Food & Drug Administration." },
+        { "mark": "CE", "name": "CE Marked · MDR", "note": "Conforms to EU Medical Device Regulation 2017/745." },
+        { "mark": "ISO", "name": "ISO 13485", "note": "Built under a certified medical quality-management system." },
+        { "mark": "IEC", "name": "IEC 60601-1", "note": "Meets international standards for medical electrical safety." }
+      ],
+      "trialsLabel": "Clinical Evidence",
+      "trials": [
+        { "stat": "98.6%", "label": "Signal fidelity", "note": "Agreement with reference-grade acquisition across a 1,200-record multi-site study." },
+        { "stat": "n = 420", "label": "Prospective cohort", "note": "Peer-reviewed evaluation across three tertiary neurology centres." },
+        { "stat": "< 0.4%", "label": "Adverse events", "note": "No device-related serious adverse events over 24 months of monitored use." }
+      ],
+      "ecosystemTitle": "Software Ecosystem",
+      "ecosystemKicker": "Connected Platform",
+      "ecosystemLead": "Every device is a node in a secure, connected clinical platform — from bedside to record.",
+      "ecosystem": [
+        { "name": "Clinical Dashboard", "desc": "A unified web console for live review, annotation and multi-patient oversight." },
+        { "name": "Cloud Sync & Archive", "desc": "Encrypted, redundant storage with instant cross-site retrieval of every study." },
+        { "name": "EHR · HL7-FHIR", "desc": "One-click, standards-based export straight into the patient record." },
+        { "name": "Developer API", "desc": "A documented REST & streaming API for research pipelines and custom tooling." }
+      ],
+      "ecosystemNote": "Single sign-on, role-based access and full audit trails are standard across the platform."
     },
     "items": [
       {
