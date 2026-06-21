@@ -93,7 +93,7 @@ useReveal()
     </section>
 
     <!-- Final CTA -->
-    <section class="bg-parchment py-16 md:py-24">
+    <section class="bg-parchment pt-16 md:pt-24 pb-32 md:pb-48">
       <div class="reveal max-w-3xl mx-auto px-8 text-center">
         <h2 class="font-serif font-light text-4xl md:text-5xl text-ink tracking-wide leading-tight">
           {{ t('home.finalCta.title') }}
