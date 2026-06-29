@@ -2,13 +2,21 @@
 import { useI18n } from 'vue-i18n'
 import SectionEyebrow from '../components/SectionEyebrow.vue'
 import { useReveal } from '../composables/useReveal.js'
+import {
+  documents,
+  marketReport,
+  documentationOverview,
+  documentationDisclaimer,
+} from '../data/tradeReports.js'
 
 const { t, tm } = useI18n()
 const regions = tm('globalTrade.regions')
 const become = tm('globalTrade.become.items')
 const importItems = tm('globalTrade.importExport.import.items')
 const exportItems = tm('globalTrade.importExport.export.items')
-const caseStudies = tm('globalTrade.caseStudies.items')
+
+// The outcome statement of each reference document doubles as its card preview.
+const docOutcome = (d) => (d.groups.find((g) => g.label === 'Outcome') || {}).text || ''
 
 useReveal()
 </script>
@@ -122,38 +130,84 @@ useReveal()
       </div>
     </section>
 
-    <!-- ───────────────────────── Case studies ───────────────────────── -->
+    <!-- ──────────── Corporate Documentation & Technical References ──────────── -->
     <section class="py-20 md:py-32 bg-parchment-light border-t border-parchment-deep">
       <div class="max-w-6xl mx-auto px-8">
-        <div class="reveal text-center max-w-2xl mx-auto">
-          <p class="text-[11px] uppercase tracking-[0.4em] text-gold/80 font-light mb-6">{{ t('globalTrade.caseStudies.eyebrow') }}</p>
-          <h2 class="font-serif font-light text-4xl md:text-5xl text-ink tracking-wide">{{ t('globalTrade.caseStudies.title') }}</h2>
-          <p class="mt-6 text-sm text-ink-soft font-light leading-relaxed">{{ t('globalTrade.caseStudies.subtitle') }}</p>
+        <div class="reveal text-center max-w-3xl mx-auto">
+          <p class="text-[11px] uppercase tracking-[0.4em] text-gold/80 font-light mb-6">{{ t('globalTrade.documentation.eyebrow') }}</p>
+          <h2 class="font-serif font-light text-4xl md:text-5xl text-ink tracking-wide">{{ t('globalTrade.documentation.title') }}</h2>
+          <p class="mt-6 text-sm text-ink-soft font-light leading-relaxed">{{ t('globalTrade.documentation.subtitle') }}</p>
+          <p class="mt-5 text-sm text-ink-soft font-light leading-relaxed">{{ documentationOverview }}</p>
         </div>
 
-        <div class="mt-16 grid md:grid-cols-2 gap-6 lg:gap-8">
+        <div class="mt-16 grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           <router-link
-            v-for="(cs, i) in caseStudies"
-            :key="cs.company + i"
-            :to="`/global-trade/report/${i}`"
+            v-for="(d, i) in documents"
+            :key="d.id"
+            :to="`/global-trade/document/${d.id}`"
             class="reveal group block"
-            :style="{ transitionDelay: `${(i % 4) * 70}ms` }"
+            :style="{ transitionDelay: `${(i % 3) * 70}ms` }"
           >
-            <article class="bg-parchment border border-parchment-deep/70 rounded-xl p-9 md:p-11 h-full lux-card group-hover:border-gold/50 group-hover:-translate-y-1">
-              <div class="flex items-baseline justify-between gap-4 flex-wrap">
-                <span :class="['text-[10px] uppercase tracking-[0.25em] font-light px-2.5 py-1 rounded-full border', cs.type === 'import' ? 'text-ink-soft border-parchment-deep' : 'text-gold-dark border-gold/50']">
-                  {{ t(`globalTrade.tradeDetail.${cs.type}`) }}
-                </span>
-                <span class="text-[11px] uppercase tracking-[0.2em] text-ink-hint font-light">{{ cs.country }} · {{ cs.year }}</span>
-              </div>
-              <h3 class="font-serif font-light text-xl md:text-2xl text-ink mt-5 mb-1.5 leading-snug group-hover:text-gold-dark transition-colors">{{ cs.title }}</h3>
-              <p class="text-xs text-ink-muted font-light uppercase tracking-[0.15em]">{{ cs.company }} · {{ cs.category }}</p>
-              <p class="mt-4 text-sm text-ink-soft font-light leading-relaxed">{{ cs.summary }}</p>
-              <span class="mt-6 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink group-hover:text-gold-dark transition-colors border-b border-gold/40 pb-1">
-                {{ t('globalTrade.caseStudies.viewReport') }} <span class="dir-arrow" aria-hidden="true"></span>
+            <article class="bg-parchment-light border border-parchment-deep/70 rounded-xl p-8 md:p-9 h-full lux-card group-hover:border-gold/50 group-hover:-translate-y-1 flex flex-col">
+              <!-- 1 · Technology partner — strongest non-title emphasis -->
+              <span class="self-start text-[10px] uppercase tracking-[0.25em] font-medium px-2.5 py-1 rounded-full border text-gold-dark border-gold/50">{{ d.partner }}</span>
+              <!-- 2 · Document ID — monospace reference -->
+              <p class="mt-4 text-[11px] tracking-[0.12em] text-ink-hint font-mono">{{ d.id }}</p>
+              <!-- 3 · Documentation type -->
+              <p class="mt-3 text-[11px] uppercase tracking-[0.25em] text-ink-muted font-light">{{ d.docType }}</p>
+              <!-- 4 · Project title -->
+              <h3 class="font-serif font-light text-xl text-ink mt-2 mb-1.5 leading-snug group-hover:text-gold-dark transition-colors">{{ d.title }}</h3>
+              <!-- 5 · Category -->
+              <p class="text-xs text-ink-muted font-light uppercase tracking-[0.15em]">{{ d.category }}</p>
+              <!-- 6 · Summary -->
+              <p class="mt-4 text-sm text-ink-soft font-light leading-relaxed flex-1">{{ docOutcome(d) }}</p>
+              <!-- 7 · View document -->
+              <span class="mt-6 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink group-hover:text-gold-dark transition-colors border-b border-gold/40 pb-1 self-start">
+                {{ t('globalTrade.documentation.viewDocument') }} <span class="dir-arrow" aria-hidden="true"></span>
               </span>
             </article>
           </router-link>
+        </div>
+
+        <p class="reveal mt-14 max-w-3xl mx-auto text-center text-[12px] text-ink-hint font-light leading-relaxed italic">
+          {{ documentationDisclaimer }}
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────── Market Intelligence Documentation ───────────────── -->
+    <section class="relative overflow-hidden py-24 md:py-32 bg-ink">
+      <div class="trade-ie-glow pointer-events-none absolute inset-0" aria-hidden="true"></div>
+      <div class="relative max-w-5xl mx-auto px-8">
+        <div class="reveal text-center max-w-2xl mx-auto">
+          <p class="text-[11px] uppercase tracking-[0.4em] text-gold/80 font-light mb-6">{{ t('globalTrade.marketReport.eyebrow') }}</p>
+          <h2 class="font-serif font-light text-4xl md:text-5xl text-parchment-light tracking-wide">{{ marketReport.title }}</h2>
+          <p class="mt-5 text-[12px] uppercase tracking-[0.25em] text-gold-light/70 font-light">
+            {{ t('globalTrade.marketReport.reportingPeriodLabel') }} · {{ marketReport.reportingPeriod }}
+          </p>
+        </div>
+
+        <div class="mt-16 grid md:grid-cols-3 gap-6 lg:gap-8">
+          <div
+            v-for="(g, i) in marketReport.groups"
+            :key="g.label"
+            class="reveal rounded-xl border border-gold/25 bg-white/[0.02] p-8 md:p-9 transition-colors hover:border-gold/45"
+            :style="{ transitionDelay: `${i * 90}ms` }"
+          >
+            <h3 class="font-serif font-light text-xl text-parchment-light">{{ g.label }}</h3>
+            <div class="h-px w-8 bg-gold/40 my-5"></div>
+            <ul class="space-y-3">
+              <li v-for="(item, k) in g.items" :key="k" class="flex items-start gap-3 text-sm text-parchment-dark/90 font-light leading-relaxed">
+                <span class="text-gold mt-1 text-[10px]">◆</span>
+                <span>{{ item }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="reveal mt-12 max-w-3xl mx-auto rounded-xl border border-gold/25 bg-white/[0.03] p-9 md:p-11 text-center">
+          <p class="text-[11px] uppercase tracking-[0.3em] text-gold/80 font-light mb-4">{{ t('globalTrade.marketReport.outlookLabel') }}</p>
+          <p class="font-serif italic font-light text-xl md:text-2xl text-parchment-light/90 leading-relaxed">{{ marketReport.marketOutlook }}</p>
         </div>
       </div>
     </section>

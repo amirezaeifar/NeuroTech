@@ -12,7 +12,7 @@ const { login } = useAuth()
 
 // Writing direction — drives the back-chevron glyph and the slide-transition
 // direction natively, without scaleX mirroring or unreliable :global() rules.
-const isRtl = computed(() => ['fa', 'ar'].includes(locale.value))
+const isRtl = computed(() => locale.value === 'fa')
 const backChevron = computed(() => (isRtl.value ? 'M9 6l6 6-6 6' : 'M15 6l-6 6 6 6'))
 const modeSwapName = computed(() => (isRtl.value ? 'auth-mode-swap-rtl' : 'auth-mode-swap'))
 // The sliding tab pill is anchored to the inline-start edge; in Register mode it

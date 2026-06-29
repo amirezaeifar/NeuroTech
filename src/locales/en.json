@@ -295,65 +295,68 @@
       "premium": "Premium"
     },
     "fields": {
-      "all": "All fields",
-      "psychEmergency": "Psychiatric Emergency",
-      "neurology": "Neurology",
-      "general": "General"
+      "all": "All categories",
+      "clinicalNeurology": "Clinical Neurology",
+      "neuroimaging": "Neuroimaging",
+      "neurosurgery": "Neurosurgery",
+      "neuroscience": "Neuroscience",
+      "neurocriticalCare": "Neurocritical Care",
+      "brainAnatomy": "Brain Anatomy"
     },
     "courses": [
       {
-        "title": "Foundations of Clinical EEG",
+        "title": "Introduction to Clinical Neurology",
         "instructor": "Dr. N. Farahani",
-        "level": "Introductory",
-        "duration": "6 lessons · 3h 20m",
+        "level": "Intermediate",
+        "duration": "16 lessons · 9h 00m",
         "tier": "free",
-        "field": "neurology",
-        "desc": "Reading the trace: montages, artefacts and the normal adult record."
+        "field": "clinicalNeurology",
+        "desc": "Clinical reasoning from examination and localization to headache, epilepsy, movement and neurodegenerative disorders."
       },
       {
-        "title": "EMG & Nerve Conduction in Practice",
+        "title": "Foundations of Neuroscience",
         "instructor": "Dr. S. Moradi",
-        "level": "Intermediate",
-        "duration": "9 lessons · 5h 10m",
-        "tier": "premium",
-        "field": "general",
-        "desc": "Needle technique, waveform interpretation and reporting standards."
-      },
-      {
-        "title": "Programming Deep-Brain Stimulators",
-        "instructor": "Dr. A. Karimi",
-        "level": "Advanced",
-        "duration": "8 lessons · 4h 45m",
-        "tier": "premium",
-        "field": "neurology",
-        "desc": "Device parameters, waveform libraries and patient titration protocols."
-      },
-      {
-        "title": "Neurostimulation: An Introduction",
-        "instructor": "Eng. R. Tabrizi",
         "level": "Introductory",
-        "duration": "5 lessons · 2h 40m",
+        "duration": "14 lessons · 7h 30m",
         "tier": "free",
-        "field": "general",
-        "desc": "TMS, VNS and the principles behind non-invasive stimulation therapy."
+        "field": "neuroscience",
+        "desc": "From the neuron and the synapse to neuroplasticity, neural networks and the cognitive systems they support."
       },
       {
-        "title": "Polysomnography & Sleep Reporting",
-        "instructor": "Dr. L. Hashemi",
+        "title": "Neuroimaging: MRI & CT Interpretation",
+        "instructor": "Dr. A. Karimi",
         "level": "Intermediate",
-        "duration": "7 lessons · 4h 05m",
+        "duration": "14 lessons · 8h 00m",
         "tier": "premium",
-        "field": "psychEmergency",
-        "desc": "Montage set-up, scoring conventions and structuring the sleep report."
+        "field": "neuroimaging",
+        "desc": "A systematic approach to CT and MRI — sequences, diffusion, vascular and functional imaging, with case review."
       },
       {
-        "title": "Intracranial Pressure Monitoring",
+        "title": "Brain Anatomy & Functional Pathways",
+        "instructor": "Dr. R. Tabrizi",
+        "level": "Introductory",
+        "duration": "18 lessons · 9h 30m",
+        "tier": "free",
+        "field": "brainAnatomy",
+        "desc": "Regional neuroanatomy — lobes, brainstem, diencephalon, basal ganglia, cerebellum and white-matter pathways."
+      },
+      {
+        "title": "Neurocritical Care & Stroke Management",
+        "instructor": "Dr. L. Hashemi",
+        "level": "Advanced",
+        "duration": "12 lessons · 6h 30m",
+        "tier": "premium",
+        "field": "neurocriticalCare",
+        "desc": "Neuromonitoring, intracranial pressure, stroke, seizure emergencies and brain injury in the neuro-ICU."
+      },
+      {
+        "title": "Neurosurgery Fundamentals",
         "instructor": "Dr. M. Saadat",
         "level": "Advanced",
-        "duration": "6 lessons · 3h 30m",
+        "duration": "16 lessons · 9h 00m",
         "tier": "premium",
-        "field": "psychEmergency",
-        "desc": "Indications, waveform analysis and intensive-care escalation pathways."
+        "field": "neurosurgery",
+        "desc": "Surgical anatomy, cranial approaches, navigation, and tumour, vascular and functional neurosurgery."
       }
     ],
     "player": {
@@ -371,7 +374,7 @@
       "instructorLabel": "Instructor",
       "levelLabel": "Level",
       "durationLabel": "Duration",
-      "fieldLabel": "Field",
+      "fieldLabel": "Category",
       "tierLabel": "Access",
       "syllabusTitle": "Syllabus",
       "lesson": "Lesson",
@@ -385,6 +388,9 @@
       "relatedTitle": "Browse the Library",
       "relatedSubtitle": "More courses from the Academy collection.",
       "descriptionTitle": "Course Description",
+      "outcomesTitle": "Learning Outcomes",
+      "featuredLabel": "Featured lesson",
+      "demoVideoNotice": "Demo lecture — to be replaced with the academy's proprietary course content.",
       "simulateHint": "Demo — takes you to a mock checkout; lessons unlock when you return.",
       "unlockedNotice": "Subscription active. All lessons are now unlocked — select any lesson to begin.",
       "dismiss": "Dismiss"
@@ -857,6 +863,32 @@
       "import": "Import",
       "export": "Export"
     },
+    "documentation": {
+      "eyebrow": "Corporate Documentation",
+      "title": "Technical & Market References",
+      "subtitle": "Selected technical, operational and market documentation from healthcare technology assessment, infrastructure planning and integration engagements.",
+      "viewDocument": "View document",
+      "partnerLabel": "Technology Partner",
+      "categoryLabel": "Category",
+      "disclaimerTitle": "Disclaimer"
+    },
+    "documentDetail": {
+      "eyebrow": "Reference Document",
+      "back": "Back to Global Trade",
+      "summaryTitle": "Document Profile",
+      "documentIdLabel": "Document ID",
+      "docTypeLabel": "Document Type",
+      "partnerLabel": "Associated Technology Partner",
+      "categoryLabel": "Category",
+      "locationLabel": "Location",
+      "regionLabel": "Region"
+    },
+    "marketReport": {
+      "eyebrow": "Market Intelligence",
+      "title": "Market Intelligence Documentation",
+      "reportingPeriodLabel": "Reporting Period",
+      "outlookLabel": "Market Outlook"
+    },
     "become": {
       "title": "Become a representative",
       "italic": "An invitation, not a contract.",
@@ -1040,6 +1072,109 @@
         "publications": [
           { "title": "Procedural illustration for neurostimulation training modules", "venue": "Neuro Tech Academy · 2023" }
         ]
+      },
+      {
+        "name": "Sam Webster",
+        "kind": "educator",
+        "title": "Neuroanatomy Education",
+        "qualification": "Anatomy Educator · Educational Content Provider",
+        "councilNumber": "—",
+        "platform": "Medical Education",
+        "status": "Active Partner",
+        "collaborations": ["Educational Content Provider", "Brain Anatomy Curriculum", "Active Partner"],
+        "affiliation": "Medical Education",
+        "bio": "Sam Webster is an anatomy educator whose structured, dissection-led teaching of the human brain underpins the Academy's Brain Anatomy curriculum. His work is distinguished by a clear, regional progression through neuroanatomy — surface landmarks, brainstem, deep grey matter and white-matter pathways — that consistently connects structure to clinical function. The Academy curates his lecture series as foundational visual learning material for trainees building their first systematic map of the brain.",
+        "expertise": [
+          "Gross and functional neuroanatomy",
+          "Brainstem and cranial-nerve nuclei",
+          "Anatomical dissection technique",
+          "Visual and spatial anatomy teaching",
+          "Undergraduate and postgraduate education"
+        ],
+        "methodology": "Webster's teaching favours a regional, image-led method: each structure is introduced in situ, oriented against fixed landmarks, and immediately tied to the deficit it produces when damaged. Complex three-dimensional relationships are built up incrementally rather than memorised in isolation, which suits learners moving from first exposure toward confident localisation.",
+        "impact": "His openly accessible neuroanatomy material has supported medical and allied-health students internationally, and within the Academy forms the visual backbone of the Brain Anatomy course — giving clinicians a durable, examination-ready mental model of cerebral structure.",
+        "courses": [{ "title": "Brain Anatomy", "index": 3 }],
+        "playlists": [{ "title": "Brain Anatomy — Structural Series", "lessons": 18 }],
+        "experience": [
+          { "role": "Anatomy Educator & Content Provider", "org": "Neuro Tech Academy", "period": "2024 — Present" },
+          { "role": "Lecturer in Anatomy", "org": "University Medical School", "period": "2012 — Present" }
+        ],
+        "education": [
+          { "degree": "PhD, Anatomical Sciences", "school": "University Medical School" },
+          { "degree": "BSc, Human Anatomy", "school": "University Medical School" }
+        ],
+        "publications": [
+          { "title": "Structured neuroanatomy for the early clinical learner", "venue": "Anatomical Education Review" },
+          { "title": "Region-first approaches to teaching the brainstem", "venue": "Journal of Anatomy Education" }
+        ]
+      },
+      {
+        "name": "Therapy in a Nutshell",
+        "kind": "educator",
+        "title": "Neuroscience & Neuroplasticity Education",
+        "qualification": "Applied Neuroscience Educator · Educational Content Provider",
+        "councilNumber": "—",
+        "platform": "Medical Education",
+        "status": "Active Partner",
+        "collaborations": ["Educational Content Provider", "Neuroscience Curriculum", "Active Partner"],
+        "affiliation": "Medical Education",
+        "bio": "Therapy in a Nutshell is an educational content provider specialising in the translation of contemporary neuroscience — particularly neuroplasticity and the stress response — into clear, evidence-informed teaching. The Academy draws on this material for its Neuroscience course, where the emphasis on mechanism made accessible complements the programme's progression from the single neuron to whole-brain networks and cognition.",
+        "expertise": [
+          "Neuroplasticity and learning",
+          "Applied and behavioural neuroscience",
+          "The stress response and the nervous system",
+          "Translational science communication",
+          "Clinician and patient education"
+        ],
+        "methodology": "The approach distils primary neuroscience into concise, mechanism-first explanations, pairing each concept with a concrete clinical or behavioural correlate. This keeps abstract cellular and network principles anchored to outcomes that matter at the bedside and in practice.",
+        "impact": "Its accessible neuroscience education has reached a broad international audience of clinicians, students and patients, and within the Academy it strengthens the Neuroscience course's bridge between cellular mechanism and applied understanding.",
+        "courses": [{ "title": "Neuroscience", "index": 1 }],
+        "playlists": [{ "title": "Neuroplasticity — Foundations", "lessons": 14 }],
+        "experience": [
+          { "role": "Neuroscience Educator & Content Provider", "org": "Neuro Tech Academy", "period": "2024 — Present" },
+          { "role": "Clinical Educator, Applied Neuroscience", "org": "Independent Practice", "period": "2017 — Present" }
+        ],
+        "education": [
+          { "degree": "Graduate training, Clinical Mental Health", "school": "Accredited Graduate Programme" }
+        ],
+        "publications": [
+          { "title": "Neuroplasticity as a framework for clinical change", "venue": "Applied Neuroscience Education" },
+          { "title": "Communicating the stress response to non-specialists", "venue": "Translational Education Notes" }
+        ]
+      },
+      {
+        "name": "All About Clinical Medicine",
+        "kind": "educator",
+        "title": "Clinical Neurology Education",
+        "qualification": "Clinical Medicine Educator · Educational Content Provider",
+        "councilNumber": "—",
+        "platform": "Medical Education",
+        "status": "Active Partner",
+        "collaborations": ["Educational Content Provider", "Clinical Neurology Curriculum", "Active Partner"],
+        "affiliation": "Medical Education",
+        "bio": "All About Clinical Medicine is an educational content provider whose complete clinical neurology series anchors the Academy's Clinical Neurology course. The material is structured around examination-room reasoning — history, neurological examination, localisation and the common disease groups — in the methodical, examination-oriented style favoured by postgraduate trainees preparing for clinical practice and board assessment.",
+        "expertise": [
+          "Clinical neurology",
+          "The neurological examination",
+          "Lesion localisation",
+          "Case-based clinical reasoning",
+          "Postgraduate examination preparation"
+        ],
+        "methodology": "The teaching follows a structured, case-led format: each topic is framed as a clinical problem, worked through from presentation to localisation and management, and reinforced with the kind of high-yield reasoning expected in postgraduate assessment. The sequence is deliberately cumulative, building toward independent diagnostic judgement.",
+        "impact": "Its comprehensive clinical neurology teaching supports residents and students worldwide, and provides the Academy's Clinical Neurology course with a coherent, end-to-end pathway from the bedside examination to a prioritised differential diagnosis.",
+        "courses": [{ "title": "Clinical Neurology", "index": 0 }],
+        "playlists": [{ "title": "Clinical Neurology — Complete Series", "lessons": 16 }],
+        "experience": [
+          { "role": "Clinical Neurology Educator & Content Provider", "org": "Neuro Tech Academy", "period": "2024 — Present" },
+          { "role": "Clinical Medicine Educator", "org": "Independent Medical Education", "period": "2015 — Present" }
+        ],
+        "education": [
+          { "degree": "MD, Medicine", "school": "Accredited Medical School" }
+        ],
+        "publications": [
+          { "title": "A structured approach to the neurological examination", "venue": "Clinical Medicine Education" },
+          { "title": "Localisation-first teaching in clinical neurology", "venue": "Neurology Teaching Notes" }
+        ]
       }
     ],
     "cta": {
@@ -1053,6 +1188,14 @@
       "affiliationLabel": "Clinical Affiliation",
       "councilLabel": "Medical Council No.",
       "aboutTitle": "About",
+      "expertiseTitle": "Areas of Expertise",
+      "methodologyTitle": "Teaching Methodology",
+      "impactTitle": "Educational Impact",
+      "coursesTaughtTitle": "Courses Taught",
+      "playlistsTitle": "Associated Playlists",
+      "platformLabel": "Platform",
+      "statusLabel": "Status",
+      "lessonsLabel": "lessons",
       "experienceTitle": "Experience & Roles",
       "educationTitle": "Education",
       "publicationsTitle": "Publications & Projects",

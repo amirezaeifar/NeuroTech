@@ -6,6 +6,7 @@ import SpecimenPlate from '../components/SpecimenPlate.vue'
 import logo from '../assets/logo.png'
 import NeuralProgressTree from '../components/NeuralProgressTree.vue'
 import { courseCode } from '../utils/catalog.js'
+import { courseMediaAt } from '../data/courseMedia.js'
 import { useReveal } from '../composables/useReveal.js'
 
 const { t, tm } = useI18n()
@@ -17,9 +18,12 @@ const statusFilters = [
 ]
 const fieldFilters = [
   { key: 'all', label: 'academy.fields.all' },
-  { key: 'neurology', label: 'academy.fields.neurology' },
-  { key: 'psychEmergency', label: 'academy.fields.psychEmergency' },
-  { key: 'general', label: 'academy.fields.general' },
+  { key: 'clinicalNeurology', label: 'academy.fields.clinicalNeurology' },
+  { key: 'neuroimaging', label: 'academy.fields.neuroimaging' },
+  { key: 'neurosurgery', label: 'academy.fields.neurosurgery' },
+  { key: 'neuroscience', label: 'academy.fields.neuroscience' },
+  { key: 'neurocriticalCare', label: 'academy.fields.neurocriticalCare' },
+  { key: 'brainAnatomy', label: 'academy.fields.brainAnatomy' },
 ]
 
 const activeStatus = ref('all')
@@ -193,6 +197,7 @@ useReveal()
             :section-id="`plate-${courseIndex(c)}`"
             :code="courseCode(courses, courseIndex(c))"
             :course="c"
+            :cover="courseMediaAt(courseIndex(c))?.cover || ''"
             :to="`/academy/course/${courseIndex(c)}`"
             :field-label="t(`academy.fields.${c.field}`)"
             :tier-label="t(`academy.filters.${c.tier}`)"

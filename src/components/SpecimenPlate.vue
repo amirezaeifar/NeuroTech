@@ -27,6 +27,8 @@ const props = defineProps({
   course: { type: Object, required: true },
   /** Router target for the course. */
   to: { type: String, required: true },
+  /** Course cover image (object-fit: cover with a subtle dark overlay). */
+  cover: { type: String, default: '' },
   /** Pre-translated field label (e.g. "Neurology"). */
   fieldLabel: { type: String, default: '' },
   /** Pre-translated tier label (e.g. "Premium"). */
@@ -103,8 +105,12 @@ onBeforeUnmount(() => io?.disconnect())
     <router-link :to="to" class="plate__inner group">
       <!-- Specimen panel (the single floating plane) -->
       <figure class="plate__panel lux-card">
-        <span class="plate__panel-fill" :class="['bg-gradient-to-br', gradient]"></span>
-        <span class="plate__stamp font-serif" aria-hidden="true">{{ stamp }}</span>
+        <template v-if="cover">
+          <img :src="cover" alt="" class="plate__cover" loading="lazy" />
+          <span class="plate__cover-overlay" aria-hidden="true"></span>
+        </template>
+        <span v-else class="plate__panel-fill" :class="['bg-gradient-to-br', gradient]"></span>
+        <span v-if="!cover" class="plate__stamp font-serif" aria-hidden="true">{{ stamp }}</span>
         <span class="plate__tag" :class="{ 'is-premium': isPremium }">
           <svg v-if="isPremium" viewBox="0 0 24 24" class="plate__tag-icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="1.5" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
           {{ tierLabel }}
@@ -202,6 +208,24 @@ onBeforeUnmount(() => io?.disconnect())
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .group:hover .plate__panel-fill { transform: scale(1.05); }
+
+/* Course cover — fills the panel without cropping the focal subject, under a
+   subtle dark wash that keeps the gold tag and theme legible. */
+.plate__cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group:hover .plate__cover { transform: scale(1.05); }
+.plate__cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgb(20 17 13 / 0.18) 0%, rgb(20 17 13 / 0.32) 60%, rgb(20 17 13 / 0.52) 100%);
+}
 
 /* Field stamp — a large, faint specimen mark. */
 .plate__stamp {

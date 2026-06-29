@@ -135,16 +135,17 @@ html.dark .partners-hero .partners-hero-rule { background-color: rgba(154, 115, 
    deep-bronze gold, frosty white-tinted glass); here we restore the original
    deep aesthetic in dark mode. Lives globally (not in scoped CSS) because the
    component's scoped `:global(html.dark) …` selector is mis-compiled by this
-   build — mirrors the Partners/Trade hero treatment above. The canvas node
-   colour is switched in lockstep from JS (ProductsView → syncTheme). */
+   build — mirrors the Partners/Trade hero treatment above. */
 html.dark .products-stage {
+  background-color: #1a1714;
+  background-image: radial-gradient(120% 60% at 50% 0%, rgba(237, 192, 113, 0.05), transparent 60%);
+
   --stage-gold: #edc071;
   --stage-text: #f3ece0;
   --stage-muted: rgba(243, 236, 224, 0.56);
   --stage-faint: rgba(243, 236, 224, 0.4);
   --stage-rule: #edc071;
-  /* Premium glass on charcoal: barely-there fill + a faint cool sheen so the
-     gold organic field glows through. */
+  /* Premium glass on charcoal: barely-there fill + a faint cool sheen. */
   --glass-bg: rgba(255, 255, 255, 0.02);
   --glass-bg-hover: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.08);
@@ -155,19 +156,14 @@ html.dark .products-stage {
   --device-signal: #edc071;
 }
 
-/* Products background bands — dark-mode inversion (mirrors the Trade/Partners
-   heroes). The header band flips from deep charcoal to warm parchment #F2EDE4
-   and the catalogue band flips from parchment to deep charcoal, so the page
-   reads "top-light / bottom-dark" — the inverse of the light-mode split, and
-   exactly what the particle X-ray inversion is tuned against. */
-html.dark .pf-bg-hero {
+/* Products header band — dark-mode inversion (mirrors the Trade/Partners
+   heroes). The header flips from deep charcoal to warm parchment #F2EDE4 while
+   the catalogue flips to deep charcoal, so the page reads "top-light /
+   bottom-dark" — the inverse of the light-mode split. */
+html.dark .products-hero {
   background: #f2ede4;
 }
-html.dark .pf-bg-stage {
-  background-color: #1a1714;
-  background-image: radial-gradient(120% 60% at 50% 0%, rgba(237, 192, 113, 0.05), transparent 60%);
-}
-html.dark .pf-bg-hero .products-hero-aura {
+html.dark .products-hero .products-hero-aura {
   background: radial-gradient(60% 90% at 50% 0%, rgba(154, 115, 34, 0.12), transparent 70%);
 }
 html.dark .products-hero .products-hero-title { color: #14110e; }

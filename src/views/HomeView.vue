@@ -6,7 +6,7 @@ import { useReveal } from '../composables/useReveal.js'
 const { t, tm } = useI18n()
 const stats = tm('home.stats')
 const expertise = tm('home.expertise.items')
-const partners = ['Forbo', 'GB', 'Oxford', 'Verin']
+const partners = ['Forbo', 'GE Healthcare', 'Oxford', 'Verin', 'Siemens', 'Brainlab']
 // Repeat the four names so the marquee track fills wide screens; the template
 // renders this row twice more for a seamless translateX(-50%) loop.
 const partnerRow = [...partners, ...partners, ...partners, ...partners]

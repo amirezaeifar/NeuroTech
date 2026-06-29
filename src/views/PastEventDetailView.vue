@@ -12,7 +12,7 @@ const router = useRouter()
 
 // Writing direction — drives native RTL chevron glyphs (no scaleX mirroring)
 // and the keyboard arrow mapping.
-const isRtl = computed(() => ['fa', 'ar'].includes(locale.value))
+const isRtl = computed(() => locale.value === 'fa')
 // Chevron pointing toward the gallery's start / end edge in the current
 // direction. In LTR the start edge is the left; in RTL it is the right.
 const chevronToStart = computed(() => (isRtl.value ? 'M9 6l6 6-6 6' : 'M15 6l-6 6 6 6'))

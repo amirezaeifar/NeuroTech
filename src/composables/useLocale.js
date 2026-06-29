@@ -1,23 +1,18 @@
 import { watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+// The site ships exclusively in Persian (RTL) and English (LTR). Other locales
+// were retired; re-adding one means restoring its entry here, its messages
+// import in main.js, and its JSON file under src/locales.
 export const SUPPORTED_LOCALES = [
-  { code: 'en', label: 'English', dir: 'ltr' },
-  { code: 'fr', label: 'Français', dir: 'ltr' },
-  { code: 'de', label: 'Deutsch', dir: 'ltr' },
-  { code: 'zh', label: '中文', dir: 'ltr' },
-  { code: 'ru', label: 'Русский', dir: 'ltr' },
-  { code: 'tr', label: 'Türkçe', dir: 'ltr' },
   { code: 'fa', label: 'فارسی', dir: 'rtl' },
-  { code: 'ar', label: 'العربية', dir: 'rtl' },
+  { code: 'en', label: 'English', dir: 'ltr' },
 ]
 
-const RTL_LOCALES = ['fa', 'ar']
+const RTL_LOCALES = ['fa']
 
 const FONT_STACKS = {
   fa: "'YekanBakh', sans-serif",
-  ar: "'YekanBakh', 'Noto Naskh Arabic', sans-serif",
-  zh: "'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif",
 }
 const DEFAULT_FONT_STACK = "'Inter', sans-serif"
 
