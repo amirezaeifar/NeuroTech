@@ -6,7 +6,10 @@ import { useReveal } from '../composables/useReveal.js'
 const { t, tm } = useI18n()
 const stats = tm('home.stats')
 const expertise = tm('home.expertise.items')
-const partners = ['Siemens', 'Philips', 'GE Healthcare', 'Nihon Kohden', 'Natus', 'Compumedics', 'Medtronic', 'Cadwell']
+const partners = ['Forbo', 'GE Healthcare', 'Oxford', 'Verin', 'Siemens', 'Brainlab']
+// Repeat the four names so the marquee track fills wide screens; the template
+// renders this row twice more for a seamless translateX(-50%) loop.
+const partnerRow = [...partners, ...partners, ...partners, ...partners]
 
 useReveal()
 </script>
@@ -32,7 +35,7 @@ useReveal()
         <div class="reveal mt-14" style="transition-delay: 240ms">
           <router-link to="/products" class="btn-ghost-gold">
             {{ t('home.hero.cta') }}
-            <span aria-hidden="true">→</span>
+            <span class="dir-arrow" aria-hidden="true"></span>
           </router-link>
         </div>
       </div>
@@ -77,12 +80,12 @@ useReveal()
     <!-- Partners marquee -->
     <section class="bg-parchment-dark py-12">
       <div class="max-w-5xl mx-auto px-8 mb-6">
-        <p class="text-center text-[11px] uppercase tracking-[0.3em] text-ink-muted font-light">{{ t('home.partners') }}</p>
+        <p class="text-center text-[12px] uppercase tracking-[0.3em] text-ink-soft font-normal">{{ t('home.partners') }}</p>
       </div>
       <div class="marquee">
         <div class="marquee-track">
-          <span v-for="(p, i) in [...partners, ...partners]" :key="i"
-                class="font-serif italic font-light text-ink-muted text-xl">
+          <span v-for="(p, i) in [...partnerRow, ...partnerRow]" :key="i"
+                class="font-serif italic font-normal text-ink-soft text-2xl">
             {{ p }}
           </span>
         </div>
@@ -90,7 +93,7 @@ useReveal()
     </section>
 
     <!-- Final CTA -->
-    <section class="bg-parchment py-16 md:py-24">
+    <section class="bg-parchment pt-16 md:pt-24 pb-32 md:pb-48">
       <div class="reveal max-w-3xl mx-auto px-8 text-center">
         <h2 class="font-serif font-light text-4xl md:text-5xl text-ink tracking-wide leading-tight">
           {{ t('home.finalCta.title') }}
@@ -99,7 +102,7 @@ useReveal()
         <div class="mt-12">
           <router-link to="/contact" class="btn-ghost-gold">
             {{ t('home.finalCta.button') }}
-            <span aria-hidden="true">→</span>
+            <span class="dir-arrow" aria-hidden="true"></span>
           </router-link>
         </div>
       </div>

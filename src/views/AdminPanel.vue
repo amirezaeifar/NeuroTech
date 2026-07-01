@@ -189,7 +189,7 @@ useReveal()
 
             <div class="flex flex-col md:flex-row md:items-center gap-4 pt-2">
               <button type="submit" class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink hover:text-gold-dark transition-colors border-b border-gold/50 pb-1 self-start">
-                {{ t('admin.content.fields.save') }} <span aria-hidden="true">→</span>
+                {{ t('admin.content.fields.save') }} <span class="dir-arrow" aria-hidden="true"></span>
               </button>
               <button type="button" class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink-muted hover:text-ink transition-colors border-b border-parchment-deep pb-1 self-start">
                 {{ t('admin.content.fields.publish') }}

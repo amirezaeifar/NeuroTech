@@ -13,10 +13,12 @@
  *                  them carry the learner's module / "video watched" nodes.
  *   • Light      — layered feGaussianBlur + feMerge bloom gives an intense,
  *                  shiny white neon glow with zero CSS background tricks.
- *   • Currents   — scrolling fires "action potentials": bright pulses of light
- *                  travel down the trunk and branches. Their travel is tied to
- *                  scroll position & velocity via a @vueuse/motion useSpring,
- *                  so a fast flick sends a surge of current through the arbor.
+ *   • Currents   — a continuous, fluid light flow (NOT dashed segments): a
+ *                  repeating silver→white "comet" gradient (#npt-flow) streams
+ *                  along the arbor. A rAF loop translates the gradient and reads
+ *                  scroll velocity to drive the neuron's "energy" — fast scroll
+ *                  brightens the flow, grows the bloom and speeds the travel;
+ *                  at rest it eases down to a slow breathing pulse (see frame()).
  *   • The Pulse  — the node for the last-watched video (currentNodeId) emits a
  *                  continuous expanding glow, driven by useMotion().
  *
@@ -24,15 +26,16 @@
  * fixed in the viewport while the long library page scrolls past — the scroll is
  * what energises the currents.
  *
- * Accessibility / perf: respects prefers-reduced-motion (currents freeze, the
- * pulse stops); the heavy bloom is rasterised over the STATIC arbor (cached),
- * while only lightweight dash-offsets animate per frame, targeting 60fps.
+ * Accessibility / perf: respects prefers-reduced-motion (the flow freezes to a
+ * low static glow, the pulse stops); the heavy bloom is rasterised over the
+ * STATIC arbor (cached), while only the single gradient transform + the flow
+ * group's opacity/bloom update per frame, targeting 60fps.
  *
  * Scope note: LTR-only, like the other Atlas wayfinders — physical coordinates.
  */
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSpring, useMotion, useReducedMotion } from '@vueuse/motion'
+import { useMotion, useReducedMotion } from '@vueuse/motion'
 import { userProgress } from '../data/userProgress.js'
 
 const props = defineProps({
@@ -120,17 +123,19 @@ const arbor = computed(() => {
   const soma = { x: VB_W * 0.5, y: VB_H * 0.7 }
 
   // Recursively spawn small child filaments off a parent branch for density.
+  // Three children per level + deeper recursion = a denser, more fractal arbor
+  // of fine sub-dendrites (the smaller twigs that read as biological detail).
   function fractal(parent, depth, lengthScale) {
     if (depth <= 0) return
-    const spawnCount = 2
+    const spawnCount = 3
     for (let s = 0; s < spawnCount; s++) {
-      const f = 0.35 + rng() * 0.6
+      const f = 0.3 + rng() * 0.65
       const p = pointAt(parent.pts, f)
       const side = rng() < 0.5 ? -1 : 1
-      const a = parent.endAngle + side * (0.5 + rng() * 0.7)
-      const child = growBranch(p.x, p.y, a, parent.length * lengthScale, 5 + ((rng() * 3) | 0), 0.5, rng)
-      filaments.push({ d: child.d, w: Math.max(0.5, 1.4 * lengthScale), o: 0.16 + depth * 0.05 })
-      fractal(child, depth - 1, lengthScale * 0.62)
+      const a = parent.endAngle + side * (0.45 + rng() * 0.8)
+      const child = growBranch(p.x, p.y, a, parent.length * lengthScale, 5 + ((rng() * 3) | 0), 0.55, rng)
+      filaments.push({ d: child.d, w: Math.max(0.45, 1.4 * lengthScale), o: 0.15 + depth * 0.05 })
+      fractal(child, depth - 1, lengthScale * 0.6)
     }
   }
 
@@ -165,10 +170,13 @@ const arbor = computed(() => {
         id: m.id, x: mp.x, y: mp.y, status: m.status,
         title: m.title, type: 'module', courseIndex: ci,
       })
-      // dendrite tuft off the module
-      const tuft = growBranch(mp.x, mp.y, a + (rng() - 0.5) * 1.4, 34 + rng() * 26, 5, 0.6, rng)
-      filaments.push({ d: tuft.d, w: 0.9, o: 0.28 })
-      fractal(tuft, 2, 0.55)
+      // dendrite tufts off the module — two splayed tufts, each branching
+      // deeply into fine sub-dendrites for a dense, natural cluster.
+      for (let k = 0; k < 2; k++) {
+        const tuft = growBranch(mp.x, mp.y, a + (rng() - 0.5) * 1.7, 30 + rng() * 30, 5, 0.65, rng)
+        filaments.push({ d: tuft.d, w: 0.9, o: 0.28 })
+        fractal(tuft, 2, 0.55)
+      }
     })
 
     fractal(branch, 2, 0.5)
@@ -176,19 +184,31 @@ const arbor = computed(() => {
 
   // ── Apical tuft: dense canopy where the trunk ends. ──
   const tip = trunk.end
-  for (let i = 0; i < 7; i++) {
-    const a = -Math.PI / 2 + (rng() - 0.5) * 1.7
-    const t = growBranch(tip.x, tip.y, a, 70 + rng() * 80, 7, 0.45, rng)
+  for (let i = 0; i < 13; i++) {
+    const a = -Math.PI / 2 + (rng() - 0.5) * 1.9
+    const t = growBranch(tip.x, tip.y, a, 70 + rng() * 85, 7, 0.48, rng)
     filaments.push({ d: t.d, w: 1.1, o: 0.3 })
     fractal(t, 2, 0.55)
   }
 
   // ── Basal roots & axon: fan downward/out from the soma. ──
-  for (let i = 0; i < 7; i++) {
-    const a = Math.PI / 2 + (rng() - 0.5) * 2.4
-    const t = growBranch(soma.x, soma.y, a, 90 + rng() * 110, 9, 0.4, rng)
+  for (let i = 0; i < 13; i++) {
+    const a = Math.PI / 2 + (rng() - 0.5) * 2.5
+    const t = growBranch(soma.x, soma.y, a, 90 + rng() * 115, 9, 0.42, rng)
     filaments.push({ d: t.d, w: 1.0, o: 0.24 })
     fractal(t, 2, 0.58)
+  }
+
+  // ── Extra fine sub-branches on the LEFT flank — adds organic, biological
+  //    density and a deliberate left/right asymmetry. Twigs sprout leftward
+  //    (≈180°) from points along the trunk and each branch into sub-dendrites. ──
+  for (let i = 0; i < 12; i++) {
+    const f = 0.18 + rng() * 0.72
+    const base = pointAt(trunk.pts, f)
+    const a = Math.PI + (rng() - 0.5) * 1.7   // ~180° → left, with vertical spread
+    const t = growBranch(base.x, base.y, a, 36 + rng() * 66, 6, 0.55, rng)
+    filaments.push({ d: t.d, w: 0.8, o: 0.2 })
+    fractal(t, 2, 0.55)
   }
 
   return { soma, trunkD: trunk.d, filaments, branches, currents, courseNodes, moduleNodes }
@@ -259,34 +279,50 @@ function onNodeClick(node) {
 /* ── Reduced motion ────────────────────────────────────────────────────────── */
 const reduced = useReducedMotion()
 
-/* ── Scroll → spring → travelling currents (the Motion Plugin engine) ──────────
-   `flow.t` is the spring-smoothed scroll progress. Each current path offsets its
-   dash pattern by `flow.t * currentSpeed (+ phase)`, so pulses stream down the
-   arbor as you scroll, surging with scroll velocity (spring momentum). */
-const flow = reactive({ t: 0 })
-const flowSpring = useSpring(flow, { stiffness: 120, damping: 18, mass: 0.7 })
-
-const dashOffset = (phase) => -((flow.t * props.currentSpeed + phase) % 1)
-
 const rootEl = ref(null)
-function computeProgress() {
-  const el = rootEl.value
-  if (!el) return 0
-  const trackEl =
-    (props.track && document.querySelector(props.track)) ||
-    el.closest('[data-progress-track]') ||
-    el.parentElement
-  if (!trackEl) return 0
-  const r = trackEl.getBoundingClientRect()
-  const vh = window.innerHeight || document.documentElement.clientHeight
-  const dist = r.height - vh
-  if (dist <= 4) return clamp01((vh * 0.5 - r.top) / Math.max(vh, 1))
-  return clamp01(-r.top / dist)
-}
-function onScroll() {
-  const p = computeProgress()
-  if (reduced.value) flow.t = p
-  else flowSpring.set({ t: p })
+
+/* ── Scroll-velocity-driven light flow ────────────────────────────────────────
+   The travelling current is a repeating silver→white gradient (see <defs>): a
+   train of "comets", each a hot white head trailing a soft silver tail. A rAF
+   loop continuously advances the gradient (fluid — never dashed/segmented) and
+   reads scroll velocity to drive the neuron's "energy":
+     • fast scroll → brighter flow, larger bloom, faster travel ("excited"),
+     • idle        → energy eases down to a calm, slowly-pulsing resting glow.
+   prefers-reduced-motion freezes the travel and holds a low static glow. */
+const FLOW_PERIOD = 230          // gradient repeat length (viewBox units)
+const flowY = ref(0)             // animated gradient translate — the travel
+const flowOpacity = ref(0.4)     // flow brightness (energy-mapped)
+const flowGlow = ref(3)          // bloom radius in px (energy-mapped)
+
+let rafId = 0
+let lastScrollY = 0
+let lastTs = 0
+let vel = 0                      // smoothed scroll velocity (px / frame)
+let energy = 0.15                // smoothed excitement, 0..1
+
+function frame(ts) {
+  const dt = lastTs ? Math.min((ts - lastTs) / 16.67, 3) : 1   // frames elapsed
+  lastTs = ts
+
+  const sy = window.scrollY || document.documentElement.scrollTop || 0
+  vel += (Math.abs(sy - lastScrollY) - vel) * 0.3
+  lastScrollY = sy
+
+  // Excite quickly with velocity; dim slowly when it drops (elegant settle).
+  const target = clamp01(vel / 45)
+  energy += (target - energy) * (target > energy ? 0.25 : 0.035)
+
+  // Resting floor: a slow breathing pulse so the neuron is never fully dark.
+  const e = Math.max(energy, 0.14 + 0.06 * Math.sin(ts / 720))
+
+  // Travel: idle drift + velocity surge. Negative → currents rise up the trunk.
+  const speed = (0.5 + e * 4.2) * props.currentSpeed * 0.6
+  // Round to keep DOM writes stable (no sub-pixel thrash) while staying smooth.
+  flowY.value = Math.round(((flowY.value - speed * dt) % FLOW_PERIOD) * 10) / 10
+  flowOpacity.value = Math.round((0.32 + e * 0.68) * 100) / 100
+  flowGlow.value = Math.round((2 + e * 11) * 10) / 10
+
+  rafId = requestAnimationFrame(frame)
 }
 
 /* ── The Pulse — useMotion() on the active node's expanding ring ───────────── */
@@ -306,13 +342,16 @@ const pulseVariants = computed(() =>
 useMotion(pulseEl, pulseVariants)
 
 onMounted(() => {
-  onScroll()
-  window.addEventListener('scroll', onScroll, { passive: true })
-  window.addEventListener('resize', onScroll, { passive: true })
+  if (reduced.value) {
+    flowOpacity.value = 0.5   // static, low-energy glow; no travel
+    flowGlow.value = 3
+    return
+  }
+  lastScrollY = window.scrollY || 0
+  rafId = requestAnimationFrame(frame)
 })
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', onScroll)
-  window.removeEventListener('resize', onScroll)
+  if (rafId) cancelAnimationFrame(rafId)
 })
 </script>
 
@@ -350,10 +389,41 @@ onBeforeUnmount(() => {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+
+        <!-- Travelling light current: a repeating silver→white "comet" gradient.
+             spreadMethod="repeat" tiles it into a continuous train of pulses; the
+             rAF loop translates it along the arbor for a fluid, non-segmented
+             flow. Non-linear stops give a bright white head and a soft silver
+             tail, so each pulse reads as an organic comet rather than a band. -->
+        <linearGradient
+          id="npt-flow"
+          gradientUnits="userSpaceOnUse"
+          x1="0" y1="0" x2="0" :y2="FLOW_PERIOD"
+          spreadMethod="repeat"
+          :gradientTransform="`translate(0 ${flowY})`"
+        >
+          <stop offset="0" stop-color="#D1D5DB" stop-opacity="0" />
+          <stop offset="0.40" stop-color="#D1D5DB" stop-opacity="0.22" />
+          <stop offset="0.62" stop-color="#E9EDF2" stop-opacity="0.6" />
+          <stop offset="0.74" stop-color="#FFFFFF" stop-opacity="1" />
+          <stop offset="0.80" stop-color="#FFFFFF" stop-opacity="0.95" />
+          <stop offset="0.88" stop-color="#D1D5DB" stop-opacity="0" />
+          <stop offset="1" stop-color="#D1D5DB" stop-opacity="0" />
+        </linearGradient>
+
+        <!-- Soma mask: hides the travelling current within a disc around the
+             central base node, so the flow stops at the node's edge and the
+             node core stays clean and static. White = visible, black = hidden. -->
+        <mask id="npt-soma-mask" maskUnits="userSpaceOnUse" x="0" y="0" :width="VB_W" :height="VB_H">
+          <rect x="0" y="0" :width="VB_W" :height="VB_H" fill="#FFFFFF" />
+          <circle :cx="arbor.soma.x" :cy="arbor.soma.y" r="15" fill="#000000" />
+        </mask>
       </defs>
 
-      <!-- ░░ STATIC ARBOR (bloomed once, cached) ░░ -->
-      <g filter="url(#npt-bloom)" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+      <!-- ░░ STATIC ARBOR (bloomed once, cached) ░░
+           Stroke/fill colours come from CSS vars (see <style>) so the arbor is
+           luminous white in dark mode and dark-charcoal ink in light mode. -->
+      <g class="npt__arbor" filter="url(#npt-bloom)" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <!-- decorative fractal filaments / roots -->
         <path
           v-for="(f, i) in arbor.filaments"
@@ -367,31 +437,41 @@ onBeforeUnmount(() => {
           v-for="(b, i) in arbor.branches"
           :key="`b-${i}`"
           :d="b.d"
-          stroke-width="1.7"
+          stroke-width="2"
           stroke-opacity="0.55"
         />
         <!-- apical trunk -->
-        <path :d="arbor.trunkD" stroke-width="2.6" stroke-opacity="0.72" />
+        <path :d="arbor.trunkD" stroke-width="3" stroke-opacity="0.72" />
         <!-- soma (cell body) -->
-        <circle :cx="arbor.soma.x" :cy="arbor.soma.y" r="9" fill="#FFFFFF" stroke="none" opacity="0.9" />
+        <circle class="npt__soma" :cx="arbor.soma.x" :cy="arbor.soma.y" r="10" stroke="none" opacity="0.9" />
       </g>
 
-      <!-- ░░ NEURAL CURRENTS — action potentials streaming with scroll ░░ -->
-      <g filter="url(#npt-core)" fill="none" stroke="#FFFFFF" stroke-linecap="round">
+      <!-- ░░ NEURAL CURRENTS — a fluid silver→white light flow ░░
+           Stroke is the travelling gradient (#npt-flow), not a dash pattern, so
+           the flow is continuous. Group opacity and a layered drop-shadow bloom
+           are driven by scroll velocity (see frame()): the flow surges and
+           brightens as you scroll, then settles to a calm pulse at rest. -->
+      <g
+        class="npt__currents"
+        fill="none"
+        stroke-linecap="round"
+        mask="url(#npt-soma-mask)"
+        :style="{
+          opacity: flowOpacity,
+          filter: `drop-shadow(0 0 ${flowGlow * 0.45}px rgba(255,255,255,${0.55 + 0.4 * flowOpacity})) drop-shadow(0 0 ${flowGlow}px rgba(209,213,219,${0.35 + 0.4 * flowOpacity}))`,
+        }"
+      >
         <path
           v-for="(c, i) in arbor.currents"
           :key="`c-${i}`"
           :d="c.d"
-          pathLength="1"
-          :stroke-width="i === 0 ? 2.4 : 1.7"
-          stroke-dasharray="0.012 0.2"
-          :stroke-dashoffset="dashOffset(c.phase)"
-          stroke-opacity="0.95"
+          stroke="url(#npt-flow)"
+          :stroke-width="i === 0 ? 3.4 : 2.4"
         />
       </g>
 
-      <!-- ░░ NODES ░░ -->
-      <g filter="url(#npt-core)" fill="#FFFFFF" stroke="none">
+      <!-- ░░ NODES ░░ — gold in light mode, white in dark mode (via CSS var). -->
+      <g class="npt__nodes" filter="url(#npt-core)" stroke="none">
         <circle
           v-for="n in arbor.courseNodes"
           :key="n.id"
@@ -408,8 +488,8 @@ onBeforeUnmount(() => {
 
       <!-- ░░ THE PULSE — last watched video ░░ -->
       <g v-if="currentNode" filter="url(#npt-core)" :transform="`translate(${currentNode.x} ${currentNode.y})`">
-        <circle ref="pulseEl" class="npt-pulse" r="4" fill="none" stroke="#FFFFFF" stroke-width="1.2" />
-        <circle r="2.8" fill="#FFFFFF" />
+        <circle ref="pulseEl" class="npt-pulse" r="4" fill="none" stroke-width="1.2" />
+        <circle class="npt__pulse-core" r="2.8" />
       </g>
 
       <!-- ░░ HIT AREAS — invisible, pointer-enabled (hover + click) ░░
@@ -454,7 +534,31 @@ onBeforeUnmount(() => {
   width: 100%;
   background: transparent;
   pointer-events: none; /* purely decorative overlay */
+
+  /* ── Theme palette ────────────────────────────────────────────────────────
+     LIGHT MODE (default): a sleek dark-metallic / ink neural structure —
+     branches & soma in brand charcoal (#323A45), muted-charcoal nodes, and a
+     cool-silver active-node pulse. The travelling current itself is a fixed
+     silver→white metallic flow (the #npt-flow gradient), the same in both modes.
+     DARK MODE (html.dark, in src/style.css) makes branches & nodes luminous
+     white. Heavy contrast against the page in either theme. */
+  --npt-branch: #323A45;   /* dendrites, branches, trunk, soma (charcoal ink) */
+  --npt-current: #C9CED6;  /* active-node pulse — cool silver (matches the flow) */
+  --npt-node: #20262E;     /* course/module nodes — a darker, muted charcoal so
+                              they read as part of the body, not separate dots  */
 }
+/* DARK MODE keeps the original pure-white luminous network — the override lives
+   in the global stylesheet (src/style.css, `html.dark .npt`), matching how the
+   rest of the app's dark theming is done; scoped `:global()` is unreliable here. */
+
+/* Wire the palette into the SVG. CSS stroke/fill override the (removed) white
+   presentation attributes and let the bloom filter glow in the theme colour. */
+.npt__arbor { stroke: var(--npt-branch); }
+.npt__soma { fill: var(--npt-branch); }
+.npt__currents { stroke: var(--npt-current); }
+.npt__nodes { fill: var(--npt-node); }
+.npt-pulse { stroke: var(--npt-current); }
+.npt__pulse-core { fill: var(--npt-current); }
 .npt--sticky {
   position: sticky;
   top: var(--npt-top, 24px);
@@ -508,7 +612,7 @@ onBeforeUnmount(() => {
   font-size: 9px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(244, 215, 145, 0.92);
+  color: rgba(209, 213, 219, 0.95); /* cool silver — matches the light flow */
 }
 .npt-tip__title {
   font-size: 12.5px;
@@ -529,7 +633,7 @@ onBeforeUnmount(() => {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.5);
 }
-.npt-tip__status[data-s='completed'] .npt-tip__dot { background: #F4D791; box-shadow: 0 0 6px #F4D791; }
+.npt-tip__status[data-s='completed'] .npt-tip__dot { background: #FFFFFF; box-shadow: 0 0 6px rgba(255, 255, 255, 0.85); }
 .npt-tip__status[data-s='in-progress'] .npt-tip__dot { background: #9FD0FF; box-shadow: 0 0 6px #9FD0FF; }
 
 .npt-tip-enter-active,

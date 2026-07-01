@@ -2,10 +2,11 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LuxeCard from '../components/LuxeCard.vue'
-import BrandMark from '../components/BrandMark.vue'
 import SpecimenPlate from '../components/SpecimenPlate.vue'
+import logo from '../assets/logo.png'
 import NeuralProgressTree from '../components/NeuralProgressTree.vue'
 import { courseCode } from '../utils/catalog.js'
+import { courseMediaAt } from '../data/courseMedia.js'
 import { useReveal } from '../composables/useReveal.js'
 
 const { t, tm } = useI18n()
@@ -17,9 +18,12 @@ const statusFilters = [
 ]
 const fieldFilters = [
   { key: 'all', label: 'academy.fields.all' },
-  { key: 'neurology', label: 'academy.fields.neurology' },
-  { key: 'psychEmergency', label: 'academy.fields.psychEmergency' },
-  { key: 'general', label: 'academy.fields.general' },
+  { key: 'clinicalNeurology', label: 'academy.fields.clinicalNeurology' },
+  { key: 'neuroimaging', label: 'academy.fields.neuroimaging' },
+  { key: 'neurosurgery', label: 'academy.fields.neurosurgery' },
+  { key: 'neuroscience', label: 'academy.fields.neuroscience' },
+  { key: 'neurocriticalCare', label: 'academy.fields.neurocriticalCare' },
+  { key: 'brainAnatomy', label: 'academy.fields.brainAnatomy' },
 ]
 
 const activeStatus = ref('all')
@@ -49,25 +53,26 @@ useReveal()
       <!-- Depth layers: faint hairline grid, amber light-pool, brand watermark -->
       <div class="academy-hero-grid pointer-events-none absolute inset-0"></div>
       <div class="academy-hero-glow pointer-events-none absolute inset-0"></div>
-      <BrandMark
-        :size="420"
-        tone="mono"
-        class="pointer-events-none absolute -top-16 text-[#F4D791]/[0.04] hidden md:block"
+      <img
+        :src="logo"
+        alt=""
+        aria-hidden="true"
+        class="academy-hero-logo pointer-events-none absolute -top-16 w-[420px] h-auto opacity-[0.05] hidden md:block"
         style="inset-inline-end: -3rem;"
       />
 
       <div class="relative max-w-5xl mx-auto px-8 text-center">
-        <p class="text-[11px] uppercase tracking-[0.35em] text-[#EDC071] font-light mb-6">
+        <p class="academy-hero-eyebrow text-[11px] uppercase tracking-[0.35em] text-[#EDC071] font-light mb-6">
           {{ t('academy.hero.eyebrow') }}
         </p>
-        <h1 class="font-serif font-light text-[#F6F3EC] text-5xl md:text-6xl tracking-wide">
+        <h1 class="academy-hero-title font-serif font-light text-[#F6F3EC] text-5xl md:text-6xl tracking-wide">
           {{ t('academy.hero.title') }}
         </h1>
 
         <!-- Diamond rule — a touch more crafted than a plain line -->
-        <div class="mt-10 flex items-center justify-center gap-4">
+        <div class="academy-hero-rule mt-10 flex items-center justify-center gap-4">
           <span class="h-px w-16 bg-gradient-to-r from-transparent to-[#EDC071]/70"></span>
-          <span class="text-[#EDC071] text-[9px] tracking-widest">◆</span>
+          <span class="academy-hero-diamond text-[#EDC071] text-[9px] tracking-widest">◆</span>
           <span class="h-px w-16 bg-gradient-to-l from-transparent to-[#EDC071]/70"></span>
         </div>
       </div>
@@ -87,7 +92,6 @@ useReveal()
         <div class="mt-16 grid md:grid-cols-2 gap-8">
           <!-- Free -->
           <LuxeCard class="reveal group relative overflow-hidden lux-card hover:-translate-y-0.5 hover:border-gold/50">
-            <span class="pointer-events-none absolute top-0 inset-inline-start-0 h-12 w-12 border-t border-gold/40" style="border-inline-start:1px solid rgb(var(--c-gold)/0.4);"></span>
             <div class="flex items-center gap-3">
               <span class="grid place-items-center h-9 w-9 rounded-full border border-gold/40 text-gold-dark">
                 <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A2 2 0 0 1 5 5h5a2 2 0 0 1 2 2v12a1.5 1.5 0 0 0-1.5-1.5H5A2 2 0 0 1 3 15.5z"/><path d="M21 6.5A2 2 0 0 0 19 5h-5a2 2 0 0 0-2 2v12a1.5 1.5 0 0 1 1.5-1.5H19a2 2 0 0 0 2-1.5z"/></svg>
@@ -107,7 +111,6 @@ useReveal()
 
           <!-- Premium -->
           <LuxeCard class="reveal group relative overflow-hidden lux-card hover:-translate-y-0.5 hover:border-gold/50" style="transition-delay: 80ms;">
-            <span class="pointer-events-none absolute top-0 inset-inline-end-0 h-12 w-12 border-t border-gold/40" style="border-inline-end:1px solid rgb(var(--c-gold)/0.4);"></span>
             <div class="flex items-center justify-between gap-4">
               <div class="flex items-center gap-3">
                 <span class="grid place-items-center h-9 w-9 rounded-full border border-gold/40 text-gold-dark">
@@ -132,21 +135,20 @@ useReveal()
     </section>
 
     <!-- ───────────── Course library — Neural rail + plates ───────────── -->
-    <section class="bg-parchment border-t border-parchment-deep">
+    <section class="library-section bg-parchment border-t border-parchment-deep">
       <!-- The grid is the scroll-track: its height drives the neural currents. -->
       <div class="lib-grid" data-progress-track>
-        <!-- Rail: the living progress neuron. Sticky wrapper owns the position so
-             the faded radial underlay travels with the (transparent) network. -->
-        <aside class="lib-rail">
-          <div class="lib-rail__sticky">
-            <!-- Massive atmospheric halo — spans ~half the screen, locks with the
-                 tree so it's always behind it. -->
-            <div class="neural-glow" aria-hidden="true"></div>
-            <div class="neural-underlay">
-              <NeuralProgressTree :sticky="false" />
-            </div>
+        <!-- ONE sticky wrapper — a direct grid child — holding BOTH the halo and
+             the tree. They lock together (sticky; bottom:20px) and scroll away
+             together when the library section ends. -->
+        <div class="neural-rail">
+          <!-- Halo: absolute INSIDE the sticky wrapper, so it's bound to the tree. -->
+          <div class="neural-glow" aria-hidden="true"></div>
+          <!-- Tree: stacked above the halo. -->
+          <div class="neural-underlay">
+            <NeuralProgressTree :sticky="false" />
           </div>
-        </aside>
+        </div>
 
         <!-- Field: editorial control header, then the specimen plates -->
         <div class="lib-field">
@@ -195,6 +197,7 @@ useReveal()
             :section-id="`plate-${courseIndex(c)}`"
             :code="courseCode(courses, courseIndex(c))"
             :course="c"
+            :cover="courseMediaAt(courseIndex(c))?.cover || ''"
             :to="`/academy/course/${courseIndex(c)}`"
             :field-label="t(`academy.fields.${c.field}`)"
             :tier-label="t(`academy.filters.${c.tier}`)"
@@ -230,80 +233,109 @@ useReveal()
   padding-bottom: clamp(3rem, 8vh, 7rem);
 }
 
-/* Mobile: a slim accent neuron above the list. */
-.lib-rail { display: flex; justify-content: center; padding-top: clamp(2rem, 6vh, 4rem); }
-.lib-rail__sticky { width: 100%; max-width: 270px; }
+.library-section { position: relative; }
+.lib-grid { position: relative; z-index: 0; }
 
-/* The network sits above the halo. */
-.neural-underlay { position: relative; z-index: 1; width: 100%; }
-.neural-underlay > * { position: relative; z-index: 1; }
+/* ── The single sticky wrapper (tree + halo) ───────────────────────────────────
+   A direct child of the grid, so it's bound to the library section: it scrolls
+   away naturally when the section ends. `position: relative` here also makes it
+   the containing block for the absolute halo within it. */
+.neural-rail {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: clamp(2rem, 6vh, 4rem);      /* mobile: a slim accent above the list */
+}
 
-/* ── Massive left-side atmospheric halo ────────────────────────────────────────
-   A huge, very soft radial pool — a slightly deeper shade of the charcoal theme
-   (#323A45 → #212833) — anchored behind the tree and reaching out across roughly
-   half the screen width before melting completely to 0. It lives inside the
-   sticky box, so it locks and travels WITH the network. No border, no hard
-   shadow: the seam toward the centre of the page is invisible. */
+/* The network sits clearly ABOVE the halo. */
+.neural-underlay {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  justify-content: center;
+}
+.neural-underlay > * { position: relative; z-index: 10; }
+
+/* ── Enormous, BOUND halo — absolute inside the sticky wrapper ──────────────────
+   Locks exactly when the tree locks and scrolls out with it when the section
+   ends. A very soft radial pool, densest behind the tree and melting to 0 toward
+   the page centre. No border, no hard shadow.
+
+   LIGHT MODE (default): a faint metallic-gold aura (#EBBC73) — the charcoal
+   neuron reads as a sleek dark ink structure on the light page, wrapped in a warm
+   gold glow that echoes its gold neural currents.
+   DARK MODE: a deeper shade of the charcoal theme (#323A45 → #212833) so the
+   luminous white neuron pops against it. */
 .neural-glow {
   position: absolute;
-  z-index: 0;
   top: 50%;
-  left: 50%;
-  width: 56vw;                              /* ~half the viewport, behind the tree */
-  height: 132%;
-  transform: translate(-50%, -50%);
+  left: -10vw;
+  transform: translateY(-50%);
+  width: 70vw;
+  height: 150vh;
+  z-index: 0;
   pointer-events: none;
   background: radial-gradient(
-    ellipse 58% 50% at 50% 50%,
-    rgba(33, 40, 51, 0.88) 0%,
-    rgba(33, 40, 51, 0.55) 30%,
-    rgba(33, 40, 51, 0.25) 52%,
-    rgba(33, 40, 51, 0.08) 70%,
-    rgba(33, 40, 51, 0) 82%
+    ellipse 46% 42% at 38% 50%,
+    rgba(235, 188, 115, 0.26) 0%,
+    rgba(235, 188, 115, 0.16) 24%,
+    rgba(235, 188, 115, 0.09) 44%,
+    rgba(235, 188, 115, 0.035) 62%,
+    rgba(235, 188, 115, 0) 80%
   );
-  filter: blur(8px);                        /* extra atmospheric softness */
+  filter: blur(12px);                        /* extra atmospheric softness */
 }
+/* DARK MODE halo (charcoal pool) lives in the global stylesheet
+   (src/style.css, `html.dark .neural-glow`) for reliable cross-component theming. */
 
 @media (min-width: 1024px) {
   .lib-grid {
-    /* Rail / field — sized so the neuron reads as a companion, not a centrepiece. */
-    grid-template-columns: minmax(240px, 4fr) minmax(0, 8fr);
-    /* Fixed neuron height < viewport guarantees the whole tree can be fully
-       visible at once (a prerequisite for the bottom-pin lock). */
-    --neuron-h: min(660px, 72vh);
+    /* Wider rail so the (much larger) neuron reads as a prominent visual anchor. */
+    grid-template-columns: minmax(300px, 4.6fr) minmax(0, 7.4fr);
+    /* A large, prominent tree (~30–40% bigger than before). Sized so the WHOLE
+       thing still fits in the viewport when it locks — prerequisite for the
+       "fully visible, uncut" lock. Capped at 1100px on tall screens; otherwise
+       it tracks the viewport minus 160px (room for navbar + top/bottom gaps). */
+    --neuron-h: min(1100px, calc(100vh - 160px));
     /* Initial offset so the TOP of the tree starts just below the field row
        ("All fields / Neurology / Psychiatric Emergency / General"). */
     --neuron-start: clamp(11rem, 7vh + 11.9rem, 18rem);
   }
-  /* The rail cell stretches to the full row height (= the plate list), giving the
-     sticky neuron room to slide up and then lock at the bottom. */
-  .lib-rail { display: block; padding-top: 0; height: 100%; }
 
-  .lib-rail__sticky {
+  /* ── THE STICKY LOCK on the sticky wrapper ────────────────────────────────────
+     `align-self: start` stops the grid item from stretching to the full row, so
+     it keeps its own height and has room to travel; the tall grid (= the plate
+     list) is its sticky containing block.
+
+     We pin with `top`, NOT `bottom`. A `bottom` inset shifts a sticky box UP
+     toward the TOP of its containing block — but this box sits near that top
+     edge (it's offset down only by `--neuron-start`), so a bottom inset has
+     almost no room to shift into and releases immediately, tracking the scroll
+     1:1 (this was the long-standing "sticky doesn't work" bug). A `top` inset
+     is the correct model: the tree slides up with the cards and LOCKS once its
+     top reaches the inset — by which point the whole tree (sized to fit) is on
+     screen — then holds while the cards scroll, releasing at the section ends.
+
+     The inset clears the 81px sticky navbar and otherwise vertically centres the
+     neuron in the leftover viewport height, biased ~50–90px downward so it sits
+     comfortably mid-viewport (never cut off at the top) when locked. */
+  .neural-rail {
+    align-self: start;
     position: sticky;
-    /* ── THE BOTTOM-PIN LOCK ──────────────────────────────────────────────────
-       Not pinned at the top or middle: the tree slides up naturally with the
-       cards, and LOCKS only once its bottom edge clears the viewport bottom —
-       i.e. when the ENTIRE tree is fully on screen. It then stays pinned 20px
-       off the bottom while the cards keep scrolling, releasing when the field
-       row scrolls back into view on the way up. */
-    bottom: 20px;
+    top: clamp(140px, calc((100vh - var(--neuron-h)) / 2 + 45px), 320px);
     height: var(--neuron-h);
     margin-top: var(--neuron-start);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: none;
+    padding-top: 0;
   }
 
   .neural-underlay {
     width: 100%;
-    height: 100%;
     max-width: none;
-    display: flex;
+    height: 100%;
     align-items: center;
-    justify-content: center;
   }
   /* Drive the SVG by HEIGHT so it matches --neuron-h exactly (overrides the
      component's width-driven aspect-ratio). */
@@ -313,5 +345,8 @@ useReveal()
     max-width: 100%;
     aspect-ratio: auto;
   }
+
+  /* Cards stay crisp above the halo's right-side bleed. */
+  .lib-field { position: relative; z-index: 1; }
 }
 </style>

@@ -3,13 +3,7 @@ import { createI18n } from 'vue-i18n'
 import App from './App.vue'
 import router from './router'
 import en from './locales/en.json'
-import fr from './locales/fr.json'
-import de from './locales/de.json'
-import zh from './locales/zh.json'
-import ru from './locales/ru.json'
-import tr from './locales/tr.json'
 import fa from './locales/fa.json'
-import ar from './locales/ar.json'
 import './assets/fonts.css'
 import './style.css'
 import { initTheme } from './composables/useTheme.js'
@@ -17,8 +11,9 @@ import { MotionPlugin } from '@vueuse/motion'
 
 initTheme()
 
-const SUPPORTED = ['en', 'fr', 'de', 'zh', 'ru', 'tr', 'fa', 'ar']
+const SUPPORTED = ['fa', 'en']
 const saved = localStorage.getItem('locale')
+// Visitors who previously selected a now-retired locale fall back to English.
 const savedLocale = SUPPORTED.includes(saved) ? saved : 'en'
 
 const i18n = createI18n({
@@ -26,7 +21,7 @@ const i18n = createI18n({
   globalInjection: true,
   locale: savedLocale,
   fallbackLocale: 'en',
-  messages: { en, fr, de, zh, ru, tr, fa, ar },
+  messages: { en, fa },
 })
 
 const app = createApp(App)

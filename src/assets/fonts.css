@@ -47,3 +47,17 @@
   font-style: normal;
   font-display: swap;
 }
+
+/*
+@font-face {
+    font-family: 'A iranian Sans';
+    src: url('/fonts/new/Vazirmatn-Regular.woff2') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+body, html, * {
+    font-family: 'A iranian Sans' !important;
+}
+*/

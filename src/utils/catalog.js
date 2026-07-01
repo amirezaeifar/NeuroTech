@@ -7,16 +7,21 @@
  * (field + tier + position within the field), so it never shifts between
  * languages.
  *
- *   field    → prefix     neurology = NRO · psychEmergency = PSY · general = GEN
+ *   field    → prefix     clinicalNeurology = CLN · neuroimaging = NIM ·
+ *                          neurosurgery = NSG · neuroscience = NSC ·
+ *                          neurocriticalCare = NCC · brainAnatomy = ANA
  *   tier     → hundreds    free = 1 · premium = 2
  *   position → 2-digit running count within the field
  *
- *   e.g.  NRO-101 · PSY-204 · GEN-102
+ *   e.g.  CLN-101 · NIM-201 · ANA-102
  */
 const FIELD_PREFIX = {
-  neurology: 'NRO',
-  psychEmergency: 'PSY',
-  general: 'GEN',
+  clinicalNeurology: 'CLN',
+  neuroimaging: 'NIM',
+  neurosurgery: 'NSG',
+  neuroscience: 'NSC',
+  neurocriticalCare: 'NCC',
+  brainAnatomy: 'ANA',
 }
 
 /**
